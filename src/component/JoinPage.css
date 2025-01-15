@@ -1,0 +1,114 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: black;
+  }
+
+  .join-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .join-box {
+    padding: 40px 30px;
+    border-radius: 8px;
+    width: 450px;
+    text-align: center;
+  }
+  
+  
+  h1 {
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-size: 48px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  
+  }
+  
+  label {
+    text-align: left;
+    font-size: 20px;
+    color: #ffffff;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  input {
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 16px;
+    height: 30px;
+  }
+
+  input[type="password"] {
+    margin-bottom: 10px; /* 비밀번호 입력 박스 아래 간격 설정 */
+}
+.half-input-group {
+  display: flex; /* Align items in a row */
+  gap: 10px; /* Add 10px space between the inputs */
+  
+}
+
+.half-input {
+  flex: 1; /* Allow both inputs to share available space equally */
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 30px; /* Match height of other inputs */
+}
+  input:focus {
+    outline: none;
+    border-color: #ffffff;
+  }
+  .input-search-group {
+    display: flex; /* Align items horizontally */
+    align-items: center; /* Center vertically */
+    gap: 10px; /* Space between the input and button */
+    margin-bottom: 20px; /* Space below the group */
+}
+
+.input-box {
+    
+  flex: 1; /* Allow the input box to grow and fill available space */
+}
+  .input-group {
+    display: flex;
+    
+    flex-direction: column;
+    margin-bottom: 10px; /* Space between input groups */
+}
+.search-btn {
+  margin-bottom: 10px;
+  height: 60px; /* Match the height of the input field */
+  padding: 0 50px; /* Add padding for better appearance */
+  border: 1px solid #333333;
+  background-color: #333333;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+  
+  .join-button {
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    height: 60px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px;
+    margin-top: 30px;
+  }
+  
+  .join-button:hover {
+    background-color: #555555;
+  }
+  
+  
