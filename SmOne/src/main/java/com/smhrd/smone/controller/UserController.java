@@ -1,7 +1,12 @@
 package com.smhrd.smone.controller;
 
 import com.smhrd.smone.model.User;
+import com.smhrd.smone.model.VerificationRequest;
 import com.smhrd.smone.service.UserService;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
 	private final UserService userService;
+	private final Map<String, String> verificationCodeStorage = new ConcurrentHashMap<>();
 
 	public UserController(UserService userService) {
 		this.userService = userService;
@@ -81,7 +87,10 @@ public class UserController {
 	@PostMapping("/password/send-email")
 	public ResponseEntity<?> sendVerificationEmail(@RequestBody User user) {
 		try {
+			// 인증번호 생성 및 이메일 전송
 			String verificationCode = userService.sendVerificationEmail(user.getUserId(), user.getEmail());
+			// 인증번호를 임시 저장소에 저장
+			verificationCodeStorage.put(user.getUserId(), verificationCode);
 			return ResponseEntity.ok("인증번호가 이메일로 전송되었습니다.");
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -90,15 +99,33 @@ public class UserController {
 		}
 	}
 
+	// 인증번호 검증 API
+	@PostMapping("/password/verify-code")
+	public ResponseEntity<?> verifyCode(@RequestBody VerificationRequest request) {
+		String storedCode = verificationCodeStorage.get(request.getUserId());
+		if (storedCode != null && storedCode.equals(request.getVerificationCode())) {
+			return ResponseEntity.ok("인증번호가 일치합니다.");
+		}
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증번호가 일치하지 않습니다.");
+	}
+
 	// 비밀번호 변경 API
 	@PostMapping("/password/change")
-	public ResponseEntity<?> changePassword(@RequestBody User user) {
-		boolean isUpdated = userService.changePassword(user.getUserId(), user.getUserPw());
-		if (isUpdated) {
-			return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디를 찾을 수 없습니다.");
-		}
+	public ResponseEntity<?> changePassword(@RequestBody Map<String, String> request) {
+	    String userId = request.get("userId");
+	    String newPassword = request.get("newPassword");
+
+	    try {
+	        boolean isUpdated = userService.changePassword(userId, newPassword);
+
+	        if (isUpdated) {
+	            return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디를 찾을 수 없습니다.");
+	        }
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 변경 중 오류가 발생했습니다.");
+	    }
 	}
 
 }
