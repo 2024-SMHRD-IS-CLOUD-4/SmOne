@@ -112,7 +112,13 @@ function Main() {
               src={LogoImage}
               alt="I Lung View Logo"
               className="logo"
-              onClick={() => navigate("/Main")}
+              onClick={() => {
+                setShowMyPage(false);
+                setShowPatientJoin(false);
+                setImage(null); // 업로드된 이미지 초기화
+                setImagePanelImage(null); // 패널에 업로드된 이미지 초기화
+                navigate("/Main");
+              }}
               style={{ cursor: "pointer" }}
             />
             <button className="smart-button" onClick={toggleMyPage}>
