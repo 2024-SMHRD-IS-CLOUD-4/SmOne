@@ -1,32 +1,25 @@
 package com.smhrd.smone.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.smhrd.smone.mapper.UserMapper;
 import com.smhrd.smone.model.User;
+import com.smhrd.smone.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserMapper mapper;
+    private final UserRepository userRepository;
 
-    public int signup(User user) {
-        // 중복된 아이디 확인
-        User existingUser = mapper.findByUserId(user.getUserId());
-        if (existingUser != null) {
-            return 0; // 중복된 아이디
-        }
-        return mapper.signup(user);
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public User login(User user) {
-        return mapper.login(user);
+    // 회원가입
+    public User registerUser(User user) {
+        return userRepository.save(user);
     }
 
-    public boolean isUsernameAvailable(String userId) {
-        User existingUser = mapper.findByUserId(userId);
-        return existingUser == null;
+    // 아이디 중복 체크
+    public boolean isUserIdDuplicate(String userId) {
+        return userRepository.existsByUserId(userId);
     }
 }

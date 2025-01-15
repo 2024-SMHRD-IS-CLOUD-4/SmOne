@@ -1,56 +1,53 @@
 package com.smhrd.smone.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.smhrd.smone.model.User;
 import com.smhrd.smone.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService service;
+    private final UserService userService;
 
-    // 회원가입
-    @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody User user) {
-        int result = service.signup(user);
-        if (result > 0) {
-            return ResponseEntity.ok("회원가입 성공");
-        } else {
-            return ResponseEntity.badRequest().body("회원가입 실패: 이미 존재하는 아이디입니다.");
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    // 회원가입 API
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        // 전달된 데이터 로그 출력
+        System.out.println("Received User Data: " + user);
+
+        // 필수 필드 검증
+        if (user.getCenterId() == null || user.getCenterId().isEmpty()) {
+            return ResponseEntity.badRequest().body("기관명을 입력하세요.");
+        }
+        if (user.getUAdd() == null || user.getUAdd().isEmpty()) {
+            return ResponseEntity.badRequest().body("주소를 입력하세요.");
+        }
+        if (userService.isUserIdDuplicate(user.getUserId())) {
+            return ResponseEntity.badRequest().body("중복된 아이디 입니다.");
+        }
+
+        try {
+            User registeredUser = userService.registerUser(user);
+            return ResponseEntity.ok(registeredUser);
+        } catch (Exception e) {
+            // 예외 로그 출력
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("회원가입 중 오류가 발생했습니다.");
         }
     }
 
-    // 로그인
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
-        User authenticatedUser = service.login(user);
-        if (authenticatedUser != null) {
-            return ResponseEntity.ok("로그인 성공");
-        } else {
-            return ResponseEntity.badRequest().body("로그인 실패: 아이디 또는 비밀번호를 확인하세요.");
-        }
-    }
-
-    // 아이디 중복 확인
-    @GetMapping("/check-username/{userId}")
-    public ResponseEntity<String> checkUsername(@PathVariable String userId) {
-        boolean isAvailable = service.isUsernameAvailable(userId);
-        if (isAvailable) {
-            return ResponseEntity.ok("사용 가능한 아이디입니다.");
-        } else {
-            return ResponseEntity.badRequest().body("이미 존재하는 아이디입니다.");
-        }
+    // 아이디 중복 체크 API
+    @GetMapping("/check-duplicate/{userId}")
+    public ResponseEntity<?> checkUserIdDuplicate(@PathVariable String userId) {
+        boolean isDuplicate = userService.isUserIdDuplicate(userId);
+        return ResponseEntity.ok(isDuplicate);
     }
 }
