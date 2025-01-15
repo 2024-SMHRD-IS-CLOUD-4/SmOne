@@ -11,7 +11,7 @@ function Result() {
   const location = useLocation();
   const [showMyPage, setShowMyPage] = useState(false);
   const [showPatientJoin, setShowPatientJoin] = useState(false);
-  const [image, setImage] = useState(location.state?.uploadedImage || null);
+  const [image/*, setImage*/] = useState(location.state?.uploadedImage || null);
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,11 +42,11 @@ function Result() {
     setShowMyPage(false);
   };
 
-  const resetToResult = () => {
-    setShowMyPage(false);
-    setShowPatientJoin(false);
-    setSearchResults([]);
-  };
+  // const resetToResult = () => {
+  //   setShowMyPage(false);
+  //   setShowPatientJoin(false);
+  //   setSearchResults([]);
+  // };
 
   const handleSearchChange = (e) => {
     const query = e.target.value;

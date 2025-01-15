@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Main.css";
 import MyPage from "./MyPage";
 import PatientJoin from "./PatientJoin";
-import XrayImage from "./x-ray.png";
+// import XrayImage from "./x-ray.png";
 import Loading from "./Loading";
 import LogoImage from "./teamlogo.png";
 
