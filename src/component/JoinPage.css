@@ -72,8 +72,18 @@ body {
     display: flex; /* Align items horizontally */
     align-items: center; /* Center vertically */
     gap: 10px; /* Space between the input and button */
-    margin-bottom: 20px; /* Space below the group */
 }
+  .select-box1 {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 16px;
+    height: 52px;
+    background-color: white;
+    margin-top: 0px;
+  }
+  
 
 .input-box {
     
@@ -104,7 +114,6 @@ body {
     border-radius: 4px;
     cursor: pointer;
     font-size: 20px;
-    margin-top: 30px;
   }
   
   .join-button:hover {

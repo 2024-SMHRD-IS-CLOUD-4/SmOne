@@ -18,15 +18,16 @@ const FindPass = () => {
         <source src="video.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
+      
       <div className="pass-container">
         <div className="pass-box">
           <h1>Change Password</h1>
           <form onSubmit={handlePasswordChange}>
-            <label htmlFor="institution-name">기관명</label>
+            <label htmlFor="institution-name">아이디</label>
             <input
               type="text1"
               id="institution-name"
-              placeholder="기관명 입력"
+              placeholder="아이디 입력"
             />
             <label htmlFor="password">새 비밀번호</label>
             <input
@@ -41,7 +42,7 @@ const FindPass = () => {
               placeholder="새로운 비밀번호 입력"
             />
             <button type="submit" className="pass-button">
-              비밀번호 변경완료
+              비밀번호 변경
             </button>
           </form>
         </div>

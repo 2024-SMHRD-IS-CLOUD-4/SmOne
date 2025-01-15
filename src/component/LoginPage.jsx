@@ -6,8 +6,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleLogin = (event) => {
-    event.preventDefault(); // Prevent form submission default behavior
-    navigate("/main"); // Navigate to the main page
+    event.preventDefault();
+    navigate("/main");
   };
 
   return (
@@ -36,7 +36,17 @@ const LoginPage = () => {
             </button>
           </form>
           <div className="login-links">
-            <a href="/find-password">비밀번호 변경</a>
+            <a href="/find-id">아이디 찾기</a>
+            <a
+              href="/identity-check"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/identity-check");
+              }}
+            >
+              비밀번호 찾기
+            </a>
+
             <a href="/signup">회원가입</a>
           </div>
         </div>
