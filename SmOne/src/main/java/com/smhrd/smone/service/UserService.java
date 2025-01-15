@@ -22,4 +22,9 @@ public class UserService {
     public boolean isUserIdDuplicate(String userId) {
         return userRepository.existsByUserId(userId);
     }
+    
+    //
+    public User findUserById(String userId) {
+    	return userRepository.findByUserId(userId);
+    }
 }

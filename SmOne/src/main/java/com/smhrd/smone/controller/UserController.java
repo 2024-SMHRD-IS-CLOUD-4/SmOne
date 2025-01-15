@@ -3,6 +3,7 @@ package com.smhrd.smone.controller;
 import com.smhrd.smone.model.User;
 import com.smhrd.smone.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,5 +50,15 @@ public class UserController {
     public ResponseEntity<?> checkUserIdDuplicate(@PathVariable String userId) {
         boolean isDuplicate = userService.isUserIdDuplicate(userId);
         return ResponseEntity.ok(isDuplicate);
+    }
+    
+    // 로그인 API
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User loginRequest){
+    	User user = userService.findUserById(loginRequest.getUserId());
+    	if(user == null || !user.getUserPw().equals(loginRequest.getUserPw())) {
+    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호가 일치하지 않습니다.");
+    	}
+    	return ResponseEntity.ok("로그인 성공");
     }
 }
