@@ -19,25 +19,25 @@ function Main() {
   const navigate = useNavigate();
 
   const patientList = [
-    { name: "김철수", birth: "900101" },
-    { name: "김철수", birth: "900102" },
-    { name: "김철수", birth: "900103" },
-    { name: "김철수", birth: "900104" },
-    { name: "김철수", birth: "900105" },
-    { name: "김철수", birth: "900106" },
-    { name: "김철수", birth: "900107" },
-    { name: "김철수", birth: "900108" },
-    { name: "김지수", birth: "000000" },
-    { name: "김지수", birth: "000101" },
-    { name: "김지수", birth: "000202" },
-    { name: "김지수", birth: "000303" },
-    { name: "최승찬", birth: "880505" },
-    { name: "최승찬", birth: "880505" },
-    { name: "최승찬", birth: "880505" },
-    { name: "최승찬", birth: "880505" },
-    { name: "박영희", birth: "850707" },
-    { name: "양윤성", birth: "950312" },
-    { name: "정현지", birth: "990102" },
+    { name: "김철수", birth: "900101", phone: "010-1234-5678", address: "서울시 강남구" },
+    { name: "김철수", birth: "900102" , phone: "010-1234-5678", address: "서울시 강남구"},
+    { name: "김철수", birth: "900103" , phone: "010-1234-5678", address: "서울시 강남구"},
+    { name: "김철수", birth: "900104" , phone: "010-5678-1234", address: "광주시 북구"},
+    { name: "김철수", birth: "900105" , phone: "010-1234-5678", address: "서울시 강남구"},
+    { name: "김철수", birth: "900106" , phone: "010-2222-3333", address: "부산시 해운대구" },
+    { name: "김철수", birth: "900107" , phone: "010-1234-5678", address: "서울시 강남구"},
+    { name: "김철수", birth: "900108" , phone: "010-2222-3333", address: "부산시 해운대구" },
+    { name: "김지수", birth: "000000" , phone: "010-1234-5678", address: "서울시 강남구"},
+    { name: "김지수", birth: "000101" , phone: "010-1111-2222", address: "대전시 동구" },
+    { name: "김지수", birth: "000202" , phone: "010-1111-2222", address: "대전시 동구"},
+    { name: "김지수", birth: "000303", phone: "010-1234-5678", address: "서울시 강남구" },
+    { name: "최승찬", birth: "880505" , phone: "010-1111-2222", address: "대전시 동구" },
+    { name: "최승찬", birth: "880505" , phone: "010-1111-2222", address: "대전시 동구"},
+    { name: "최승찬", birth: "880505", phone: "010-2222-3333", address: "부산시 해운대구"  },
+    { name: "최승찬", birth: "880505" , phone: "010-1234-5678", address: "서울시 강남구"},
+    { name: "박영희", birth: "850707" , phone: "010-5678-1234", address: "광주시 북구"},
+    { name: "양윤성", birth: "950312", phone: "010-1234-5678", address: "서울시 강남구" },
+    { name: "정현지", birth: "990102" , phone: "010-2222-3333", address: "부산시 해운대구" },
   ];
 
   const handleImageUpload = (event) => {
@@ -70,8 +70,8 @@ function Main() {
     const nameQuery = searchInput.trim();
     const birthQuery = searchInputbirth.trim();
 
-    if (!nameQuery && !birthQuery) {
-      // 이름과 생년월일 모두 입력하지 않았을 경우
+    // 조건: 이름은 2글자 이상, 생년월일은 1글자 이상
+    if (nameQuery.length < 2 && birthQuery.length < 1) {
       setSearchResults([]);
       return;
     }
@@ -79,12 +79,13 @@ function Main() {
     const filteredResults = patientList.filter((patient) => {
       const matchesName = nameQuery === "" || patient.name.includes(nameQuery);
       const matchesBirth = birthQuery === "" || patient.birth.includes(birthQuery);
-
       return matchesName && matchesBirth; // 이름과 생년월일 모두 일치하거나 하나만 일치
     });
 
     setSearchResults(filteredResults);
   };
+
+
 
   const handleDiagnosisClick = () => {
     if (!image) {
@@ -148,19 +149,31 @@ function Main() {
                   placeholder="이름을 입력하세요"
                   className="search-input1"
                   value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
+                  onChange={(e) => {
+                    setSearchInput(e.target.value);
+                    handleSearchChange();
+                  }}
                 />
                 <input
                   type="text"
                   placeholder="생년월일 6자리를 입력하세요"
                   className="search-input2"
                   value={searchInputbirth}
-                  onChange={(e) => setSearchInputbirth(e.target.value)}
+                  onChange={(e) => {
+                    setSearchInputbirth(e.target.value);
+                    handleSearchChange();
+                  }}
                 />
               </div>
               {/* 검색 버튼 */}
-              <button className="search-button" onClick={handleSearchChange}>
-                검색
+              <button
+                className="search-button"
+                onClick={() => {
+                  handleSearchChange(); // 기존 검색 로직 호출
+                  navigate("/Search"); // Search 페이지로 이동
+                }}
+              >
+                상세검색
               </button>
             </div>
             {searchResults.length > 0 && (
@@ -225,24 +238,24 @@ function Main() {
                       />
                     </div>
                     <div className="image-panel">
-                <label htmlFor="image-panel-upload" className="upload-box">
-                  {imagePanelImage ? (
-                    <img
-                      src={imagePanelImage}
-                      alt="Uploaded to Panel"
-                      className="uploaded-image"
-                    />
-                  ) : (
-                    <span>+</span>
-                  )}
-                </label>
-                <input
-                  id="image-panel-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImagePanelUpload}
-                  style={{ display: "none" }}
-                />
+                      <label htmlFor="image-panel-upload" className="upload-box">
+                        {imagePanelImage ? (
+                          <img
+                            src={imagePanelImage}
+                            alt="Uploaded to Panel"
+                            className="uploaded-image"
+                          />
+                        ) : (
+                          <span>+</span>
+                        )}
+                      </label>
+                      <input
+                        id="image-panel-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImagePanelUpload}
+                        style={{ display: "none" }}
+                      />
                     </div>
                   </div>
                 )}

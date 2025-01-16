@@ -10,6 +10,7 @@ import MyPage from "./component/MyPage";
 import PatientJoin from "./component/PatientJoin"; // PatientJoin 컴포넌트 추가
 import Loading from "./component/Loading";
 import Result from "./component/Result";
+import Search from "./component/Search";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/main" element={<Main />} />
+        <Route path="/search" element={<Search />} />
         <Route path="/signup" element={<JoinPage />} />
         <Route path="/find-pass" element={<FindPass />} />
         <Route path="/find-id" element={<FindId />} />
