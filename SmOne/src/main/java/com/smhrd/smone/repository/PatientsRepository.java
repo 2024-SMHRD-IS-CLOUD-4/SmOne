@@ -3,14 +3,13 @@ package com.smhrd.smone.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.smhrd.smone.model.Patients;
 
-public interface PatientsRepository extends JpaRepository<Patients, Integer> {
+@Repository
+public interface PatientsRepository extends JpaRepository<Patients, Long> {
 	
-	 // 생년월일 앞부분으로 검색
-    @Query("SELECT p FROM Patients p WHERE p.birth LIKE :birth%")
-    List<Patients> findByBirthStartingWith(@Param("birth") String birth);
-}
+	// 이름에 포함되거나 주민등록번호 앞 6자리로 검색
+	List<Patients> findBypNameContainingOrBirthStartingWith(String pName, String birth);
+	}

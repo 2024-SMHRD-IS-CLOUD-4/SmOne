@@ -16,13 +16,17 @@ public class PatientsService {
 	private PatientsRepository patientsRepository;
 
 	// 환자 등록
-	public Patients savePatient(Patients patient) {
-		System.out.println("저장할 환자 데이터: " + patient);
-		return patientsRepository.save(patient);
+	public void registerPatient(Patients patient) {
+		patientsRepository.save(patient);
 	}
 
-	// 생년월일 앞부분으로 환자 검색
-	public List<Patients> findPatientByPartialBirth(String birth) {
-		return patientsRepository.findByBirthStartingWith(birth);
-	}
+	// 전체 환자 목록 조회
+    public List<Patients> getAllPatients() {
+        return patientsRepository.findAll();
+    }
+
+    // 이름 또는 주민등록번호 앞자리로 검색
+    public List<Patients> searchPatients(String search) {
+        return patientsRepository.findBypNameContainingOrBirthStartingWith(search, search);
+    }
 }
