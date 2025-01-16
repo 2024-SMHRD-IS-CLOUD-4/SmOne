@@ -5,7 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.AllArgsConstructor;
+
+@ToString
 
 @Entity
 @Table(name = "PATIENTS") // 정확한 테이블 이름 지정
