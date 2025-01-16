@@ -78,27 +78,25 @@ public class UserController {
 	}
 
 	// 비밀번호 찾기 - 인증번호 전송 API
-	@PostMapping("/password/send-email")
-	public ResponseEntity<?> sendVerificationEmail(@RequestBody User user) {
-		try {
-			String verificationCode = userService.sendVerificationEmail(user.getUserId(), user.getEmail());
-			return ResponseEntity.ok("인증번호가 이메일로 전송되었습니다.");
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이메일 전송 중 오류가 발생했습니다.");
-		}
-	}
+    @PostMapping("/password/send-email")
+    public ResponseEntity<?> sendVerificationEmail(@RequestBody User user) {
+        String verificationCode = userService.sendVerificationEmail(user.getUserId(), user.getEmail());
+        if (verificationCode != null) {
+            return ResponseEntity.ok(verificationCode); // 인증번호 반환
+        } else {
+            return ResponseEntity.badRequest().body("아이디와 이메일 정보가 일치하지 않습니다.");
+        }
+    }
 
-	// 비밀번호 변경 API
-	@PostMapping("/password/change")
-	public ResponseEntity<?> changePassword(@RequestBody User user) {
-		boolean isUpdated = userService.changePassword(user.getUserId(), user.getUserPw());
-		if (isUpdated) {
-			return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디를 찾을 수 없습니다.");
-		}
-	}
+    // 비밀번호 변경 API
+    @PostMapping("/password/change")
+    public ResponseEntity<?> changePassword(@RequestBody User user) {
+        boolean isUpdated = userService.changePassword(user.getUserId(), user.getUserPw());
+        if (isUpdated) {
+            return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+        } else {
+            return ResponseEntity.badRequest().body("아이디를 찾을 수 없습니다.");
+        }
+    }
 
 }

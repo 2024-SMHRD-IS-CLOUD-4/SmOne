@@ -47,27 +47,14 @@ public class UserService {
         return userOptional.map(User::getUserId).orElse(null);
     }
 
-    // 비밀번호 변경
-    public boolean changePassword(String userId, String newPassword) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setUserPw(newPassword);
-            userRepository.save(user);
-            return true;
-        }
-        return false;
-    }
-
-    // 인증번호 이메일 전송
+ // 인증번호 이메일 전송
     public String sendVerificationEmail(String userId, String email) {
         Optional<User> userOptional = userRepository.findById(userId);
-
         if (userOptional.isPresent() && userOptional.get().getEmail().equals(email)) {
             String verificationCode = generateVerificationCode();
             try {
                 MimeMessage message = mailSender.createMimeMessage();
-                MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
+                MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
                 helper.setSubject("비밀번호 변경 인증번호");
                 helper.setTo(email);
                 helper.setText("인증번호는 다음과 같습니다: " + verificationCode);
@@ -81,10 +68,23 @@ public class UserService {
         throw new IllegalArgumentException("아이디와 이메일 정보가 일치하지 않습니다.");
     }
 
+    // 비밀번호 변경
+    public boolean changePassword(String userId, String newPassword) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setUserPw(newPassword);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
     // 인증번호 생성
     private String generateVerificationCode() {
         Random random = new Random();
-        int code = 100000 + random.nextInt(900000);
+        int code = 100000 + random.nextInt(900000); // 6자리 난수 생성
         return String.valueOf(code);
     }
 }
+
