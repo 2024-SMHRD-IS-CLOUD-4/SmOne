@@ -47,7 +47,21 @@ public class UserService {
         return userOptional.map(User::getUserId).orElse(null);
     }
 
- // 인증번호 이메일 전송
+
+    // 비밀번호 변경
+    public boolean changePassword(String userId, String newPassword) {
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setUserPw(newPassword); // 새로운 비밀번호 설정
+            userRepository.save(user); // 변경 사항 저장
+            return true;
+        }
+        return false; // 해당 아이디가 없을 경우
+    }
+
+    // 인증번호 이메일 전송
     public String sendVerificationEmail(String userId, String email) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent() && userOptional.get().getEmail().equals(email)) {
@@ -68,17 +82,6 @@ public class UserService {
         throw new IllegalArgumentException("아이디와 이메일 정보가 일치하지 않습니다.");
     }
 
-    // 비밀번호 변경
-    public boolean changePassword(String userId, String newPassword) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setUserPw(newPassword);
-            userRepository.save(user);
-            return true;
-        }
-        return false;
-    }
 
     // 인증번호 생성
     private String generateVerificationCode() {
