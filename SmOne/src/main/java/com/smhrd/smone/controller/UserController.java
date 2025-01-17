@@ -4,6 +4,7 @@ import com.smhrd.smone.model.User;
 import com.smhrd.smone.model.VerificationRequest;
 import com.smhrd.smone.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.Map;
@@ -33,9 +34,6 @@ public class UserController {
 		// 필수 필드 검증
 		if (user.getCenterId() == null || user.getCenterId().isEmpty()) {
 			return ResponseEntity.badRequest().body("기관명을 입력하세요.");
-		}
-		if (user.getUAdd() == null || user.getUAdd().isEmpty()) {
-			return ResponseEntity.badRequest().body("주소를 입력하세요.");
 		}
 		if (userService.isUserIdDuplicate(user.getUserId())) {
 			return ResponseEntity.badRequest().body("중복된 아이디 입니다.");
@@ -80,6 +78,16 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("세션이 만료 되었습니다.");
 		}
 		return ResponseEntity.ok("세션 유지중: " + userId);
+	}
+	
+	// 로그아웃 API
+	@PostMapping("/logout")
+	public ResponseEntity<?> logout(HttpServletRequest requset){
+		HttpSession session = requset.getSession(false); // 현재 세션 가져오기
+		if(session != null) {
+			session.invalidate(); // 세션 무효화
+		}
+		return ResponseEntity.ok("로그아웃 성공");
 	}
 
 	// 아이디 찾기API

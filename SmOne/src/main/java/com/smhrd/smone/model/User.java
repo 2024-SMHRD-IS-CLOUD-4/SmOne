@@ -10,8 +10,6 @@ import lombok.ToString;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.sql.Timestamp;
 
 @ToString
@@ -41,10 +39,9 @@ public class User {
 
     @Column(name = "EMAIL", length = 255, nullable = false)
     private String email;
-
-    @JsonProperty("uAdd")
-    @Column(name = "U_ADD", length = 255, nullable = false)
-    private String uAdd;
+    
+    @Column(name = "ADDRESS", length = 255)
+    private String address;
 
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
