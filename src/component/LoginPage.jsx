@@ -19,7 +19,7 @@ const LoginPage = () => {
     event.preventDefault();
     console.log("Form Data:", formData); // 전송 데이터 확인
     try {
-      const response = await axios.post("http://localhost:8090/SmOne/api/users/login", formData);
+      const response = await axios.post("http://211.188.60.45:8090/SmOne/api/users/login", formData);
       if (response.status === 200) {
         alert("로그인 성공!");
         navigate("/main"); // 로그인 성공 시 메인 페이지로 이동
