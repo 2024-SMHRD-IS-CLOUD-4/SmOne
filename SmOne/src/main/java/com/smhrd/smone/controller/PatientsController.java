@@ -1,5 +1,7 @@
 package com.smhrd.smone.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,12 +39,17 @@ public class PatientsController {
         return ResponseEntity.ok(patients);
     }
 
-    // 이름 또는 주민등록번호 앞자리로 검색
-    @GetMapping("/{search}")
-    public ResponseEntity<List<Patients>> searchPatients(@PathVariable String search) {
-        List<Patients> patients = patientsService.searchPatients(search);
+ // 검색 및 페이지네이션
+    @GetMapping("/search")
+    public ResponseEntity<Page<Patients>> searchPatients(
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) String birth,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size
+    ) {
+        Page<Patients> patients = patientsService.searchPatients(name, birth, PageRequest.of(page, size));
         if (patients.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build(); // 검색 결과 없음
         }
         return ResponseEntity.ok(patients);
     }

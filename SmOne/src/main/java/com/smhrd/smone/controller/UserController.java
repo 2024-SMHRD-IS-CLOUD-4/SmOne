@@ -4,11 +4,12 @@ import com.smhrd.smone.model.User;
 import com.smhrd.smone.model.VerificationRequest;
 import com.smhrd.smone.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,12 +60,26 @@ public class UserController {
 
 	// 로그인 API
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody User loginRequest) {
+	public ResponseEntity<?> login(@RequestBody User loginRequest, HttpSession session) {
 		User user = userService.findUserById(loginRequest.getUserId());
 		if (user == null || !user.getUserPw().equals(loginRequest.getUserPw())) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호가 일치하지 않습니다.");
 		}
+		
+		// 세션에 사용자 정보를 저장
+        session.setAttribute("userId", user.getUserId());
+        
 		return ResponseEntity.ok("로그인 성공");
+	}
+	
+	// 세션 유지 확인
+	@GetMapping("/session-check")
+	public ResponseEntity<?> checkSession(HttpSession session){
+		String userId = (String) session.getAttribute("userId");
+		if(userId == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("세션이 만료 되었습니다.");
+		}
+		return ResponseEntity.ok("세션 유지중: " + userId);
 	}
 
 	// 아이디 찾기API

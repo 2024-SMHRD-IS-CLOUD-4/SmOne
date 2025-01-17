@@ -1,5 +1,7 @@
 package com.smhrd.smone.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +27,16 @@ public class PatientsService {
         return patientsRepository.findAll();
     }
 
-    // 이름 또는 주민등록번호 앞자리로 검색
-    public List<Patients> searchPatients(String search) {
-        return patientsRepository.findBypNameContainingOrBirthStartingWith(search, search);
+ // 검색 및 페이지네이션
+    public Page<Patients> searchPatients(String name, String birth, PageRequest pageRequest) {
+        if (name != null && birth != null) {
+            return patientsRepository.findBypNameContainingAndBirthStartingWith(name, birth, pageRequest);
+        } else if (name != null) {
+            return patientsRepository.findBypNameContaining(name, pageRequest);
+        } else if (birth != null) {
+            return patientsRepository.findByBirthStartingWith(birth, pageRequest);
+        }
+        return patientsRepository.findAll(pageRequest);
     }
-}
+
+    }
