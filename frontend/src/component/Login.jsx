@@ -19,7 +19,8 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:8090/SmOne/api/users/login', formData, {
+            const response = await axios.post('${process.env.REACT_APP_API_URL}/users/login', formData, {
+
                 withCredentials: true,
             });
             if (response.status === 200) {
