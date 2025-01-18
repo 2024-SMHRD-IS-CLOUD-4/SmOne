@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./FindPass.css";
+import "./Findpw.css";
 
 const FindPass = () => {
   const navigate = useNavigate();
