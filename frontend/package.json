@@ -2,6 +2,7 @@
   "name": "tutorial",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://223.130.157.164:8090/SmOne/api",
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@ionic/react": "^8.4.1",
