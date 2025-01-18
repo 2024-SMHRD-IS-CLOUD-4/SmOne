@@ -1,5 +1,7 @@
 package com.smhrd.smone.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +18,25 @@ public class PatientsService {
 	private PatientsRepository patientsRepository;
 
 	// 환자 등록
-	public Patients savePatient(Patients patient) {
-		System.out.println("저장할 환자 데이터: " + patient);
-		return patientsRepository.save(patient);
+	public void registerPatient(Patients patient) {
+		patientsRepository.save(patient);
 	}
 
-	// 생년월일 앞부분으로 환자 검색
-	public List<Patients> findPatientByPartialBirth(String birth) {
-		return patientsRepository.findByBirthStartingWith(birth);
-	}
-}
+	// 전체 환자 목록 조회
+    public List<Patients> getAllPatients() {
+        return patientsRepository.findAll();
+    }
+
+ // 검색 및 페이지네이션
+    public Page<Patients> searchPatients(String name, String birth, PageRequest pageRequest) {
+        if (name != null && birth != null) {
+            return patientsRepository.findBypNameContainingAndBirthStartingWith(name, birth, pageRequest);
+        } else if (name != null) {
+            return patientsRepository.findBypNameContaining(name, pageRequest);
+        } else if (birth != null) {
+            return patientsRepository.findByBirthStartingWith(birth, pageRequest);
+        }
+        return patientsRepository.findAll(pageRequest);
+    }
+
+    }

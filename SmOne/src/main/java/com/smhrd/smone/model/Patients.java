@@ -1,5 +1,9 @@
 package com.smhrd.smone.model;
 
+import java.sql.Timestamp;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
@@ -9,39 +13,36 @@ import lombok.ToString;
 import lombok.AllArgsConstructor;
 
 @ToString
-
-@Entity
-@Table(name = "PATIENTS") // 정확한 테이블 이름 지정
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "PATIENTS")
 public class Patients {
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "P_IDX") // 테이블의 P_IDX 컬럼 매핑
-    private int pIdx; // 기본 키
+    @Column(name = "P_IDX")
+    private Long pIdx;
 
+	@JsonProperty("pName")
     @Column(name = "P_NAME", nullable = false, length = 50)
-    @JsonProperty("pName") // JSON 데이터 키와 매핑
-    private String pName; // 환자 이름
+    private String pName;
 
-    @Column(name = "ADDRESS", length = 100)
-    @JsonProperty("address") // JSON 데이터 키와 매핑
-    private String address; // 주소
+	@JsonProperty("pAdd")
+    @Column(name = "P_ADD", nullable = false, length = 100)
+    private String pAdd;
 
     @Column(name = "BIRTH", nullable = false, length = 50)
-    @JsonProperty("birth") // JSON 데이터 키와 매핑
-    private String birth; // 생년월일
+    private String birth;
 
-    @Column(name = "GENDER", length = 10)
-    @JsonProperty("gender") // JSON 데이터 키와 매핑
-    private String gender; // 성별
+    @Column(name = "GENDER", nullable = false, length = 10)
+    private String gender;
 
-    @Column(name = "TEL", length = 50)
-    @JsonProperty("tel") // JSON 데이터 키와 매핑
-    private String tel; // 전화번호
+    @Column(name = "TEL", nullable = false, length = 50)
+    private String tel;
 
-    @Column(name = "CREATED_AT", updatable = false, insertable = false)
-    private java.sql.Timestamp createdAt; // 생성 시간
+    @CreationTimestamp
+    @Column(name = "CREATED_AT", updatable = false)
+    private Timestamp createdAt; 
 }

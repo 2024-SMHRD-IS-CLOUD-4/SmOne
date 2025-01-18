@@ -10,8 +10,6 @@ import lombok.ToString;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.sql.Timestamp;
 
 @ToString
@@ -25,29 +23,28 @@ public class User {
 
 	@Id
     @Column(name = "USER_ID", length = 100, nullable = false)
-    private String userId; // NOT NULL
+    private String userId; 
 
     @Column(name = "CENTER_ID", length = 255, nullable = false)
-    private String centerId; // NOT NULL
+    private String centerId; 
 
     @Column(name = "USER_PW", length = 255, nullable = false)
-    private String userPw; // NOT NULL
+    private String userPw; 
 
     @Column(name = "USER_NAME", length = 255, nullable = false)
-    private String userName; // NOT NULL
+    private String userName; 
 
     @Column(name = "ROLE", length = 255, nullable = false)
-    private String role; // NOT NULL
+    private String role;
 
     @Column(name = "EMAIL", length = 255, nullable = false)
-    private String email; // NOT NULL
-
-    @JsonProperty("uAdd")
-    @Column(name = "U_ADD", length = 255, nullable = false)
-    private String uAdd; // U_ADD 필드
+    private String email;
+    
+    @Column(name = "ADDRESS", length = 255)
+    private String address;
 
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
-    private Timestamp createdAt; // 기본값으로 자동 입력
+    private Timestamp createdAt;
 
 }

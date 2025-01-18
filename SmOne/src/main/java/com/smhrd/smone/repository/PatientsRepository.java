@@ -1,16 +1,23 @@
 package com.smhrd.smone.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.smhrd.smone.model.Patients;
 
-public interface PatientsRepository extends JpaRepository<Patients, Integer> {
+@Repository
+public interface PatientsRepository extends JpaRepository<Patients, Long> {
 	
-	 // 생년월일 앞부분으로 검색
-    @Query("SELECT p FROM Patients p WHERE p.birth LIKE :birth%")
-    List<Patients> findByBirthStartingWith(@Param("birth") String birth);
-}
+	// 이름과 주민등록번호를 모두 만족하는 경우
+    Page<Patients> findBypNameContainingAndBirthStartingWith(String name, String birth, PageRequest pageRequest);
+
+    // 이름으로만 검색
+    Page<Patients> findBypNameContaining(String name, PageRequest pageRequest);
+
+    // 주민등록번호로만 검색
+    Page<Patients> findByBirthStartingWith(String birth, PageRequest pageRequest);
+
+
+	}
