@@ -34,7 +34,7 @@ const Login = () => {
             if (error.response) {
                 alert(`로그인 실패: ${error.response.data}`);
             } else {
-                alert('서버와 연결할 수 없습니다.');
+                alert('서버와 연결할 수 없습니다. ${process.env.REACT_APP_DB_URL}를 확인해 주세요.');
             }
         }
     };
