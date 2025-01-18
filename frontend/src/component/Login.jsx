@@ -47,7 +47,7 @@ const Login = () => {
     };
 
     const handleFindPw = () => {
-        navigate('/find-pw');
+        navigate('/identityCheck');
     };
 
     return (
