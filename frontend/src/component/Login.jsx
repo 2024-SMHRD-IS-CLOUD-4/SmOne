@@ -17,27 +17,27 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+     
         try {
-            const response = await axios.post('${process.env.REACT_APP_DB_URL}/users/login', formData, {
-
+            const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/login`, formData, {
                 withCredentials: true,
             });
             if (response.status === 200) {
                 alert('로그인 성공!');
                 navigate('/main');
             } else {
-                alert(`로그인 실패 ( DB 연결 성공 ): ${response.data}`);
+                alert(`로그인 실패 (DB 연결 성공): ${response.data}`);
             }
         } catch (error) {
             console.error('Error:', error);
             if (error.response) {
-                alert(`로그인 실패 ( DB 연결 실패 ): ${error.response.data}`);
+                alert(`로그인 실패 (DB 연결 실패): ${error.response.data}`);
             } else {
-                alert('서버와 연결할 수 없습니다. ${process.env.REACT_APP_DB_URL}를 확인해 주세요.');
+                alert(`서버와 연결할 수 없습니다. DB URL: ${process.env.REACT_APP_DB_URL}`);
+                console.log('현재 DB URL:', process.env.REACT_APP_DB_URL);
             }
         }
-    };
+     };
 
     const handleSignup = () => {
         navigate('/signup');
