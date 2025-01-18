@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +57,53 @@ public class UserController {
 		return ResponseEntity.ok(isDuplicate);
 	}
 
+	// 사용자 정보 조회
+	@GetMapping("/mypage")
+	public ResponseEntity<?> getMyPage(@RequestParam String userId) {
+		User user = userService.findUserById(userId);
+		if (user == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+		}
+		return ResponseEntity.ok(user);
+	}
+
+	// 사용자 정보 업데이트
+	@PutMapping("/update")
+	public ResponseEntity<?> updateUser(@RequestBody User user) {
+		try {
+			User updatedUser = userService.updateUser(user);
+			return ResponseEntity.ok(updatedUser);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("정보 수정 중 오류가 발생했습니다.");
+		}
+	}
+
+	@PostMapping("/delete")
+	public ResponseEntity<?> deleteUser(@RequestBody Map<String, String> request) {
+	    String userId = request.get("userId");
+	    String password = request.get("password");
+
+	    // 사용자 조회
+	    User user = userService.findUserById(userId);
+	    if (user == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+	    }
+
+	    // 비밀번호 확인
+	    if (!user.getUserPw().equals(password)) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다.");
+	    }
+
+	    // 사용자 삭제
+	    try {
+	        userService.deleteUser(userId);
+	        return ResponseEntity.ok("회원 탈퇴 성공");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 탈퇴 중 오류가 발생했습니다.");
+	    }
+	}
+
 	// 로그인 API
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody User loginRequest, HttpSession session) {
@@ -63,28 +111,32 @@ public class UserController {
 		if (user == null || !user.getUserPw().equals(loginRequest.getUserPw())) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호가 일치하지 않습니다.");
 		}
-		
+
 		// 세션에 사용자 정보를 저장
-        session.setAttribute("userId", user.getUserId());
-        
+		session.setAttribute("userId", user.getUserId());
+
 		return ResponseEntity.ok("로그인 성공");
 	}
-	
+
 	// 세션 유지 확인
 	@GetMapping("/session-check")
-	public ResponseEntity<?> checkSession(HttpSession session){
+	public ResponseEntity<?> checkSession(HttpSession session) {
 		String userId = (String) session.getAttribute("userId");
-		if(userId == null) {
+		if (userId == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("세션이 만료 되었습니다.");
 		}
-		return ResponseEntity.ok("세션 유지중: " + userId);
+		// 캐시 비활성화 헤더 추가
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore().mustRevalidate())
+                .body("세션 유지 중: " + userId);
 	}
 	
+
 	// 로그아웃 API
 	@PostMapping("/logout")
-	public ResponseEntity<?> logout(HttpServletRequest requset){
+	public ResponseEntity<?> logout(HttpServletRequest requset) {
 		HttpSession session = requset.getSession(false); // 현재 세션 가져오기
-		if(session != null) {
+		if (session != null) {
 			session.invalidate(); // 세션 무효화
 		}
 		return ResponseEntity.ok("로그아웃 성공");
@@ -135,21 +187,20 @@ public class UserController {
 	// 비밀번호 변경 API
 	@PostMapping("/password/change")
 	public ResponseEntity<?> changePassword(@RequestBody Map<String, String> request) {
-	    String userId = request.get("userId");
-	    String newPassword = request.get("newPassword");
+		String userId = request.get("userId");
+		String newPassword = request.get("newPassword");
 
-	    try {
-	        boolean isUpdated = userService.changePassword(userId, newPassword);
+		try {
+			boolean isUpdated = userService.changePassword(userId, newPassword);
 
-	        if (isUpdated) {
-	            return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
-	        } else {
-	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디를 찾을 수 없습니다.");
-	        }
-	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 변경 중 오류가 발생했습니다.");
-	    }
+			if (isUpdated) {
+				return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디를 찾을 수 없습니다.");
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 변경 중 오류가 발생했습니다.");
+		}
 	}
-
 
 }
