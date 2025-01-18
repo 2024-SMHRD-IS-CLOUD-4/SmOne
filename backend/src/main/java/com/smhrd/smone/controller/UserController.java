@@ -26,7 +26,7 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	// 회원가입 API
+	// 회원가입 api
 	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@RequestBody User user) {
 		// 전달된 데이터 로그 출력
