@@ -15,7 +15,7 @@ function Main() {
   const [imagePanelImage, setImagePanelImage] = useState(null); // image-panel 업로드 이미지
   const [searchInput, setSearchInput] = useState(""); // 이름 검색 상태
   const [searchInputbirth, setSearchInputbirth] = useState(""); // 생년월일 검색 상태
-  const [searchResults, setSearchResults] = useState([]);
+  const [setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -169,7 +169,7 @@ function Main() {
         </header>
 
         <div className="main">
-        <div className="left-left-panel">
+        <div className="menu-container">
           <Menu />
         </div>
           <div className="left-panel">
