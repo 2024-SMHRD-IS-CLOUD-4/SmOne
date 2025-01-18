@@ -209,7 +209,7 @@
   background: rgba(0, 0, 0, 0.7);
   border-radius: 5px;
   color: white;
-  height: 650px;
+  height: 655px;
   width: 650px;
 }
 
@@ -229,7 +229,7 @@
   border-radius: 5px;
   font-size: 30px;
   flex-shrink: 0;
-  height: 150px;
+  height: 100px;
 }
 
 /* 검색창 스타일 */
@@ -242,7 +242,7 @@
 
 .search-input3,
 .search-input4 {
-  width: 105%; /* 입력 필드 너비 */
+  width: 300px; /* 입력 필드 너비 */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -251,14 +251,13 @@
 
 .search-button {
   width: 70px; /* 버튼 고정 너비 */
-  height: 104px;
+  height: 30px;
   padding: 10px;
   background-color: #48699f;
   color: white;
   border-radius: 5px;
   cursor: pointer;
   border: none;
-  margin-left: 15px;
 }
 
 .search-button:hover {
