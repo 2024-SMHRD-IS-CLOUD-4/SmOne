@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +74,8 @@ public class UserController {
 		try {
 			User updatedUser = userService.updateUser(user);
 			return ResponseEntity.ok(updatedUser);
+		} catch (ConstraintViolationException e) {
+	        return ResponseEntity.badRequest().body("잘못된 입력값: " + e.getMessage()); 
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("정보 수정 중 오류가 발생했습니다.");
