@@ -27,12 +27,12 @@ const Login = () => {
                 alert('로그인 성공!');
                 navigate('/main');
             } else {
-                alert(`로그인 실패: ${response.data}`);
+                alert(`로그인 실패 ( DB 연결 성공 ): ${response.data}`);
             }
         } catch (error) {
             console.error('Error:', error);
             if (error.response) {
-                alert(`로그인 실패: ${error.response.data}`);
+                alert(`로그인 실패 ( DB 연결 성공 ): ${error.response.data}`);
             } else {
                 alert('서버와 연결할 수 없습니다. ${process.env.REACT_APP_DB_URL}를 확인해 주세요.');
             }
