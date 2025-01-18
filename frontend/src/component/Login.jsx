@@ -19,7 +19,7 @@ const Login = () => {
         e.preventDefault();
      
         try {
-            const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/login`, formData, {
+            const response = await axios.post('http://localhost:8090/SmOne/api/users/login', formData, {
                 withCredentials: true,
             });
             if (response.status === 200) {
@@ -48,7 +48,7 @@ const Login = () => {
     };
 
     const handleFindPw = () => {
-        navigate('/find-pw');
+        navigate('/IdentityCheck');
     };
 
     return (
