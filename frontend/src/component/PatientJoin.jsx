@@ -37,7 +37,7 @@ const PatientJoin = () => {
   return (
     <div className="Patient-container">
       <div className="form-wrapper">
-        <h1 className="title">PATIENT</h1>
+        <h1 className="patient-title">PATIENT</h1>
 
         <div className="name-and-gender-group">
           <div className="name-group">

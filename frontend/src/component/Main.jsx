@@ -49,7 +49,10 @@ function Main() {
       setImage(imageUrl);
     }
   };
-
+  const handleHomeClick = () => {
+    setShowMyPage(false); // MyPage 비활성화
+    setShowPatientJoin(false); // PatientJoin 비활성화
+  };
   const handleImagePanelUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -57,7 +60,10 @@ function Main() {
       setImagePanelImage(imageUrl);
     }
   };
-
+  const handleProfileClick = () => {
+    setShowMyPage(true); // Profile 클릭 시 MyPage 활성화
+    setShowPatientJoin(false);
+  };
   const toggleMyPage = () => {
     setShowMyPage((prevState) => !prevState);
     setShowPatientJoin(false);
@@ -68,6 +74,11 @@ function Main() {
     setShowMyPage(false);
   };
 
+
+  const handlePatientClick = () => {
+    setShowPatientJoin(true);
+    setShowMyPage(false);
+  };
   const handleSearchChange = () => {
     const nameQuery = searchInput.trim();
     const birthQuery = searchInputbirth.trim();
@@ -138,10 +149,9 @@ function Main() {
               position: "relative",
               display: "flex",
               alignItems: "center",
-              gap: "10px",
             }}
           >
-            <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+            <div>
               <input
                 type="text"
                 placeholder="이름을 입력하세요"
@@ -170,14 +180,13 @@ function Main() {
 
         <div className="main">
         <div className="menu-container">
-          <Menu />
+          <Menu onProfileClick={handleProfileClick}
+           onPatientClick={handlePatientClick}
+           onHomeClick={handleHomeClick} />
         </div>
           <div className="left-panel">
             <div className="patient-info-header">
               <span className="patient-info-title">환자 정보</span>
-              <button className="add-patient-button" onClick={togglePatientJoin}>
-                환자 등록
-              </button>
             </div>
             <div className="patient-info-container">
               <div className="patient-info-row">환자 번호: 001</div>

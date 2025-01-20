@@ -7,7 +7,8 @@
     background: rgba(0, 0, 0, 0.7);
     border-radius: 5px;
     padding: 20px;
-    height: 750px;
+    height: 770px;
+    width: 1379px;
   }
   
   .form-wrapper {
@@ -17,11 +18,16 @@
   
   .title {
     align-items: center;
+    font-size: 40px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .patient-title {
+    align-items: center;
     font-size: 50px;
     margin-bottom: 20px;
     text-align: center;
   }
-  
   .name-and-gender-group {
     display: flex; /* 한 줄로 배치 */
     align-items: center; /* 세로 정렬 */

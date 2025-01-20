@@ -85,9 +85,6 @@ function Result() {
             onClick={() => navigate("/Main")}
             style={{ cursor: "pointer" }}
           />
-          <button className="smart-button" onClick={toggleMyPage}>
-            스마트인재개발원
-          </button>
           <button className="print-button" onClick={handlePrintClick}>
             <img src={require("./printerimg.png")} alt="Stethoscope Icon" />
             출력하기
@@ -95,27 +92,6 @@ function Result() {
         </header>
         <div className="main">
           <div className="left-panel">
-            <div className="search-bar">
-              <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-                <input
-                  type="text"
-                  placeholder="이름을 입력하세요"
-                  className="search-input3"
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="생년월일 6자리를 입력하세요"
-                  className="search-input4"
-                  value={searchInputbirth}
-                  onChange={(e) => setSearchInputbirth(e.target.value)}
-                />
-              </div>
-              <button className="search-button" onClick={handleSearchChange}>
-                검색
-              </button>
-            </div>
             {searchResults.length > 0 && (
               <ul className="search-results">
                 {searchResults.map((result, index) => (
@@ -127,9 +103,6 @@ function Result() {
             )}
             <div className="patient-info-header">
               <span className="patient-info-title">환자 정보</span>
-              <button className="add-patient-button" onClick={togglePatientJoin}>
-                환자 등록
-              </button>
             </div>
             <div className="patient-info-container">
               <div className="patient-info-row">환자 번호: 001</div>

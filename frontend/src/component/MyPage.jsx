@@ -64,9 +64,6 @@ function MyPage() {
             <button type="button" onClick={handlePasswordChange}>
               비밀번호 수정
             </button>
-            <button type="button" onClick={handleLogout}>
-              로그아웃
-            </button>
             <button type="button" className="profile-danger-button">
               탈퇴하기
             </button>

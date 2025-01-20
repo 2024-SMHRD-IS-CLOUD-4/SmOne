@@ -13,9 +13,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.8); /* 반투명 배경 */
-    z-index: 10; /* 다른 요소 위로 올라오게 설정 */
-    border-radius: 0; /* 기존 스타일 제거 */
+    background-color: #000
   }
   
   
