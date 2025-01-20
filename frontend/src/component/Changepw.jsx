@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./Findpw.css";
+import "./Changepw.css";
 
-const FindPass = () => {
+const Changepw = () => {
   const navigate = useNavigate();
 
   const handlePasswordChange = (e) => {
@@ -51,4 +51,4 @@ const FindPass = () => {
   );
 };
 
-export default FindPass;
+export default Changepw;

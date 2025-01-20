@@ -48,8 +48,6 @@
     font-size: 20px;
     cursor: pointer;
     align-self: center; /* Center the button horizontally */
-    margin-left: -90px;
-    margin-top: 80px;
   }
   
   .print-button {
