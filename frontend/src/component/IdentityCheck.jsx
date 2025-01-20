@@ -15,7 +15,7 @@ const IdentityCheck = () => {
     console.log("입력한 이메일:", fullEmail);
 
     // 본인 인증 완료 후 FindPass로 이동
-    navigate("/find-pass");
+    navigate("/find-pw");
   };
 
   return (

@@ -19,22 +19,37 @@ const Login = () => {
         e.preventDefault();
      
         try {
+            // 정확한 경로 확인을 위한 로깅 추가
+            console.log('요청 URL:', `${process.env.REACT_APP_DB_URL}/users/login`);
+            console.log('요청 데이터:', formData);
+        
             const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/login`, formData, {
                 withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json'  // 명시적으로 Content-Type 설정
+                }
             });
-            if (response.status === 200) {
+            
+            // 200 이외의 성공 상태 코드도 처리
+            if (response.status >= 200 && response.status < 300) {
                 alert('로그인 성공!');
                 navigate('/main');
             } else {
-                alert(`로그인 실패 (DB 연결 성공): ${response.data}`);
+                alert(`로그인 실패: ${JSON.stringify(response.data)}`);
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error details:', error);
+            
             if (error.response) {
-                alert(`로그인 실패 (DB 연결 실패): ${error.response.data}`);
+                // 에러 응답 상세 정보 표시
+                console.log('Error status:', error.response.status);
+                console.log('Error data:', error.response.data);
+                alert(`로그인 실패: ${JSON.stringify(error.response.data)}`);
+            } else if (error.request) {
+                // 요청은 보냈지만 응답을 받지 못한 경우
+                alert('서버 응답이 없습니다.');
             } else {
-                alert(`서버와 연결할 수 없습니다. DB URL: ${process.env.REACT_APP_DB_URL}`);
-                console.log('현재 DB URL:', process.env.REACT_APP_DB_URL);
+                alert(`서버와 연결할 수 없습니다. URL: ${process.env.REACT_APP_DB_URL}`);
             }
         }
      };
@@ -48,7 +63,7 @@ const Login = () => {
     };
 
     const handleFindPw = () => {
-        navigate('/find-pw');
+        navigate('/IdentityCheck');
     };
 
     return (

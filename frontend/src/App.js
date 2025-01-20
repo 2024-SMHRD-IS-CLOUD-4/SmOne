@@ -22,7 +22,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/find-pw" element={<Findpw />} />
         <Route path="/find-id" element={<Findid />} />
-        <Route path="/identity-check" element={<IdentityCheck />} />
+        <Route path="/identitycheck" element={<IdentityCheck />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/patient-join" element={<PatientJoin />} /> {/* PatientJoin 경로 추가 */}
         <Route path="/loading" element={<Loading />} />
