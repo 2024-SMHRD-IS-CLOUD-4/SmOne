@@ -141,7 +141,7 @@ function Main() {
               gap: "10px",
             }}
           >
-            <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+            <div>
               <input
                 type="text"
                 placeholder="이름을 입력하세요"
