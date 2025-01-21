@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./Result.css";
 import MyPage from "./MyPage";
@@ -14,10 +14,14 @@ function Result() {
   const [showDiagnosis, setShowDiagnosis] = useState(false); // Diagnosis 화면 표시 상태
   const [image] = useState(location.state?.uploadedImage || null);
   const [imagePanel] = useState(location.state?.uploadedImagePanel || null);
-  const [searchInput, setSearchInput] = useState("");
-  const [searchInputbirth, setSearchInputbirth] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchInput] = useState("");
+  const [searchInputbirth] = useState("");
+  const [setSearchResults] = useState([]);
   const diagnosisRef = useRef(); // Diagnosis 화면을 참조
+  const canvasRef = useRef(null);
+  const isDrawingRef = useRef(false);
+  const contextRef = useRef(null);
+
 
   const patientList = [
     { name: "김철수", birth: "900101" },
@@ -46,12 +50,6 @@ function Result() {
     setShowDiagnosis(false);
   };
 
-  const togglePatientJoin = () => {
-    setShowPatientJoin((prevState) => !prevState);
-    setShowMyPage(false);
-    setShowDiagnosis(false);
-  };
-
   const handleSearchChange = () => {
     const nameQuery = searchInput.trim();
     const birthQuery = searchInputbirth.trim();
@@ -69,6 +67,40 @@ function Result() {
 
     setSearchResults(filteredResults);
   };
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    const context = canvas.getContext("2d");
+    context.strokeStyle = "red"; // 기본 선 색상
+    context.lineWidth = 3; // 기본 선 두께
+    contextRef.current = context;
+  }, []);
+
+  const startDrawing = ({ nativeEvent }) => {
+    const { offsetX, offsetY } = nativeEvent;
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(offsetX, offsetY);
+    isDrawingRef.current = true;
+  };
+
+  const draw = ({ nativeEvent }) => {
+    if (!isDrawingRef.current) return;
+    const { offsetX, offsetY } = nativeEvent;
+    contextRef.current.lineTo(offsetX, offsetY);
+    contextRef.current.stroke();
+  };
+
+  const finishDrawing = () => {
+    isDrawingRef.current = false;
+    contextRef.current.closePath();
+  };
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    contextRef.current.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
 
   return (
     <div>
@@ -92,15 +124,9 @@ function Result() {
         </header>
         <div className="main">
           <div className="left-panel">
-            {searchResults.length > 0 && (
-              <ul className="search-results">
-                {searchResults.map((result, index) => (
-                  <li key={index} className="search-result-item">
-                    {result.name} - {result.birth}
-                  </li>
-                ))}
-              </ul>
-            )}
+          <button className="smart-button" onClick={toggleMyPage}>
+              스마트인재개발원
+            </button>
             <div className="patient-info-header">
               <span className="patient-info-title">환자 정보</span>
             </div>
@@ -146,17 +172,30 @@ function Result() {
                   </label>
                 </div>
                 <div className="image-panel">
-                  {imagePanel ? (
-                    <img
-                      src={imagePanel}
-                      alt="Uploaded to Panel"
-                      className="uploaded-image"
-                    />
-                  ) : (
-                    <span>No Image Uploaded</span>
-                  )}
-                </div>
+            {imagePanel ? (
+              <div className="canvas-container">
+                <img
+                  src={imagePanel}
+                  alt="Uploaded to Panel"
+                  className="uploaded-image"
+                />
+                <canvas
+                  ref={canvasRef}
+                  className="drawing-canvas"
+                  onMouseDown={startDrawing}
+                  onMouseMove={draw}
+                  onMouseUp={finishDrawing}
+                  onMouseLeave={finishDrawing}
+                ></canvas>
               </div>
+            ) : (
+              <span>No Image Uploaded</span>
+            )}
+          </div>
+          <button onClick={clearCanvas} className="clear-button">
+            Clear Drawing
+          </button>
+        </div>
             )}
             {!showMyPage && !showPatientJoin && !showDiagnosis && (
               <div className="diagnosis-info">

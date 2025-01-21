@@ -29,7 +29,7 @@
 
 .logo {
   font-size: 60px;
-  margin-left: -30px;
+  margin-left: 60px;
 }
 
 .smart-button {
@@ -327,5 +327,37 @@
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
+}
+/* Result.css */
+.canvas-container {
+  position: relative;
+  width: 700px;
+  height: 650px;
+}
+
+
+.drawing-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  cursor: crosshair;
+}
+
+.clear-button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background-color: #4187f6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.clear-button:hover {
+  background-color: #005fa3;
 }
 
