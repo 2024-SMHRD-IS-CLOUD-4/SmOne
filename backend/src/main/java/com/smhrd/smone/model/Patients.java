@@ -22,6 +22,7 @@ public class Patients {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonProperty("pIdx")
     @Column(name = "P_IDX")
     private Integer pIdx;
 
