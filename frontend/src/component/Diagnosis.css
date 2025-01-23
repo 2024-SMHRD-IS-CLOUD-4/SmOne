@@ -2,8 +2,8 @@
   position: absolute; /* 화면의 특정 위치에 배치 */
   top: 0;
   left: 0;
-  width: 1510px; /* 화면 너비 전체 */
-  height: 790px; /* 화면 높이 전체 */
+  width: 1000px; /* 화면 너비 전체 */
+  height: 800px; /* 화면 높이 전체 */
   border-radius: 5px;
   background: rgba(0, 0, 0, 0.7); /* 어두운 반투명 배경 */
   z-index: -1; /* report-content 뒤로 배치 */
@@ -17,7 +17,6 @@
   background-color: white;
   border: 1px solid #ccc;
   transform: scale(0.65); /* 80% 크기로 축소 */
-  transform-origin: top left; /* 축소 기준점 설정 */
 }
 
 .report-header {

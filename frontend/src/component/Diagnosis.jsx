@@ -3,7 +3,7 @@ import "./Diagnosis.css";
 
 function Diagnosis() {
   return (
-    <div style={{ position: "relative", height: "800px" }}>
+    <div style={{ position: "relative",height: "790px" }}>
       {/* 반투명 배경 박스 */}
       <div className="background-box"></div>
 
