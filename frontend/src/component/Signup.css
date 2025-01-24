@@ -91,10 +91,12 @@ body {
 }
   .input-group {
     display: flex;
-    
     flex-direction: column;
     margin-bottom: 10px; /* Space between input groups */
 }
+
+
+
 .search-btn {
   margin-bottom: 10px;
   height: 60px; /* Match the height of the input field */

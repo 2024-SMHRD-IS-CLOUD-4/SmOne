@@ -32,7 +32,6 @@ const Login = () => {
             
             // 200 이외의 성공 상태 코드도 처리
             if (response.status >= 200 && response.status < 300) {
-                alert('로그인 성공!');
                 navigate('/main');
             } else {
                 alert(`로그인 실패: ${JSON.stringify(response.data)}`);
@@ -79,7 +78,7 @@ const Login = () => {
                     <form onSubmit={handleSubmit}>
                         <label htmlFor="userId"></label>
                         <input
-                            type="text2"
+                            type="text"
                             id="userId"
                             name="userId"
                             placeholder="아이디 입력"
@@ -89,7 +88,7 @@ const Login = () => {
                         />
                         <label htmlFor="userPw"></label>
                         <input
-                            type="password2"
+                            type="password"
                             id="userPw"
                             name="userPw"
                             placeholder="비밀번호 입력"

@@ -221,11 +221,11 @@ function Main() {
                             src={image}
                             alt="Uploaded"
                             className="uploaded-image"
-                          />
-                        ) : (
-                          <span>클릭하여 환자의 X-Ray<br></br>사진을 올려주세요</span>
-                        )}
-                      </label>
+                            />
+                          ) : (
+                            <span>클릭하여 환자의 X-Ray<br></br>사진을 올려주세요</span>
+                          )}
+                        </label>
                       <input
                         id="image-upload"
                         type="file"

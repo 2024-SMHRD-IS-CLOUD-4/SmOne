@@ -4,25 +4,21 @@ import "./Result.css";
 import MyPage from "./MyPage";
 import PatientJoin from "./PatientJoin";
 import LogoImage from "./teamlogo.png";
-import Diagnosis from "./Diagnosis";
 
 function Result() {
   const location = useLocation();
   const navigate = useNavigate();
   const [showMyPage, setShowMyPage] = useState(false);
   const [showPatientJoin, setShowPatientJoin] = useState(false);
-  const [showDiagnosis, setShowDiagnosis] = useState(false); // Diagnosis 화면 표시 상태
   const [image] = useState(location.state?.uploadedImage || null);
   const [imagePanel] = useState(location.state?.uploadedImagePanel || null);
   const [searchInput] = useState("");
   const [searchInputbirth] = useState("");
   const [setSearchResults] = useState([]);
-  const diagnosisRef = useRef(); // Diagnosis 화면을 참조
   const canvasRef = useRef(null);
   const isDrawingRef = useRef(false);
   const contextRef = useRef(null);
-
-
+  
   const patientList = [
     { name: "김철수", birth: "900101" },
     { name: "김지수", birth: "000101" },
@@ -33,21 +29,12 @@ function Result() {
   ];
 
   const handlePrintClick = () => {
-    setShowDiagnosis(true); // Diagnosis 화면 표시
-    setTimeout(() => {
-      if (diagnosisRef.current) {
-        const originalTitle = document.title;
-        document.title = "진단서 출력";
-        window.print();
-        document.title = originalTitle;
-      }
-    }, 500); // Diagnosis 렌더링 대기
+    navigate("/Diagnosis"); // Diagnosis 화면으로 즉시 이동
   };
 
   const toggleMyPage = () => {
     setShowMyPage((prevState) => !prevState);
     setShowPatientJoin(false);
-    setShowDiagnosis(false);
   };
 
   const handleSearchChange = () => {
@@ -69,12 +56,19 @@ function Result() {
   };
   useEffect(() => {
     const canvas = canvasRef.current;
+    const uploadedImage = document.querySelector(".uploaded-image");
+
+    if (uploadedImage) {
+      canvas.width = uploadedImage.offsetWidth;
+      canvas.height = uploadedImage.offsetHeight;
+    }
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
     const context = canvas.getContext("2d");
     context.strokeStyle = "red"; // 기본 선 색상
     context.lineWidth = 3; // 기본 선 두께
     contextRef.current = context;
+    
   }, []);
 
   const startDrawing = ({ nativeEvent }) => {
@@ -117,6 +111,9 @@ function Result() {
             onClick={() => navigate("/Main")}
             style={{ cursor: "pointer" }}
           />
+          <button onClick={clearCanvas} className="clear-button">
+            Clear Drawing
+          </button>
           <button className="print-button" onClick={handlePrintClick}>
             <img src={require("./printerimg.png")} alt="Stethoscope Icon" />
             출력하기
@@ -146,17 +143,13 @@ function Result() {
           </div>
           <div
             className={`right-panel ${
-              showMyPage || showPatientJoin || showDiagnosis ? "show-my-page" : ""
+              showMyPage || showPatientJoin ? "show-my-page" : ""
             }`}
           >
             {showMyPage && <MyPage />}
             {showPatientJoin && <PatientJoin />}
-            {showDiagnosis && (
-              <div ref={diagnosisRef} className="centered-container">
-                <Diagnosis />
-              </div>
-            )}
-            {!showMyPage && !showPatientJoin && !showDiagnosis && (
+  
+            {!showMyPage && !showPatientJoin &&  (
               <div className="upload-area">
                 <div className="diagnosis">
                   <label htmlFor="image-upload" className="upload-box">
@@ -192,12 +185,10 @@ function Result() {
               <span>No Image Uploaded</span>
             )}
           </div>
-          <button onClick={clearCanvas} className="clear-button">
-            Clear Drawing
-          </button>
+
         </div>
             )}
-            {!showMyPage && !showPatientJoin && !showDiagnosis && (
+            {!showMyPage && !showPatientJoin && (
               <div className="diagnosis-info">
                 폐렴 확률 90% 이상 고위험 환자입니다. 빠른 시일내에 병원을 방문하기를 권장합니다.
               </div>

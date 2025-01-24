@@ -2,11 +2,24 @@ import React from "react";
 import "./Diagnosis.css";
 
 function Diagnosis() {
+  const handlePrint = () => {
+    window.print(); // 화면 출력 기능
+  };
+  
   return (
-    <div style={{ position: "relative", height: "800px" }}>
-      {/* 반투명 배경 박스 */}
-      <div className="background-box"></div>
+    <div className="diagnosis-body">
+    <div className="diagnosis-container">
+      {/* 움직이는 배경 비디오 */}
+      <video className="video-background" autoPlay muted loop>
+        <source src="video.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
 
+    <div className="overlay-box">
+    <button className="print-button" onClick={handlePrint}>
+            <img src={require("./printerimg.png")} alt="Print Icon" />
+            출력하기
+          </button>
     <div className="report-content">
       <div className="report-header">
         <h2>OO 기관 소견서</h2>
@@ -82,6 +95,8 @@ function Diagnosis() {
           </tr>
         </tbody>
       </table>
+    </div>
+    </div>
     </div>
     </div>
   );
