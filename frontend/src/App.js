@@ -4,7 +4,7 @@ import Login from "./component/Login";
 import Main from "./component/Main";
 import Signup from "./component/Signup";
 import Findid from "./component/Findid";
-import Findpw from "./component/Findpw";
+import Changepw from "./component/Changepw";
 import IdentityCheck from "./component/IdentityCheck";
 import MyPage from "./component/MyPage";
 import PatientJoin from "./component/PatientJoin"; // PatientJoin 컴포넌트 추가
@@ -20,7 +20,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/main" element={<Main />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/find-pw" element={<Findpw />} />
+        <Route path="/Changepw" element={<Changepw />} />
         <Route path="/find-id" element={<Findid />} />
         <Route path="/identitycheck" element={<IdentityCheck />} />
         <Route path="/mypage" element={<MyPage />} />

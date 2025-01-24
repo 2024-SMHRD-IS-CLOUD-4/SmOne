@@ -139,9 +139,6 @@ function Main() {
               }}
               style={{ cursor: "pointer" }}
             />
-            <button className="smart-button" onClick={toggleMyPage}>
-              스마트인재개발원
-            </button>
           </div>
           <div
             className="search-bar"
@@ -185,6 +182,9 @@ function Main() {
            onHomeClick={handleHomeClick} />
         </div>
           <div className="left-panel">
+          <button className="smart-button" onClick={toggleMyPage}>
+              스마트인재개발원
+            </button>
             <div className="patient-info-header">
               <span className="patient-info-title">환자 정보</span>
             </div>
@@ -221,11 +221,11 @@ function Main() {
                             src={image}
                             alt="Uploaded"
                             className="uploaded-image"
-                          />
-                        ) : (
-                          <span>+</span>
-                        )}
-                      </label>
+                            />
+                          ) : (
+                            <span>클릭하여 환자의 X-Ray<br></br>사진을 올려주세요</span>
+                          )}
+                        </label>
                       <input
                         id="image-upload"
                         type="file"
@@ -243,7 +243,7 @@ function Main() {
                       className="uploaded-image"
                     />
                   ) : (
-                    <span>+</span>
+                    <span>클릭하여 정상 X-Ray<br></br>사진을 올려주세요</span>
                   )}
                 </label>
                 <input
