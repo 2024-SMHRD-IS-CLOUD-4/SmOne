@@ -55,7 +55,7 @@ function PatientJoin() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8090/SmOne/api/patients/register",
+        `${process.env.REACT_APP_DB_URL}/patients/register`,
         updatedFormData,
         {
           headers: { "Content-Type": "application/json" },

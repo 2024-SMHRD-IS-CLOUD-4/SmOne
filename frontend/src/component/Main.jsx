@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Main.css";
 import MyPage from "./MyPage";
 import PatientJoin from "./PatientJoin";

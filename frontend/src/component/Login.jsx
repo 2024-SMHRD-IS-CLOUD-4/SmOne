@@ -23,7 +23,8 @@ const Login = () => {
             console.log('요청 URL:', `${process.env.REACT_APP_DB_URL}/users/login`);
             console.log('요청 데이터:', formData);
         
-            const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/login`, formData, {
+            const response = await axios.post(
+                `${process.env.REACT_APP_DB_URL}/users/login`, formData, {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json'  // 명시적으로 Content-Type 설정

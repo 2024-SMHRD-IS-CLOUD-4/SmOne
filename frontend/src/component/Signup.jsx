@@ -43,7 +43,7 @@ function Signup() {
   const handleDuplicateCheck = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8090/SmOne/api/users/check-duplicate/${formData.userId}`
+        `${process.env.REACT_APP_DB_URL}/users/check-duplicate/${formData.userId}`
       );
       setIsDuplicate(response.data);
       if (response.data) {
@@ -68,7 +68,7 @@ function Signup() {
 
     try {
       await axios.post(
-        "http://localhost:8090/SmOne/api/users/register",
+        `${process.env.REACT_APP_DB_URL}/users/register`,
         formData,
         {
           headers: {

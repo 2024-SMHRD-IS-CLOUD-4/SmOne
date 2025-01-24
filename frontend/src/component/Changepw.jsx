@@ -47,7 +47,7 @@ const Changepw = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8090/SmOne/api/users/password/change",
+        `${process.env.REACT_APP_DB_URL}/users/password/change`,
         {
           userId,
           newPassword,

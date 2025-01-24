@@ -22,7 +22,7 @@ const IdentityCheck = () => {
   // 인증번호 전송
   const handleSendCode = async () => {
     try {
-      const response = await fetch("http://localhost:8090/SmOne/api/users/password/send-email", {
+      const response = await fetch(`${process.env.REACT_APP_DB_URL}/users/password/send-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
