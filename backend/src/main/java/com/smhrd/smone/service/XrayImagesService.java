@@ -19,43 +19,47 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class XrayImagesService {
-	
-	private final XrayImagesRepository xrayRepo;
-	
-	// "C:\\XrayImages"
-	@Value("${file.upload-dir}")
-	private String uploadDir;
-	
-	// 특정 확잔 x-ray 목록 조회
-	public List<XrayImages> getXraysByPatient(Integer pIdx) {
+    
+    private final XrayImagesRepository xrayRepo;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir; // 예: C:\\XrayImages
+
+    // 환자별 X-ray 목록
+    public List<XrayImages> getXraysByPatient(Integer pIdx) {
         return xrayRepo.findBypIdx(pIdx);
     }
-	
-	// 진다하기 버튼 클릭 -> 파일 업로드 => db에 result =null
-	public List<XrayImages> insertXrayImages(Integer pIdx, MultipartFile[] files) throws Exception{
-		List<XrayImages> savedList = new ArrayList<>();
-		
-		for (MultipartFile file : files) {
-			if(file.isEmpty()) continue;
-			
-			 // 로컬 디스크에 저장
-            String originalName = file.getOriginalFilename();
-            String savedFileName = System.currentTimeMillis() + "_" + originalName;
-            
-            // 경로: "C:\\XrayImages\\{time}_{originalName}"
-            Path targetPath = Paths.get(uploadDir + File.separator + savedFileName);
-            Files.write(targetPath, file.getBytes());
 
-            // DB에 insert
+    // 파일 업로드 => DB insert(RESULT=null)
+    public List<XrayImages> insertXrayImages(Integer pIdx, List<MultipartFile> files) throws Exception {
+        List<XrayImages> resultList = new ArrayList<>();
+        for(MultipartFile mf : files){
+            if(mf.isEmpty()) continue;
+
+            // 1) 로컬 파일 저장
+            String orig = mf.getOriginalFilename();
+            String saveName = System.currentTimeMillis() + "_" + orig;
+            Path dest = Paths.get(uploadDir + File.separator + saveName);
+            Files.write(dest, mf.getBytes());
+
+            // 2) DB insert
             XrayImages x = new XrayImages();
             x.setPIdx(pIdx);
-            x.setImgPath(savedFileName);
+            x.setImgPath(saveName);
             x.setProcessedAt(null);
             x.setResult(null);
-
-            savedList.add(xrayRepo.save(x));
+            resultList.add(xrayRepo.save(x));
         }
+        return resultList;
+    }
 
-        return savedList;
+    // 해당 환자의 "연-월-일" 목록 (중복 없이, 최신순)
+    public List<String> getDistinctDates(Integer pIdx) {
+        return xrayRepo.findDistinctDatesByPIdx(pIdx);
+    }
+
+    // 특정 환자 + 특정 연-월-일 => 그 날짜의 X-ray 목록
+    public List<XrayImages> getImagesByDate(Integer pIdx, String dateStr) {
+        return xrayRepo.findByPIdxAndDate(pIdx, dateStr);
     }
 }

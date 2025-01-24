@@ -332,6 +332,7 @@
 /* Result.css */
 .canvas-container {
   position: relative;
+<<<<<<< HEAD
   align-items: center;
   width: 97%; /* uploaded-image와 동일한 width */
   height: 99%; /* uploaded-image와 동일한 height */
@@ -346,6 +347,21 @@
   height: 97%;
   border-radius: 10px;
   cursor: url('./pen.png')16 16, crosshair; /* 연필 모양 커서 */
+=======
+  width: 700px;
+  height: 650px;
+}
+
+
+.drawing-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  cursor: crosshair;
+>>>>>>> branch 'master' of https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne
 }
 
 .clear-button {

@@ -32,12 +32,15 @@ function MyPage() {
           <input type="text" id="user-id" value="USER123" readOnly />
 
           <label htmlFor="user-role">사용자 직업</label>
-          <input
+          <select
             type="text"
             id="user-role"
             value={userRole}
             onChange={(e) => setUserRole(e.target.value)}
-          />
+            >
+            <option value="의사">의사</option>
+            <option value="관리자">관리자</option>
+        </select>
 
           <label htmlFor="user-zipcode">기관 주소</label>
           <div className="profile-address-input">

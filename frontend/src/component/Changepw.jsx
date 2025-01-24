@@ -47,7 +47,11 @@ const Changepw = () => {
 
     try {
       const response = await axios.post(
+<<<<<<< HEAD
         "http://localhost:8090/SmOne/api/users/password/change",
+=======
+        `${process.env.REACT_APP_DB_URL}/users/password/change`,
+>>>>>>> branch 'master' of https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne
         {
           userId,
           newPassword,

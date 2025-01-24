@@ -31,21 +31,42 @@ public class XrayImagesController {
             List<XrayImages> list = xrayService.getXraysByPatient(pIdx);
             return ResponseEntity.ok(list);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
+            return ResponseEntity.badRequest().body(e.getMessage());
+            }
+	}
 	
 	// 진단하기 => 파일 업로드 => DB insert(RESULT=null)
 	@PostMapping("/diagnose")
-    public ResponseEntity<?> diagnoseXray(
-        @RequestParam("pIdx") Integer pIdx,
-        @RequestParam("files") MultipartFile[] files
-    ) {
+    public ResponseEntity<?> diagnoseXray(@RequestParam("pIdx") Integer pIdx,
+    									@RequestParam("files") List<MultipartFile> files) {
         try {
             List<XrayImages> saved = xrayService.insertXrayImages(pIdx, files);
             return ResponseEntity.ok(saved);
         } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업로드 실패: " + e.getMessage());
+        }
+    }
+	
+	// 특정 환자의 연-월-일 목록 (중복 없이, 최신순)
+	@GetMapping("/dates")
+	public ResponseEntity<?> getDistinctDates(@RequestParam Integer pIdx){
+		try {
+			List<String> dates = xrayService.getDistinctDates(pIdx);
+			return ResponseEntity.ok(dates);
+		}catch(Exception e){
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	// 특정 환자 + 특정 연- 월 -일 => 해당 날짜 x-ray 목록
+	@GetMapping("/byDate")
+    public ResponseEntity<?> getImagesByDate(@RequestParam Integer pIdx,
+                                             @RequestParam String date) {
+        try {
+            List<XrayImages> list = xrayService.getImagesByDate(pIdx, date);
+            return ResponseEntity.ok(list);
+        } catch(Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.smhrd.smone.model;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 import org.hibernate.annotations.CreationTimestamp;
 
