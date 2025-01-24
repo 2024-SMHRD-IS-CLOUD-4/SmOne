@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./component/Login";
 import Main from "./component/Main";
 import Signup from "./component/Signup";
@@ -14,9 +14,9 @@ import Diagnosis from "./component/Diagnosis";
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter basename="/">
       <Routes>
-      <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/" element={<Login />} />
         <Route path="/main" element={<Main />} />
         <Route path="/signup" element={<Signup />} />
@@ -29,7 +29,7 @@ function App() {
         <Route path="/Result" element={<Result />} />
         <Route path="/Diagnosis" element={<Diagnosis />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 
