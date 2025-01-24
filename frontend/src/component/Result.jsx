@@ -15,7 +15,6 @@ function Result() {
   const [searchInput] = useState("");
   const [searchInputbirth] = useState("");
   const [setSearchResults] = useState([]);
-  const diagnosisRef = useRef(); // Diagnosis 화면을 참조
   const canvasRef = useRef(null);
   const isDrawingRef = useRef(false);
   const contextRef = useRef(null);

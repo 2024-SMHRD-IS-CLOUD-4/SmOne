@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Signup.css";
@@ -15,9 +15,11 @@ function Signup() {
     postcode: "",
     address: "",
     detailAddress: "",
-    uAdd: "", // 통합 주소 필드
   });
+  
   const [isDuplicate, setIsDuplicate] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [setPlaces] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,7 +42,9 @@ function Signup() {
 
   const handleDuplicateCheck = async () => {
     try {
-      const response = await axios.get(`http://localhost:8090/SmOne/api/users/check-duplicate/${formData.userId}`);
+      const response = await axios.get(
+        `http://localhost:8090/SmOne/api/users/check-duplicate/${formData.userId}`
+      );
       setIsDuplicate(response.data);
       if (response.data) {
         alert("중복된 아이디 입니다.");
@@ -60,24 +64,64 @@ function Signup() {
       return;
     }
 
-    const updatedFormData = {
-      ...formData,
-      uAdd: `${formData.postcode} ${formData.address} ${formData.detailAddress}`,
-    };
+    console.log("회원가입 데이터:", formData);
 
     try {
-      await axios.post("http://localhost:8090/SmOne/api/users/register", updatedFormData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      await axios.post(
+        "http://localhost:8090/SmOne/api/users/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       alert("회원가입 성공!");
       navigate("/");
     } catch (error) {
       console.error("회원가입 에러:", error);
+      if (error.response) {
+        console.error("서버 응답 데이터:", error.response.data);
+      }
       alert("회원가입 실패!");
     }
   };
+
+  const handleSearchCenter = () => {
+    if (!formData.centerId.trim()) {
+      alert("기관명을 입력해주세요.");
+      return;
+    }
+
+    const ps = new window.kakao.maps.services.Places();
+    ps.keywordSearch(formData.centerId, (data, status) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        setPlaces(data);
+        setShowModal(true);
+      } else {
+        alert("검색 결과가 없습니다.");
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (showModal) {
+      const container = document.getElementById("map");
+      if (container) {
+        const options = {
+          center: new window.kakao.maps.LatLng(37.5665, 126.978),
+          level: 3,
+        };
+        new window.kakao.maps.Map(container, options);
+      }
+    }
+  }, [showModal]);
+
+  const closeModal = () => {
+    setShowModal(false);
+    setPlaces([]);
+  };
+
 
   return (
     <div>
@@ -91,6 +135,7 @@ function Signup() {
           <h1>JOIN</h1>
           <form onSubmit={handleSubmit}>
             <div className="input-group" style={{ display: 'flex'}}>
+            {formData.userId !== undefined && (
               <input
                 type="text"
                 name="userId"
@@ -99,6 +144,7 @@ function Signup() {
                 onChange={handleChange}
                 required
               />
+            )}
               <button
                 type="button"
                 className="search-btn1"

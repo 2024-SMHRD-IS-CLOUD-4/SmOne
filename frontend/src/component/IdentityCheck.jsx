@@ -4,18 +4,75 @@ import "./IdentityCheck.css";
 
 const IdentityCheck = () => {
   const navigate = useNavigate();
-  const [position, setPosition] = useState(""); // 직책 상태 관리
-  const [emailLocalPart, setEmailLocalPart] = useState(""); // 이메일 아이디
-  const [emailDomainPart, setEmailDomainPart] = useState(""); // 이메일 도메인
+  const [formData, setFormData] = useState({
+    userId: "",
+    emailLocalPart: "",
+    emailDomainPart: "",
+  });
 
-  const handleIdentityCheck = (e) => {
-    e.preventDefault();
-    const fullEmail = `${emailLocalPart}@${emailDomainPart}`; // 이메일 조합
-    console.log("선택한 직책:", position);
-    console.log("입력한 이메일:", fullEmail);
+  const [isCodeVerified, setIsCodeVerified] = useState(false);
+  const [message, setMessage] = useState("");
 
-    // 본인 인증 완료 후 FindPass로 이동
-    navigate("/find-pw");
+  // 입력 핸들러
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  // 인증번호 전송
+  const handleSendCode = async () => {
+    try {
+      const response = await fetch("http://localhost:8090/SmOne/api/users/password/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: formData.userId,
+          email: `${formData.emailLocalPart}@${formData.emailDomainPart}`,
+        }),
+      });
+
+      if (response.ok) {
+        alert("인증번호가 이메일로 전송되었습니다.");
+      } else {
+        alert("인증번호 전송 실패: 서버 오류.");
+      }
+    } catch (error) {
+      alert("인증번호 전송 실패: " + error.message);
+    }
+  };
+
+  // 인증번호 확인
+  const handleVerifyCode = async () => {
+    try {
+      const response = await fetch("http://localhost:8090/SmOne/api/users/password/verify-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: formData.userId,
+          verificationCode: formData.verificationCode,
+        }),
+      });
+
+      if (response.ok) {
+        setMessage("인증번호가 일치합니다.");
+        setIsCodeVerified(true);
+      } else {
+        setMessage("인증번호가 일치하지 않습니다.");
+        setIsCodeVerified(false);
+      }
+    } catch (error) {
+      setMessage("인증번호 확인 실패: " + error.message);
+      setIsCodeVerified(false);
+    }
+  };
+
+  // 비밀번호 변경 페이지로 이동
+  const handleNavigateToChangePw = () => {
+    if (isCodeVerified) {
+      navigate("/changepw");
+    } else {
+      alert("인증번호 확인이 필요합니다.");
+    }
   };
 
   return (
@@ -28,59 +85,65 @@ const IdentityCheck = () => {
       <div className="pass-container">
         <div className="pass-box">
           <h1>IDENTITY CHECK</h1>
-          <form onSubmit={handleIdentityCheck}>
-          <label htmlFor="id">아이디</label>
+          <form>
+            <label htmlFor="userId">아이디</label>
             <input
               type="text"
-              id="id"
+              id="userId"
+              name="userId"
               placeholder="아이디 입력"
+              value={formData.userId}
+              onChange={handleChange}
             />
-            <label htmlFor="institution-name">관리자명 / 직책</label>
-            <div className="input-row">
-              <input
-                type="text"
-                id="admin-name"
-                placeholder="관리자 이름"
-              />
-              <select
-                id="position"
-                value={position}
-                onChange={(e) => setPosition(e.target.value)}
-                className="select-box"
-              >
-                <option value="">직책 선택</option>
-                <option value="doctor">의사</option>
-                <option value="manager">관리자</option>
-              </select>
-            </div>
-            <label htmlFor="center-name">센터명</label>
-            <input
-              type="text"
-              id="center-name"
-              placeholder="센터명 입력"
-            />
+
             <label htmlFor="email">이메일 입력</label>
             <div className="input-row">
               <input
                 type="text"
-                id="email-local"
+                id="emailLocalPart"
+                name="emailLocalPart"
                 placeholder="이메일 아이디"
-                value={emailLocalPart}
-                onChange={(e) => setEmailLocalPart(e.target.value)}
+                value={formData.emailLocalPart}
+                onChange={handleChange}
               />
               <span>@</span>
               <input
                 type="text"
-                id="email-domain"
+                id="emailDomainPart"
+                name="emailDomainPart"
                 placeholder="직접입력"
-                value={emailDomainPart}
-                onChange={(e) => setEmailDomainPart(e.target.value)}
+                value={formData.emailDomainPart}
+                onChange={handleChange}
               />
             </div>
-            
-            <br />
-            <button type="submit" className="pass-button">
-              본인 인증
+
+            <button type="button" className="pass-button" onClick={handleSendCode}>
+              인증번호 전송
+            </button>
+
+            <label htmlFor="verificationCode">인증번호</label>
+            <input
+              type="text"
+              id="verificationCode"
+              name="verificationCode"
+              placeholder="인증번호 입력"
+              value={formData.verificationCode}
+              onChange={handleChange}
+            />
+
+            <button type="button" className="pass-button" onClick={handleVerifyCode}>
+              인증번호 확인
+            </button>
+
+            {message && <p>{message}</p>}
+
+            <button
+              type="button"
+              className="pass-button"
+              onClick={handleNavigateToChangePw}
+              disabled={!isCodeVerified}
+            >
+              비밀번호 변경
             </button>
           </form>
         </div>
