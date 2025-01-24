@@ -43,7 +43,11 @@ function Signup() {
   const handleDuplicateCheck = async () => {
     try {
       const response = await axios.get(
+<<<<<<< HEAD
+        `http://localhost:8090/SmOne/api/users/check-duplicate/${formData.userId}`
+=======
         `${process.env.REACT_APP_DB_URL}/users/check-duplicate/${formData.userId}`
+>>>>>>> branch 'master' of https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne
       );
       setIsDuplicate(response.data);
       if (response.data) {
@@ -68,7 +72,11 @@ function Signup() {
 
     try {
       await axios.post(
+<<<<<<< HEAD
+        "http://localhost:8090/SmOne/api/users/register",
+=======
         `${process.env.REACT_APP_DB_URL}/users/register`,
+>>>>>>> branch 'master' of https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne
         formData,
         {
           headers: {
