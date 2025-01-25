@@ -1,10 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 import "./Diagnosis.css";
 
 function Diagnosis() {
+  const navigate = useNavigate(); // 네비게이터 훅
   const handlePrint = () => {
-    window.print(); // 화면 출력 기능
+    window.print();
   };
+  const handleCancel = () => {
+    navigate(-1); // 취소 시 Result 화면으로 이동
+  };
+
   
   return (
     <div className="diagnosis-body">
@@ -19,6 +25,9 @@ function Diagnosis() {
     <button className="print-button" onClick={handlePrint}>
             <img src={require("./printerimg.png")} alt="Print Icon" />
             출력하기
+          </button>
+          <button className="cancel-button" onClick={handleCancel}>
+            이전화면
           </button>
     <div className="report-content">
       <div className="report-header">
