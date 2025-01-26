@@ -192,9 +192,8 @@ const handleUpdate = async () => {
                     placeholder="관리자명을 입력하세요"
                     onChange={handleChange}
                 />
-            </div>
+           
 
-            <div>
                 <label>사용자 직업</label>
                 <div>
                     <label>
