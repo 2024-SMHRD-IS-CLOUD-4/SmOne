@@ -127,7 +127,7 @@ const Findid = () => {
                     {userId && (
                         <div>
                             <p>찾은 아이디: <strong>{userId}</strong></p>
-                            <button onClick={handleConfirm} className="pass-button">확인</button>
+                            <button onClick={handleConfirm} className="pass-button0">확인</button>
                         </div>
                     )}
                 </div>

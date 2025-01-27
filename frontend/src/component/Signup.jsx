@@ -19,7 +19,7 @@ function Signup() {
 
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [setPlaces] = useState([]);
+  const [places, setPlaces] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,17 +64,12 @@ function Signup() {
       return;
     }
 
-// 이메일 결합
-const fullEmail = `${formData.emailLocalPart}@${formData.emailDomainPart}`;
-  // formData에 이메일 추가
-  const requestData = {
-    ...formData,
-    email: fullEmail,
-  };
+    console.log("회원가입 데이터:", formData);
+
     try {
       await axios.post(
         `${process.env.REACT_APP_DB_URL}/users/register`,
-        requestData,
+        formData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -200,57 +195,51 @@ const fullEmail = `${formData.emailLocalPart}@${formData.emailDomainPart}`;
             <div className="input-group2">
               <label></label>
               <div className="input-group email-input-group">
-  <input
-    type="text"
-    name="emailLocalPart"
-    className="email-local-part"
-    placeholder="이메일 아이디"
-    value={formData.emailLocalPart || ""}
-    onChange={handleChange}
-    required
-  />
-  <span>@</span>
-  <input
-    type="text"
-    name="emailDomainPart"
-    className="email-domain-part"
-    placeholder="직접입력"
-    value={formData.emailDomainPart || ""}
-    onChange={handleChange}
-    required
-  />
-</div>
+                <input
+                  type="text"
+                  name="emailLocalPart"
+                  className="email-local-part"
+                  placeholder="이메일 아이디"
+                  value={formData.emailLocalPart || ""}
+                  onChange={handleChange}
+                  required
+                />
+                <span>@</span>
+                <input
+                  type="text"
+                  name="emailDomainPart"
+                  className="email-domain-part"
+                  placeholder="직접입력"
+                  value={formData.emailDomainPart || ""}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
-            </div>
-
-            <div className="input-group">
-              <label></label>
-              <input
-                type="text"
-                name="centerId"
-                className="join_centerid"
-                placeholder="기관명"
-                value={formData.centerId}
-                onChange={handleChange}
-                required
-              />
             </div>
 
             <div className="input-group">
               <label></label>
               <div className="input-search-group">
-                <input
-                  type="text"
-                  name="postcode"
-                  className="join_postcode"
-                  placeholder="우편번호"
-                  value={formData.postcode}
-                  readOnly
-                  required
-                />
-                <button type="button" className="search-btn" onClick={handleAddressSearch}>
-                  검색
-                </button>
+              <input
+                type="text"
+                name="centerId"
+                className="join_centerid"
+                placeholder="기관명을 입력하세요"
+                value={formData.centerId}
+                onChange={handleChange}
+                required
+              />
+              <button type="button" className="search-btn" onClick={handleSearchCenter}>
+                검색
+              </button>
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label></label>
+              <div className="input-search-group">
+
               </div>
             </div>
 
@@ -267,23 +256,60 @@ const fullEmail = `${formData.emailLocalPart}@${formData.emailDomainPart}`;
               />
             </div>
 
-            <div className="input-group">
-              <label></label>
-              <input
-                type="text"
-                name="detailAddress"
-                className="join_detailAddress"
-                placeholder="상세주소"
-                value={formData.detailAddress}
-                onChange={handleChange}
-                required
-              />
-            </div>
 
-            <button type="submit" className="join-button">
-              회원가입
-            </button>
+            <button type="submit" className="join-button">회원가입</button>
           </form>
+          {showModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
+            zIndex: 1000,
+            padding: "20px",
+            borderRadius: "10px",
+            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+            width: "80%",
+            height: "80%",
+            overflow: "auto",
+          }}
+        >
+          <button
+            onClick={closeModal}
+            style={{
+              position: "absolute",
+              top: "10px",
+              right: "10px",
+              background: "red",
+              color: "white",
+              border: "none",
+              padding: "5px 10px",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            닫기
+          </button>
+          <div id="map" style={{ width: "100%", height: "50%" }}></div>
+          <ul>
+            {places.map((place, index) => (
+              <li
+                key={index}
+                style={{ cursor: "pointer", marginTop: "10px" }}
+                onClick={() => {
+                  setFormData({ ...formData, address: place.address_name });
+                  alert(`선택된 주소: ${place.address_name}`);
+                  closeModal();
+                }}
+              >
+                {place.place_name} ({place.address_name})
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
         </div>
       </div>
     </div>

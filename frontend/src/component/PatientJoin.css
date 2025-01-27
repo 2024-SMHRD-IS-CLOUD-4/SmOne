@@ -87,7 +87,7 @@
   }
   
   .postcode-search-button {
-    background-color: #48699f;
+    background-color: #1b1c1d;
     color: white;
     border: none;
     border-radius: 5px;
@@ -99,7 +99,7 @@
   }
   
   .postcode-search-button:hover {
-    background-color: #005fa3;
+    background-color: #555555;
   }
   
   .submit-button {

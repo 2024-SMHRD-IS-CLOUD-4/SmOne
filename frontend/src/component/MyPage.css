@@ -1,14 +1,23 @@
+html, body {
+    overflow: hidden; /* 스크롤 비활성화 */
+  }
+
+
 /* 프로필 페이지 컨테이너 */
 .profile-container {
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* 세로 중앙 정렬 */
-    align-items: center; /* 가로 중앙 정렬 */
-    background: rgba(0, 0, 0, 0.7); /* 투명 배경 */
+    justify-content: center;
+    /* 세로 중앙 정렬 */
+    align-items: center;
+    /* 가로 중앙 정렬 */
+    background: rgba(0, 0, 0, 0.7);
+    /* 투명 배경 */
     border-radius: 5px;
     padding: 25px;
     width: 1370px;
+    
 }
 
 /* 헤더 */
@@ -86,7 +95,8 @@ form input[readonly] {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
-    gap: 10px; /* 버튼 간격 추가 */
+    gap: 10px;
+    /* 버튼 간격 추가 */
 }
 
 .profile-buttons button {
@@ -99,11 +109,13 @@ form input[readonly] {
     background-color: #1b1c1d;
     color: white;
 }
+
 .profile-buttons button:first-child {
     background-color: #1b1c1d;
     color: white;
 }
-.profile-buttons button:hover{
+
+.profile-buttons button:hover {
     background: #555555;
 }
 
@@ -114,4 +126,98 @@ form input[readonly] {
 
 .profile-buttons button.profile-danger-button:hover {
     background: #555555;
+}
+
+.right-panel00 {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    padding: 20px;
+    height: 740px;
+    width: 1379px;
+    overflow: hidden; /* 넘치는 내용 숨김 */
+}
+
+
+.Mypage_email,
+.Mypage_address {
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 16px;
+    height: 30px;
+    width: 436px;
+}
+.Mypage_name {
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 16px;
+    height: 30px;
+    width: 312px;
+    
+}
+.Mypage_center {
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 16px;
+    height: 30px;
+    width: 312px;
+}
+
+.Mypage_button {
+    height: 52px;
+    width: 115px;
+    padding: -1px 50px;
+    border: 1px solid #333333;
+    background-color: #333333;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+.role_select00 {
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 16px;
+    height: 52px;
+    width: 115px;
+    background-color: white;
+    box-sizing: border-box;
+    margin-top: 20px;
+    margin-left: -10px;
+}
+
+.Mypage_span {
+    margin: 7px;
+    
+}
+.Mp_btn1,
+.Mp_btn2,
+.Mp_btn3 {
+    height: 52px;
+    width: 126px;
+    padding: -1px 50px;
+    border: 1px solid #333333;
+    background-color: #333333;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 4px;
+    /* margin-left: 10px; */
+}
+
+.Mypage_email1,
+.Mypage_email2 {
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 16px;
+    height: 30px;
+    width: 190px;
 }

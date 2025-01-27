@@ -15,15 +15,13 @@
 
     <script
       type="text/javascript"
-      src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bbf91db6971ba4f03e644aee664ad3d1&libraries=services"
+      src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_REACT_APP_KAKAO_API_KEY}&libraries=services`
       ></script>
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    
-    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
