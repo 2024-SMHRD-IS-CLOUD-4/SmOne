@@ -20,6 +20,7 @@ function Main() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1); // State for the current page
   const patientsPerPage = 5; // Number of patients per page
+  const [boxImages, setBoxImages] = useState(Array(5).fill(null)); // 박스 5개의 초기 상태
 
 
 
@@ -84,6 +85,51 @@ function Main() {
     setShowMyPage(false);
   };
 
+  const handleBoxImageUpload = (event, index) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      const updatedImages = [...boxImages];
+      updatedImages[index] = imageUrl;
+      setBoxImages(updatedImages);
+    }
+  };
+  const handleBoxImageClick = (event, index) => {
+    // 박스에 이미지가 있는 경우 업로드 창을 차단
+    if (boxImages[index]) {
+      event.preventDefault(); // 기본 동작 차단
+      setImage(boxImages[index]); // 패널 이미지로 설정
+    }
+  };
+  const [panelBoxImages, setPanelBoxImages] = useState(Array(5).fill(null)); // image-panel의 5개 박스 초기 상태
+
+  const handlePanelBoxImageUpload = (event, index) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      const updatedImages = [...panelBoxImages];
+      updatedImages[index] = imageUrl;
+      setPanelBoxImages(updatedImages);
+    }
+  };
+
+  const handlePanelBoxImageClick = (index) => {
+    if (panelBoxImages[index]) {
+      setImagePanelImage(panelBoxImages[index]); // 클릭한 이미지가 image-panel-upload에 표시되도록 설정
+    }
+  };
+
+  const handleRemovePanelBoxImage = (index) => {
+    const updatedImages = [...panelBoxImages];
+    updatedImages[index] = null; // 해당 박스의 이미지를 삭제
+    setPanelBoxImages(updatedImages);
+  };
+
+  const handleRemoveBoxImage = (index) => {
+    const updatedImages = [...boxImages];
+    updatedImages[index] = null; // 해당 박스의 이미지를 삭제
+    setBoxImages(updatedImages);
+  };
 
   const handlePatientClick = () => {
     setShowPatientJoin(true);
@@ -171,15 +217,17 @@ function Main() {
               type="text"
               placeholder="이름을 입력하세요"
               value={searchInput}
+              className="search-input1"
               onChange={(e) => setSearchInput(e.target.value)}
             />
             <input
               type="text"
               placeholder="생년월일 6자리를 입력하세요"
               value={searchInputbirth}
+              className="search-input2"
               onChange={(e) => setSearchInputbirth(e.target.value)}
             />
-            <button onClick={handleSearchChange}>검색</button>
+            <button className="search-button" onClick={handleSearchChange}>검색</button>
           </div>
           <button className="print-button" onClick={handleDiagnosisClick}>
             <img src={require("./stethoscope.png")} alt="Stethoscope Icon" />
@@ -205,9 +253,9 @@ function Main() {
                   searchResults.length > 0 ? (
                     searchResults.map((patient, index) => (
                       <div key={index} className="patient-item">
-                        <span>이름: {patient.name}</span> |{" "}
-                        <span>생년월일: {patient.birth}</span> |{" "}
-                        <span>전화번호: {patient.phone}</span>
+                        <span> {patient.name}</span> |{" "}
+                        <span> {patient.birth}</span> |{" "}
+                        <span> {patient.phone}</span>
                       </div>
                     ))
                   ) : (
@@ -220,9 +268,9 @@ function Main() {
                   // 검색을 하지 않았을 경우 기본 5명의 환자 리스트
                   currentPatients.map((patient, index) => (
                     <div key={index} className="patient-item">
-                      <span>이름: {patient.name}</span> |{" "}
-                      <span>생년월일: {patient.birth}</span> |{" "}
-                      <span>전화번호: {patient.phone}</span>
+                      <span> {patient.name}</span> |{" "}
+                      <span> {patient.birth}</span> |{" "}
+                      <span> {patient.phone}</span>
                     </div>
                   ))
                 )}
@@ -276,11 +324,7 @@ function Main() {
                     <div className="diagnosis">
                       <label htmlFor="image-upload" className="upload-box">
                         {image ? (
-                          <img
-                            src={image}
-                            alt="Uploaded"
-                            className="uploaded-image"
-                          />
+                          <img src={image} alt="Uploaded Image" className="uploaded-image" />
                         ) : (
                           <span>클릭하여 환자의 X-Ray<br></br>사진을 올려주세요</span>
                         )}
@@ -289,9 +333,57 @@ function Main() {
                         id="image-upload"
                         type="file"
                         accept="image/*"
-                        onChange={handleImageUpload}
                         style={{ display: "none" }}
+                        onChange={handleImageUpload}
                       />
+                      {/* 박스 5개 추가 */}
+                      <div className="upload-box-row">
+                        {[...Array(5)].map((_, index) => (
+                          <div
+                            key={index}
+                            className="upload-box-item"
+                            onClick={() => {
+                              if (boxImages[index]) {
+                                setImage(boxImages[index]); // 클릭한 이미지가 image-upload에 표시되도록 설정
+                              }
+                            }}
+                          >
+                            <label htmlFor={`box-upload-${index}`} style={{ cursor: 'pointer' }}>
+                              {boxImages[index] ? (
+                                <img
+                                  src={boxImages[index]}
+                                  alt={`Box ${index + 1}`}
+                                  style={{ width: '90%', height: '90%', borderRadius: '5px' }}
+                                />
+                              ) : (
+                                <span>박스 {index + 1}</span>
+                              )}
+                            </label>
+                            {boxImages[index] && (
+                              <button
+                                className="remove-image-button"
+                                onClick={(e) => {
+                                  e.stopPropagation(); // 버튼 클릭 시 부모 클릭 이벤트 차단
+                                  handleRemoveBoxImage(index);
+                                }}
+                              >
+                                X
+                              </button>
+                            )}
+                            {!boxImages[index] && (
+                              <input
+                                id={`box-upload-${index}`}
+                                type="file"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={(event) => handleBoxImageUpload(event, index)}
+                              />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+
                     </div>
                     <div className="image-panel">
                       <label htmlFor="image-panel-upload" className="upload-box">
@@ -302,7 +394,7 @@ function Main() {
                             className="uploaded-image"
                           />
                         ) : (
-                          <span>클릭하여 정상 X-Ray<br></br>사진을 올려주세요</span>
+                          <span>클릭하여 정상 X-Ray<br />사진을 올려주세요</span>
                         )}
                       </label>
                       <input
@@ -312,14 +404,53 @@ function Main() {
                         onChange={handleImagePanelUpload}
                         style={{ display: "none" }}
                       />
+                      {/* 5개의 박스 추가 */}
+                      <div className="upload-box-row">
+                        {[...Array(5)].map((_, index) => (
+                          <div
+                            key={index}
+                            className="upload-box-item"
+                            onClick={() => handlePanelBoxImageClick(index)} // 클릭 이벤트
+                          >
+                            <label htmlFor={`panel-box-upload-${index}`} style={{ cursor: 'pointer' }}>
+                              {panelBoxImages[index] ? (
+                                <img
+                                  src={panelBoxImages[index]}
+                                  alt={`Panel Box ${index + 1}`}
+                                  style={{ width: '90%', height: '90%', borderRadius: '5px' }}
+                                />
+                              ) : (
+                                <span>박스 {index + 1}</span>
+                              )}
+                            </label>
+                            {panelBoxImages[index] && (
+                              <button
+                                className="remove-image-button"
+                                onClick={(e) => {
+                                  e.stopPropagation(); // 버튼 클릭 시 부모 클릭 이벤트 차단
+                                  handleRemovePanelBoxImage(index);
+                                }}
+                              >
+                                X
+                              </button>
+                            )}
+                            {!panelBoxImages[index] && (
+                              <input
+                                id={`panel-box-upload-${index}`}
+                                type="file"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={(event) => handlePanelBoxImageUpload(event, index)}
+                              />
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
+
                   </div>
                 )}
-                {!showMyPage && !showPatientJoin && !isLoading && (
-                  <div className="diagnosis-info">
-                    진단내용 및 진단을 내린 대략적인 이유
-                  </div>
-                )}
+
               </>
             )}
           </div>

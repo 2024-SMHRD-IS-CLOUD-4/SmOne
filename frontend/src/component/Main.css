@@ -162,7 +162,7 @@
 }
 
 .patient-item {
-  font-size: 12px; /* Consistent font size */
+  font-size: 15px; /* Consistent font size */
   padding: 10px; /* Add padding around each item */
   border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border between items */
 }
@@ -314,10 +314,28 @@
 .image-panel {
   flex: 1;
   display: flex;
+  flex-direction: column; /* 수직 방향 배치 */
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 5px;
+  color: white;
+  height: 650px;  
+}
+
+.upload-box-row {
+  display: flex;
+  gap: 10px; /* 박스 간 간격 */
+  justify-content: center; /* 중앙 정렬 */
+  margin-top: 10px;
+}
+
+.image-panel-upload {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
-
 .xray-image {
   width: 100%;
   max-width: 300px;
@@ -426,7 +444,79 @@
   overflow: hidden;
 }
 
-/*---------------------------------------------------*/
+.upload-box-row {
+  display: flex;
+  gap: 10px; /* 박스 간 간격 */
+  justify-content: center;
+  margin-top: 20px; /* 박스와 상단 간격 */
+}
+
+.upload-box-item {
+  position: relative; /* X 버튼을 상단에 배치하기 위해 필요 */
+  width: 100px;
+  height: 100px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px dashed white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+
+.upload-box-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.upload-box-item img {
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.remove-image-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.remove-image-button:hover {
+  background-color: darkred;
+}
+.upload-box-row {
+  display: flex;
+  gap: 10px; /* 박스 간 간격 */
+  justify-content: center; /* 중앙 정렬 */
+  margin-top: 20px; /* uploaded-image와의 간격 */
+}
+
+.upload-box {
+  display: flex;
+  flex-direction: column; /* 위아래로 배치 */
+  align-items: center;
+  justify-content: center;
+}
+
+.uploaded-image {
+  width: 93%;
+  height: 93%;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 20px; /* 아래 박스와의 간격 */
+}
 
 
 
