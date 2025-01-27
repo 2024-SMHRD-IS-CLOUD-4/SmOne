@@ -40,6 +40,23 @@ body {
   
   }
   
+.centername_input,
+.centeremail_input {
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 30px;
+}
+
+.centeradmin_name{
+flex: 1 1;
+padding: 10px;
+border: 1px solid #cccccc;
+border-radius: 4px;
+font-size: 16px;
+height: 35px;
+}
   label {
     text-align: left;
     font-size: 20px;

@@ -74,6 +74,7 @@ const Findid = () => {
                                 type="text"
                                 name="centerId"
                                 id="center-name"
+                                className='centername_input'
                                 placeholder="센터명을 입력하세요"
                                 value={formData.centerId}
                                 onChange={handleChange}
@@ -86,6 +87,7 @@ const Findid = () => {
                                 type="email"
                                 name="email"
                                 id="email"
+                                className='centeremail_input'
                                 placeholder="이메일 주소를 입력하세요"
                                 value={formData.email}
                                 onChange={handleChange}
@@ -100,6 +102,7 @@ const Findid = () => {
                                 type="text"
                                 name="userName"
                                 id="admin-name"
+                                className='centeradmin_name'
                                 placeholder="관리자명을 입력하세요"
                                 value={formData.userName}
                                 onChange={handleChange}

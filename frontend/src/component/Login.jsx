@@ -83,6 +83,7 @@ const Login = () => {
                             id="userId"
                             name="userId"
                             placeholder="아이디 입력"
+                            className="user-id-input" // 클래스 추가
                             value={formData.userId}
                             onChange={handleChange}
                             required
@@ -93,6 +94,7 @@ const Login = () => {
                             id="userPw"
                             name="userPw"
                             placeholder="비밀번호 입력"
+                            className='user-pw-input'
                             value={formData.userPw}
                             onChange={handleChange}
                             required

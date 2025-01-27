@@ -16,7 +16,7 @@ function Signup() {
     address: "",
     detailAddress: "",
   });
-  
+
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [setPlaces] = useState([]);
@@ -64,12 +64,17 @@ function Signup() {
       return;
     }
 
-    console.log("회원가입 데이터:", formData);
-
+// 이메일 결합
+const fullEmail = `${formData.emailLocalPart}@${formData.emailDomainPart}`;
+  // formData에 이메일 추가
+  const requestData = {
+    ...formData,
+    email: fullEmail,
+  };
     try {
       await axios.post(
         `${process.env.REACT_APP_DB_URL}/users/register`,
-        formData,
+        requestData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -134,31 +139,34 @@ function Signup() {
         <div className="join-box">
           <h1>JOIN</h1>
           <form onSubmit={handleSubmit}>
-            <div className="input-group" style={{ display: 'flex'}}>
-            {formData.userId !== undefined && (
-              <input
-                type="text"
-                name="userId"
-                placeholder="아이디"
-                value={formData.userId}
-                onChange={handleChange}
-                required
-              />
-            )}
-              <button
-                type="button"
-                className="search-btn1"
-                onClick={handleDuplicateCheck}
-              >
-                중복 확인
-              </button>
+            <div className="input-group">
+              <div className="id-duplicate-group">
+                <input
+                  type="text"
+                  name="userId"
+                  className="userid_join"
+                  placeholder="아이디"
+                  value={formData.userId}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  className="duplicate-check-btn0"
+                  onClick={handleDuplicateCheck}
+                >
+                  중복 확인
+                </button>
+              </div>
             </div>
+
 
             <div className="input-group">
               <label></label>
               <input
                 type="password"
                 name="userPw"
+                className="userpw_join"
                 placeholder="비밀번호"
                 value={formData.userPw}
                 onChange={handleChange}
@@ -166,35 +174,53 @@ function Signup() {
               />
             </div>
 
-            <div className="input-group">
-              <input
-                type="text"
-                name="userName"
-                placeholder="관리자명"
-                value={formData.userName}
-                onChange={handleChange}
-                required
-              />
+            <div className="input-group1">
+              <div className="input-group name-role-group">
+                <input
+                  type="text"
+                  name="userName"
+                  className="user-name-input"
+                  placeholder="관리자명"
+                  value={formData.userName}
+                  onChange={handleChange}
+                  required
+                />
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="role-select"
+                >
+                  <option value="의사">의사</option>
+                  <option value="관리자">관리자</option>
+                </select>
+              </div>
             </div>
 
-            <div className="input-group">
+            <div className="input-group2">
               <label></label>
-              <select name="role" value={formData.role} onChange={handleChange} className="select-box1">
-                <option value="의사">의사</option>
-                <option value="관리자">관리자</option>
-              </select>
-            </div>
+              <div className="input-group email-input-group">
+  <input
+    type="text"
+    name="emailLocalPart"
+    className="email-local-part"
+    placeholder="이메일 아이디"
+    value={formData.emailLocalPart || ""}
+    onChange={handleChange}
+    required
+  />
+  <span>@</span>
+  <input
+    type="text"
+    name="emailDomainPart"
+    className="email-domain-part"
+    placeholder="직접입력"
+    value={formData.emailDomainPart || ""}
+    onChange={handleChange}
+    required
+  />
+</div>
 
-            <div className="input-group">
-              <label></label>
-              <input
-                type="email"
-                name="email"
-                placeholder="이메일"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
             </div>
 
             <div className="input-group">
@@ -202,6 +228,7 @@ function Signup() {
               <input
                 type="text"
                 name="centerId"
+                className="join_centerid"
                 placeholder="기관명"
                 value={formData.centerId}
                 onChange={handleChange}
@@ -215,6 +242,7 @@ function Signup() {
                 <input
                   type="text"
                   name="postcode"
+                  className="join_postcode"
                   placeholder="우편번호"
                   value={formData.postcode}
                   readOnly
@@ -231,6 +259,7 @@ function Signup() {
               <input
                 type="text"
                 name="address"
+                className="join_address"
                 placeholder="주소"
                 value={formData.address}
                 readOnly
@@ -243,6 +272,7 @@ function Signup() {
               <input
                 type="text"
                 name="detailAddress"
+                className="join_detailAddress"
                 placeholder="상세주소"
                 value={formData.detailAddress}
                 onChange={handleChange}

@@ -40,7 +40,7 @@ form label {
     display: block;
 }
 
-/* 입력 필드 스타일 */
+/* 입력 필드 스타일
 form input {
     padding: 10px;
     border: 1px solid #cccccc;
@@ -54,7 +54,7 @@ form input {
 form input[readonly] {
     background: #f0f0f0;
     cursor: not-allowed;
-}
+} */
 
 /* 주소 입력 필드 */
 .profile-address-input {

@@ -18,7 +18,7 @@ body {
     text-align: center;
   }
   
-  
+ 
   h1 {
     color: #ffffff;
     margin-bottom: 20px;
@@ -45,15 +45,129 @@ body {
     border-radius: 4px;
     font-size: 16px;
     height: 30px;
+    width: 195px;
   }
 
-  input[type="password"] {
-    margin-bottom: 10px; /* 비밀번호 입력 박스 아래 간격 설정 */
-}
 .half-input-group {
   display: flex; /* Align items in a row */
   gap: 10px; /* Add 10px space between the inputs */
   
+}
+
+.email-input-group span {
+  display: flex; /* Flexbox 사용 */
+  justify-content: center; /* 좌우 가운데 정렬 */
+  align-items: center; /* 상하 가운데 정렬 */
+  font-size: 18px;
+  font-weight: bold; /* 더 두꺼운 스타일로 강조 (선택 사항) */
+  color: #000000; /* 글자 색상 */
+  width: 30px; /* 크기 조정 (필요 시 수정 가능) */
+  height: 35px; /* 입력 필드 높이에 맞춤 */
+}
+
+.join_email{
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 30px;
+  margin-top: -20px;
+  margin-bottom: 15px;
+  width: 428px;
+}
+.join_centerid{
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 30px;
+  width: 450px;
+
+}
+.join_postcode{
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 30px;
+  width: 303px;
+}
+.join_address{
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 30px;
+  width: 450px;
+}
+.join_detailAddress{
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 30px;
+  width: 450px;
+}
+
+
+.name-role-group {
+  display: flex; /* 가로 정렬 */
+  align-items: center; /* 세로 가운데 정렬 */
+  gap: 10px; /* 입력 필드와 셀렉트 박스 간격 */
+  width: 100%; /* 부모 요소가 충분히 넓어야 함 */
+  flex-wrap: nowrap; /* 줄바꿈 방지 */
+}
+
+.user-name-input {
+  flex: 3; /* 입력 필드가 더 많은 공간을 차지 */
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 54px;
+  box-sizing: border-box; /* 패딩 포함 */
+  width: 250px;
+}
+
+.role-select {
+  flex: 1; /* select 박스는 적당히 작은 공간만 차지 */
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 54px;
+  background-color: white;
+  box-sizing: border-box;
+}
+.duplicate-check-btn0{
+  height: 52px; /* Match the height of the input field */
+  width: 115px;
+  padding: -1px 50px; /* Add padding for better appearance */
+  border: 1px solid #333333;
+  background-color: #333333;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+.userid_join{
+
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 30px;
+  width: 303px;
+}
+
+.userpw_join{
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 30px;
+  width: 430px;
 }
 
 .half-input {
@@ -91,15 +205,14 @@ body {
 }
   .input-group {
     display: flex;
-    flex-direction: column;
     margin-bottom: 10px; /* Space between input groups */
 }
 
 
 
 .search-btn {
-  margin-bottom: 10px;
-  height: 60px; /* Match the height of the input field */
+  /* margin-bottom: 10px; */
+  height: 52px; /* Match the height of the input field */
   padding: 0 50px; /* Add padding for better appearance */
   border: 1px solid #333333;
   background-color: #333333;
