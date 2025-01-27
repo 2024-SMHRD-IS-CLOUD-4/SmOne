@@ -265,28 +265,6 @@
   background-color: #005fa3;
 }
 
-.search-results {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  border-radius: 5px;
-  margin-top: 5px;
-  max-height: 150px;
-  overflow-y: auto;
-}
-
-.search-result-item {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.search-result-item:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
 /* 푸터 */
 .footer {
   height: 20px;

@@ -156,7 +156,9 @@ function Main() {
     setSearchResults(filteredResults);
     setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
-
+  const handleEditPatient = () => {
+    navigate("/Patientedit"); // Patientedit.jsx로 이동
+  };
   const handleDiagnosisClick = () => {
     if (!imagePanelImage) {
       alert("이미지를 업로드해주세요!");
@@ -294,6 +296,9 @@ function Main() {
             </div>
             <div className="patient-info-header">
               <span className="patient-info-title">환자 정보</span>
+              <button className="edit-patient-button" onClick={handleEditPatient}>
+                환자 수정
+              </button>
             </div>
             <div className="patient-info-container">
               <div className="patient-info-row">환자 번호: 001</div>
@@ -326,7 +331,7 @@ function Main() {
                         {image ? (
                           <img src={image} alt="Uploaded Image" className="uploaded-image" />
                         ) : (
-                          <span>클릭하여 환자의 X-Ray<br></br>사진을 올려주세요</span>
+                          <span>과거 X-Ray 사진을<br /> 올려주세요</span>
                         )}
                       </label>
                       <input
@@ -353,10 +358,10 @@ function Main() {
                                 <img
                                   src={boxImages[index]}
                                   alt={`Box ${index + 1}`}
-                                  style={{ width: '90%', height: '90%', borderRadius: '5px' }}
+                                  style={{ marginLeft: '5px', width: '90%', height: '90%', borderRadius: '5px' }}
                                 />
                               ) : (
-                                <span>박스 {index + 1}</span>
+                                <span>X-ray {index + 1}</span>
                               )}
                             </label>
                             {boxImages[index] && (
@@ -394,7 +399,7 @@ function Main() {
                             className="uploaded-image"
                           />
                         ) : (
-                          <span>클릭하여 정상 X-Ray<br />사진을 올려주세요</span>
+                          <span> 현재 X-Ray 사진을<br /> 올려주세요</span>
                         )}
                       </label>
                       <input
@@ -417,10 +422,10 @@ function Main() {
                                 <img
                                   src={panelBoxImages[index]}
                                   alt={`Panel Box ${index + 1}`}
-                                  style={{ width: '90%', height: '90%', borderRadius: '5px' }}
+                                  style={{ marginLeft: '5px', width: '90%', height: '90%', borderRadius: '5px' }}
                                 />
                               ) : (
-                                <span>박스 {index + 1}</span>
+                                <span>X-ray {index + 1}</span>
                               )}
                             </label>
                             {panelBoxImages[index] && (
