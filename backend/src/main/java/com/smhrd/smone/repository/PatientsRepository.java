@@ -19,5 +19,4 @@ public interface PatientsRepository extends JpaRepository<Patients, Long> {
     // 주민등록번호로만 검색
     Page<Patients> findByBirthStartingWith(String birth, PageRequest pageRequest);
 
-
 	}
