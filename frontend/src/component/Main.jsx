@@ -135,16 +135,15 @@ function Main() {
     setShowPatientJoin(true);
     setShowMyPage(false);
   };
-  const handleSearchChange = () => {
-    const nameQuery = searchInput.trim(); // 이름 검색 값
-    const birthQuery = searchInputbirth.trim(); // 생년월일 검색 값
-
+  const handleSearchChange = (nameQuery, birthQuery) => {
+    nameQuery = nameQuery.trim(); // 이름 검색 값
+    birthQuery = birthQuery.trim(); // 생년월일 검색 값
+  
     if (!nameQuery && !birthQuery) {
-      // 이름과 생년월일 모두 입력하지 않았을 경우
-      setSearchResults([]);
+      setSearchResults([]); // 검색 조건이 없으면 빈 결과로 설정
       return;
     }
-
+  
     // 조건에 따라 환자 리스트 필터링
     const filteredResults = patientList.filter((patient) => {
       const matchesName = nameQuery === "" || patient.name.includes(nameQuery);
@@ -220,14 +219,20 @@ function Main() {
               placeholder="이름을 입력하세요"
               value={searchInput}
               className="search-input1"
-              onChange={(e) => setSearchInput(e.target.value)}
+              onChange={(e) => {
+                setSearchInput(e.target.value);
+                handleSearchChange(e.target.value, searchInputbirth);
+              }}
             />
             <input
               type="text"
               placeholder="생년월일 6자리를 입력하세요"
               value={searchInputbirth}
               className="search-input2"
-              onChange={(e) => setSearchInputbirth(e.target.value)}
+              onChange={(e) => {
+                setSearchInputbirth(e.target.value);
+                handleSearchChange(searchInput, e.target.value);
+              }}
             />
             <button className="search-button" onClick={handleSearchChange}>검색</button>
           </div>
@@ -390,7 +395,7 @@ function Main() {
 
 
                     </div>
-                    <div className="image-panel">
+                    <div className="current-image-panel">
                       <label htmlFor="image-panel-upload" className="upload-box">
                         {imagePanelImage ? (
                           <img
