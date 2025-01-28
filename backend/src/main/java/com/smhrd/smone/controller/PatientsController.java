@@ -8,9 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.smhrd.smone.model.Patients;
+import com.smhrd.smone.repository.PatientsRepository;
 import com.smhrd.smone.service.PatientsService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/patients")
@@ -53,4 +56,33 @@ public class PatientsController {
         }
         return ResponseEntity.ok(patients);
     }
+    
+    // 환자 정보 수정
+    @PutMapping("/update/{pIdx}")
+    public ResponseEntity<?> updatePatient(
+    		@PathVariable("pIdx") Integer pIdx,
+    		@RequestBody Patients newData
+    ) {
+    	try {
+    		Patients updated = patientsService.updatePatient(pIdx, newData);
+    		return ResponseEntity.ok(updated); // 수정된 환자 정보 반환
+    	} catch (NoSuchElementException e) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("환자를 찾을 수 없습니다.");
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("환자 정보 수정 중 오류가 발생했습니다.");
+    	}
+    }
+    
+    // 환자 정보 삭제
+    @DeleteMapping("/{pIdx}")
+    public ResponseEntity<?> deletePatient(@PathVariable("pIdx") Integer pIdx){
+    	try {
+    		patientsService.deletePatient(pIdx);
+    		return ResponseEntity.ok("환자 삭제 성공");
+    	} catch (NoSuchElementException e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("환자 삭제 중 오류가 발생했습니다.");
+    	}
+    }
+    
 }
