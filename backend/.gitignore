@@ -34,3 +34,5 @@ build/
 
 ### jar file ###
 *.jar
+
+**/.env

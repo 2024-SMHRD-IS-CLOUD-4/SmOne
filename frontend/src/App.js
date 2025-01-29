@@ -20,11 +20,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/main" element={<Main />} />
         <Route path="/signup" element={<Signup />} />
-<<<<<<< HEAD
-        <Route path="/Change-pw" element={<Changepw />} />
-=======
         <Route path="/Changepw" element={<Changepw />} />
->>>>>>> branch 'master' of https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne
         <Route path="/find-id" element={<Findid />} />
         <Route path="/identitycheck" element={<IdentityCheck />} />
         <Route path="/mypage" element={<MyPage />} />

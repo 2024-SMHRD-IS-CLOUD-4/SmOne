@@ -1,18 +1,18 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 import "./Diagnosis.css";
 
 function Diagnosis() {
+  const navigate = useNavigate(); // 네비게이터 훅
   const handlePrint = () => {
-    window.print(); // 화면 출력 기능
+    window.print();
   };
+  const handleCancel = () => {
+    navigate(-1); // 취소 시 Result 화면으로 이동
+  };
+
   
   return (
-<<<<<<< HEAD
-<<<<<<< HEAD
-    <div style={{ position: "relative",height: "790px" }}>
-      {/* 반투명 배경 박스 */}
-      <div className="background-box"></div>
-=======
     <div className="diagnosis-body">
     <div className="diagnosis-container">
       {/* 움직이는 배경 비디오 */}
@@ -20,21 +20,14 @@ function Diagnosis() {
         <source src="video.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
->>>>>>> branch 'master' of https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne
-=======
-    <div className="diagnosis-body">
-    <div className="diagnosis-container">
-      {/* 움직이는 배경 비디오 */}
-      <video className="video-background" autoPlay muted loop>
-        <source src="video.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
->>>>>>> branch 'master' of https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne
 
     <div className="overlay-box">
     <button className="print-button" onClick={handlePrint}>
             <img src={require("./printerimg.png")} alt="Print Icon" />
             출력하기
+          </button>
+          <button className="cancel-button" onClick={handleCancel}>
+            이전화면
           </button>
     <div className="report-content">
       <div className="report-header">

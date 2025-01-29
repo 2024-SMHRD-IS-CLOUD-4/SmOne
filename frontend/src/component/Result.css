@@ -25,6 +25,7 @@
   padding: 10px 20px;
   color: white;
   height: 80px;
+  margin-right: 300px;
 }
 
 .logo {
@@ -172,6 +173,7 @@
   display: flex;
   gap: 20px;
   align-items: center;
+  overflow: hidden; /* 스크롤 제거 */
 }
 
 /* 진단 영역 */
@@ -193,10 +195,11 @@
   text-align: center;
   border-radius: 10px;
   width: 700px;
-  height: 650px;
+  height: 683px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 5px;
 }
 
 /* 이미지 설명 영역 */
@@ -208,7 +211,7 @@
   background: rgba(0, 0, 0, 0.7);
   border-radius: 5px;
   color: white;
-  height: 655px;
+  height: 710px;
   width: 700px;
 }
 
@@ -263,28 +266,6 @@
   background-color: #005fa3;
 }
 
-.search-results {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  border-radius: 5px;
-  margin-top: 5px;
-  max-height: 150px;
-  overflow-y: auto;
-}
-
-.search-result-item {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.search-result-item:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
 /* 푸터 */
 .footer {
   height: 20px;
@@ -329,10 +310,8 @@
     -webkit-print-color-adjust: exact;
   }
 }
-/* Result.css */
 .canvas-container {
   position: relative;
-<<<<<<< HEAD
   align-items: center;
   width: 97%; /* uploaded-image와 동일한 width */
   height: 99%; /* uploaded-image와 동일한 height */
@@ -346,36 +325,65 @@
   width: 100%;
   height: 97%;
   border-radius: 10px;
-  cursor: url('./pen.png')16 16, crosshair; /* 연필 모양 커서 */
-=======
-  width: 700px;
-  height: 650px;
+  cursor: crosshair; 
 }
 
+.clear-button {
+  margin-top: 55px;
+  padding: 10px 15px;
+  background-color: #ffffff;
+  color: white;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 16px;
+}
 
-.drawing-canvas {
+/* 색상 선택기 */
+.color-picker-label {
+  display: flex;
+  align-items: center;
+  transform: translateX(562px); /* 1000px 오른쪽으로 이동 */
+}
+
+.color-picker {
+  padding: 5px;
+  height: 45px;
+  width: 45px;
+  border: none;
+  border-radius: 5px 0 0 5px;
+  cursor: pointer;
+  margin-top: 60px;
+  background-color: #ffffff;
+}
+.diagnosis .canvas-container {
+  position: relative;
+  width: 97%; /* Match with uploaded-image width */
+  height: 97%; /* Match with uploaded-image height */
+  margin-top: 10px; /* Add some spacing from the uploaded image */
+}
+
+.diagnosis .drawing-canvas {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 10px;
   cursor: crosshair;
->>>>>>> branch 'master' of https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne
+  border-radius: 10px;
+}
+.diagnosis .canvas-container {
+  position: relative;
+  width: 100%; /* 전체 가로 크기 */
+  height: 100%; /* 전체 세로 크기 */
 }
 
-.clear-button {
-  margin-top: 20px;
-  padding: 10px 15px;
-  background-color: #4187f6;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
+.diagnosis .drawing-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; /* 부모의 100% */
+  height: 100%; /* 부모의 100% */
+  cursor: crosshair;
+  border-radius: 0; /* 둥근 모서리 제거 */
 }
-
-.clear-button:hover {
-  background-color: #005fa3;
-}
-

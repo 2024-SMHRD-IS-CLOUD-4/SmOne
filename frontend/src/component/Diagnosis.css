@@ -1,16 +1,15 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-.background-box {
-  position: absolute; /* 화면의 특정 위치에 배치 */
-  top: 0;
-  left: 0;
-  width: 1000px; /* 화면 너비 전체 */
-  height: 800px; /* 화면 높이 전체 */
-  border-radius: 5px;
-  background: rgba(0, 0, 0, 0.7); /* 어두운 반투명 배경 */
-  z-index: -1; /* report-content 뒤로 배치 */
-=======
-
+@media print {
+  body * {
+    visibility: hidden; /* 모든 요소 숨김 */
+  }
+  .report-content {
+    visibility: visible; /* report-content만 보이게 */
+    position: absolute; /* 페이지 상단에 고정 */
+    top: 60px;
+    left: 90px;
+    width: 200%; /* 가로 전체를 채움 */
+  }
+}
 .diagnosis-body {
   position: relative;
   width: 100vw; /* 화면 너비 전체 */
@@ -20,64 +19,31 @@
   align-items: center;
   justify-content: flex-start; /* 상단부터 배치 */
   overflow: hidden;
->>>>>>> branch 'master' of https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne
-=======
-
-.diagnosis-body {
-  position: relative;
-  width: 100vw; /* 화면 너비 전체 */
-  height: 100vh; /* 화면 높이 전체 */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start; /* 상단부터 배치 */
-  overflow: hidden;
->>>>>>> branch 'master' of https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-.report-content {
-  width: 793.7px; /* A4 가로 크기 */
-  height: 1170px; /* A4 세로 크기 */
-  margin: auto;
-  padding: 20px;
-  background-color: white;
-  border: 1px solid #ccc;
-  transform: scale(0.65); /* 80% 크기로 축소 */
-=======
+/* 로고 스타일 */
+.team-logo {
+  height: 50px; /* 로고 높이 */
+  width: auto; /* 비율 유지 */
+}
 .print-button {
+  position: absolute; /* 위치를 절대값으로 설정 */
+  top: 20px; /* 상단에서 20px */
+  right: 20px; /* 오른쪽 가장자리에서 20px */
   background-color: #4187f6;
   color: white;
   padding: 10px 15px;
   border: none;
   cursor: pointer;
   height: 60px;
-  width: 150px;
+  width: 135px;
   border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px; /* 버튼 아래 여백 */
->>>>>>> branch 'master' of https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne
-=======
-.print-button {
-  background-color: #4187f6;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  cursor: pointer;
-  height: 60px;
-  width: 150px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px; /* 버튼 아래 여백 */
->>>>>>> branch 'master' of https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne
 }
+
 
 .print-button img {
   width: 40px;
@@ -87,13 +53,40 @@
 .print-button:hover {
   background-color: #005fa3;
 }
+/* 취소하기 버튼 스타일 */
+.cancel-button {
+  position: absolute;
+  top: 20px; /* 출력 버튼과 같은 높이 */
+  right: 230px; /* 출력 버튼의 오른쪽에 위치 */
+  background-color: #f44336; /* 빨간색 배경 */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  height: 60px;
+  width: 135px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cancel-button img {
+  width: 40px;
+  height: 40px;
+}
+
+.cancel-button:hover {
+  background-color: #d32f2f; /* 더 진한 빨간색 */
+}
 
 .overlay-box {
   position: absolute;
-  top: 20px;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
+  top: 10px;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
   background: rgba(0, 0, 0, 0.5); /* 반투명 검은색 */
   border-radius: 5px;
   display: flex;
@@ -104,15 +97,12 @@
   overflow: auto;
 }
 .report-content {
+  transform: scale(0.8); /* 크기를 70%로 줄임 */
   position: relative;
   background-color: white;
   padding: 20px;
-  width: 80%; /* 크기 조정 */
-  height: 80%; /* 크기 조정 */
   max-width: 210mm;
   max-height: 297mm;
-  margin: auto;
-  overflow: auto;
   box-sizing: border-box;
 }
 
@@ -187,35 +177,4 @@
   height: 100px;
   vertical-align: top;
   padding: 10px;
-}
-@media print {
-  /* 인쇄 스타일 */
-  body {
-    margin: 0;
-    padding: 0;
-  }
-
-  .diagnosis-body {
-    width: 1%;
-    height: 1%;
-    overflow: visible;
-  }
-
-  .report-content {
-    width: 210mm; /* A4 용지 너비 */
-    height: 297mm; /* A4 용지 높이 */
-    margin: 0 auto; /* 여백 제거 */
-    padding: 10mm; /* 내용 간격 유지 */
-    box-sizing: border-box; /* 패딩 포함하여 크기 계산 */
-    page-break-inside: avoid; /* 페이지 내 잘림 방지 */
-  }
-
-  .grid-table {
-    width: 90%;
-    border-collapse: collapse; /* 테이블 경계선 겹침 방지 */
-  }
-
-  .print-button {
-    display: none; /* 인쇄 시 버튼 숨기기 */
-  }
 }

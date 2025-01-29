@@ -38,7 +38,7 @@
   gap: 10px; /* 로고와 스마트 버튼 간격 */
   
 }
-
+/* 스마트인재개발원 버튼 */
 .smart-button {
   background: transparent;
   color: white;
@@ -49,7 +49,13 @@
   cursor: pointer;
   align-self: center; /* Center the button horizontally */
 }
-
+.no-results {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  padding: 10px;
+}
+/* 진단하기 버튼 */
 .print-button {
   background-color: #48699f;
   color: white;
@@ -58,7 +64,7 @@
   cursor: pointer;
   height: 60px;
   width: 150px;
-  margin-right: 50px;
+  margin-right: 70px;
   border-radius: 5px;
   display: flex;
   align-items: center; /* Align icon and text vertically */
@@ -88,11 +94,30 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
-
+  
 }
+/* 환자 리스트 스크롤바 스타일 */
+.patient-list-container::-webkit-scrollbar {
+  width: 8px; /* 스크롤바 너비 */
+}
+
+.patient-list-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1); /* 트랙 배경색 */
+  border-radius: 5px; /* 트랙의 모서리를 둥글게 */
+}
+
+.patient-list-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3); /* 스크롤바 색상 */
+  border-radius: 5px; /* 스크롤바의 모서리를 둥글게 */
+}
+
+.patient-list-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5); /* Hover 시 스크롤바 색상 */
+}
+/* 환자정보와 환자수정버튼이 들어있는 곳 */
 .patient-info-header {
   background: rgba(0, 0, 0, 0.7);
-  border-radius:10px 10px 0 0;
+  border-radius:5px 5px 0 0;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -106,21 +131,77 @@
   margin-left: 15px;
   margin-right: 120px; /* 버튼과의 간격 */
 }
-
-.add-patient-button {
-  background: transparent;
+/* 환자리스트 박스 */
+.patient-list-container {
+  background: rgba(0, 0, 0, 0.7); /* Match the dark background */
+  padding: 20px; /* Consistent padding */
+  border-radius: 5px; /* Rounded bottom corners */
+  color: white; /* White text color */
+  display: flex;
+  flex-direction: column; /* Align content vertically */
+  gap: 10px; /* Space between list items */
+  max-height: 250px; /* Set max height */
+  overflow-y: auto; /* Enable scrolling for overflow */
+  margin-bottom: 20px; /* Space below the container */
+}
+.edit-patient-button {
+  background-color: #4187f6;
   color: white;
   border: none;
   padding: 10px 15px;
   border-radius: 5px;
-  font-size: 17px;
+  font-size: 15px;
   cursor: pointer;
+  margin-left: auto;
 }
 
+.patient-list h3 {
+  margin: 0;
+  font-size: 25px; /* Match title font size */
+  font-weight: bold; /* Make the title bold */
+  color: white; /* White text for the title */
+}
+/* 환자리스트에 들어있는 환자들 */
+.patient-item {
+  font-size: 15px; /* Consistent font size */
+  padding: 10px; /* Add padding around each item */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border between items */
+}
+
+.patient-item:last-child {
+  border-bottom: none; /* Remove border for the last item */
+}
+
+.pagination {
+  display: flex;
+  justify-content: center; /* Center align buttons */
+  margin-top: 10px;
+  gap: 5px; /* Space between buttons */
+}
+
+.pagination-button {
+  background: rgba(255, 255, 255, 0.2); /* Semi-transparent buttons */
+  border: none;
+  border-radius: 5px;
+  padding: 5px 15px;
+  color: white; /* White text */
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.pagination-button.active {
+  background-color: #4187f6; /* Highlight active button */
+  color: white;
+}
+
+.pagination-button:hover {
+  background-color: rgba(255, 255, 255, 0.4); /* Lighter hover effect */
+}
+/* 환자정보 박스 */
 .patient-info-container {
   background: rgba(0, 0, 0, 0.7);
   padding: 20px;
-  border-radius: 0 0 10px 10px; /* Only bottom-left and bottom-right corners */
+  border-radius: 0 0 5px 5px; /* Only bottom-left and bottom-right corners */
   color: white;
   display: flex;
   flex-direction: column;
@@ -131,9 +212,10 @@
 .patient-info-row {
   font-size: 18px;
 }
+/* 진단날짜가 들어있는헤더 */
 .diagnosis-date-header {
   background: rgba(0, 0, 0, 0.7);
-  border-radius: 10px 10px 0 0;
+  border-radius: 5px 5px 0 0;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -146,16 +228,16 @@
   font-weight: bold;
   color: white;
 }
-
+/* 진단날짜 박스 스타일 적용 안되면 result.css 파일에서 손볼것 */
 .diagnosis-date-container {
   background: rgba(0, 0, 0, 0.7);
   padding: 20px;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 5px 5px;
   color: white;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: 215px;
+  height: 100px;
 }
 .diagnosis-date-row {
   font-size: 18px;
@@ -178,7 +260,7 @@
   align-items: center;
 }
 
-/* 진단 영역 */
+/* 과거 X-ray사진 등록 박스 */
 .diagnosis {
   flex: 1;
   display: flex;
@@ -190,13 +272,13 @@
 
 }
 
-/* 업로드 박스 */
+/* 큰 사진이 업로드 되는  박스 */
 .upload-box {
   font-size: 50px;
   color: white;
   cursor: pointer;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 5px;
   width: 100%;
   height: 650px;
   display: flex;
@@ -207,7 +289,7 @@
 .upload-box:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
-/* 이미지 설명 영역 */
+/* 현재 X-ray사진 등록 박스 */
 .image-panel {
   flex: 1;
   display: flex;
@@ -225,19 +307,33 @@
   object-fit: cover;
   border-radius: 10px;
 }
-.add-box {
-  font-size: 50px;
+
+
+.current-image-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* 수직 방향 배치 */
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 5px;
   color: white;
-  cursor: pointer;
+  height: 810px;  
 }
 
-.image-panel {
+.upload-box-row {
+  display: flex;
+  gap: 10px; /* 박스 간 간격 */
+  justify-content: center; /* 중앙 정렬 */
+  margin-top: 10px;
+}
+
+.image-panel-upload {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 .xray-image {
   width: 100%;
   max-width: 300px;
@@ -256,28 +352,13 @@
   height: 90px;
 }
 
-/* 기존 CSS와 동일, 아래에만 추가 */
-
-.add-box {
-  font-size: 50px;
-  color: white;
-  cursor: pointer;
-  text-align: center;
-  border: 2px dashed white;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-.add-box:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-  /* 검색창 스타일 */
+  /* 이름입력, 생년월일, 검색버튼 통합 */
   .search-bar {
     display: flex;
     flex-direction: row; /* 좌우 배치 */
     align-items: center;
   }
-  
+  /* 이름입력하세요, 생년월일 6자리를 입력하세요 박스  */
   .search-input1,
   .search-input2 {
     width: 400px; /* 입력 필드 너비 */
@@ -309,15 +390,12 @@
   max-height: 150px;
   overflow-y: auto;
 }
-.search-result-item {
+.search-results {
   padding: 10px;
   cursor: pointer;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.search-result-item:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
 .xray-image {
   width: 100%;
   max-width: 680px;
@@ -346,7 +424,63 @@
   overflow: hidden;
 }
 
-/*---------------------------------------------------*/
+.upload-box-row {
+  display: flex;
+  gap: 10px; /* 박스 간 간격 */
+  justify-content: center;
+  margin-top: 20px; /* 박스와 상단 간격 */
+}
+/* 작은 X-ray사진들이 들어가는 박스 */
+.upload-box-item {
+  position: relative; /* X 버튼을 상단에 배치하기 위해 필요 */
+  width: 100px;
+  height: 100px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px dashed white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
 
+
+.upload-box-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.upload-box-item img {
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.remove-image-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.remove-image-button:hover {
+  background-color: darkred;
+}
+.upload-box-row {
+  display: flex;
+  gap: 10px; /* 박스 간 간격 */
+  justify-content: center; /* 중앙 정렬 */
+  margin-top: 20px; /* uploaded-image와의 간격 */
+}
 
 
