@@ -18,7 +18,9 @@ function Result() {
   const canvasRef = useRef(null);
   const isDrawingRef = useRef(false);
   const contextRef = useRef(null);
-  
+  const [color, setColor] = useState("black"); // 기본 색상은 빨간색
+  // 색상 변경 핸들러 추가
+
   const patientList = [
     { name: "김철수", birth: "900101" },
     { name: "김지수", birth: "000101" },
@@ -56,19 +58,13 @@ function Result() {
   };
   useEffect(() => {
     const canvas = canvasRef.current;
-    const uploadedImage = document.querySelector(".uploaded-image");
-
-    if (uploadedImage) {
-      canvas.width = uploadedImage.offsetWidth;
-      canvas.height = uploadedImage.offsetHeight;
-    }
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
+
     const context = canvas.getContext("2d");
-    context.strokeStyle = "red"; // 기본 선 색상
-    context.lineWidth = 3; // 기본 선 두께
+    context.lineWidth = 3; // 선 두께 설정
+    context.strokeStyle = color;
     contextRef.current = context;
-    
   }, []);
 
   const startDrawing = ({ nativeEvent }) => {
@@ -94,7 +90,14 @@ function Result() {
     const canvas = canvasRef.current;
     contextRef.current.clearRect(0, 0, canvas.width, canvas.height);
   };
-
+  // 색상 변경 핸들러
+  const handleColorChange = (event) => {
+    const newColor = event.target.value;
+    setColor(newColor);
+    if (contextRef.current) {
+      contextRef.current.strokeStyle = newColor; // 새로운 색상 적용
+    }
+  };
 
   return (
     <div>
@@ -111,9 +114,20 @@ function Result() {
             onClick={() => navigate("/Main")}
             style={{ cursor: "pointer" }}
           />
+          {/* 색상 선택기 */}
+          <label className="color-picker-label">
+            <input
+              type="color"
+              value={color}
+              onChange={handleColorChange}
+              className="color-picker"
+              title="Choose drawing color"
+            />
+          </label>
           <button onClick={clearCanvas} className="clear-button">
-            Clear Drawing
+            <img src={require("./eraser.png")} alt="Eraser Icon" style={{ width: "24px", height: "24px" }} />
           </button>
+
           <button className="print-button" onClick={handlePrintClick}>
             <img src={require("./printerimg.png")} alt="Stethoscope Icon" />
             출력하기
@@ -121,7 +135,7 @@ function Result() {
         </header>
         <div className="main">
           <div className="left-panel">
-          <button className="smart-button" onClick={toggleMyPage}>
+            <button className="smart-button" onClick={toggleMyPage}>
               스마트인재개발원
             </button>
             <div className="patient-info-header">
@@ -142,14 +156,13 @@ function Result() {
             </div>
           </div>
           <div
-            className={`right-panel ${
-              showMyPage || showPatientJoin ? "show-my-page" : ""
-            }`}
+            className={`right-panel ${showMyPage || showPatientJoin ? "show-my-page" : ""
+              }`}
           >
             {showMyPage && <MyPage />}
             {showPatientJoin && <PatientJoin />}
-  
-            {!showMyPage && !showPatientJoin &&  (
+
+            {!showMyPage && !showPatientJoin && (
               <div className="upload-area">
                 <div className="diagnosis">
                   <label htmlFor="image-upload" className="upload-box">
@@ -163,30 +176,41 @@ function Result() {
                       <span>+</span>
                     )}
                   </label>
+                  <div className="canvas-container">
+                    <canvas
+                      ref={canvasRef}
+                      className="drawing-canvas"
+                      style={{ cursor: "url('./signpen.png'), auto" }}
+                      onMouseDown={startDrawing}
+                      onMouseMove={draw}
+                      onMouseUp={finishDrawing}
+                      onMouseLeave={finishDrawing}
+                    ></canvas>
+                  </div>
                 </div>
                 <div className="image-panel">
-            {imagePanel ? (
-              <div className="canvas-container">
-                <img
-                  src={imagePanel}
-                  alt="Uploaded to Panel"
-                  className="uploaded-image"
-                />
-                <canvas
-                  ref={canvasRef}
-                  className="drawing-canvas"
-                  onMouseDown={startDrawing}
-                  onMouseMove={draw}
-                  onMouseUp={finishDrawing}
-                  onMouseLeave={finishDrawing}
-                ></canvas>
-              </div>
-            ) : (
-              <span>No Image Uploaded</span>
-            )}
-          </div>
+                  {imagePanel ? (
+                    <div className="canvas-container">
+                      <img
+                        src={imagePanel}
+                        alt="Uploaded to Panel"
+                        className="uploaded-image"
+                      />
+                      <canvas
+                        ref={canvasRef}
+                        className="drawing-canvas"
+                        onMouseDown={startDrawing}
+                        onMouseMove={draw}
+                        onMouseUp={finishDrawing}
+                        onMouseLeave={finishDrawing}
+                      ></canvas>
+                    </div>
+                  ) : (
+                    <span>No Image Uploaded</span>
+                  )}
+                </div>
 
-        </div>
+              </div>
             )}
             {!showMyPage && !showPatientJoin && (
               <div className="diagnosis-info">

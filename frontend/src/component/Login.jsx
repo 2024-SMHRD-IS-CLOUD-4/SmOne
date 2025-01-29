@@ -59,7 +59,7 @@ const Login = () => {
     };
 
     const handleFindId = () => {
-        navigate('/find-id');
+        navigate('/findid');
     };
 
     const handleFindPw = () => {
