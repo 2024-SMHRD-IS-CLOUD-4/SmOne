@@ -30,7 +30,7 @@ public class XrayImagesService {
         return xrayRepo.findBypIdx(pIdx);
     }
 
-    // 파일 업로드 => DB insert(RESULT=null)
+    // 새 X-RAY 업로드 AND DB insert(RESULT=null, PROCESSED_AT = NULL)
     public List<XrayImages> insertXrayImages(Integer pIdx, List<MultipartFile> files) throws Exception {
         List<XrayImages> resultList = new ArrayList<>();
         for(MultipartFile mf : files){
@@ -38,7 +38,7 @@ public class XrayImagesService {
 
             // 1) 로컬 파일 저장
             String orig = mf.getOriginalFilename();
-            String saveName = System.currentTimeMillis() + "_" + orig;
+            String saveName = System.currentTimeMillis() + "_" + orig; 
             Path dest = Paths.get(uploadDir + File.separator + saveName);
             Files.write(dest, mf.getBytes());
 

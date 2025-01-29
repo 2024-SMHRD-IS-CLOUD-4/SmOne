@@ -24,7 +24,7 @@ public class XrayImagesController {
 	@Autowired
 	private XrayImagesService xrayService;
 	
-	// 환자별 x-ray 목록 조회
+	// 특정 환자 x-ray 목록 조회
 	@GetMapping("/{pIdx}")
     public ResponseEntity<?> getXraysByPatient(@PathVariable Integer pIdx) {
         try {
@@ -39,13 +39,15 @@ public class XrayImagesController {
 	@PostMapping("/diagnose")
     public ResponseEntity<?> diagnoseXray(@RequestParam("pIdx") Integer pIdx,
     									@RequestParam("files") List<MultipartFile> files) {
-        try {
+		try {
             List<XrayImages> saved = xrayService.insertXrayImages(pIdx, files);
             return ResponseEntity.ok(saved);
         } catch(Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업로드 실패: " + e.getMessage());
         }
     }
+
 	
 	// 특정 환자의 연-월-일 목록 (중복 없이, 최신순)
 	@GetMapping("/dates")
