@@ -47,4 +47,7 @@ public class XrayImages {
 	@Column(name = "RESULT", length = 255)
 	private String result; // 우선 null 허용
 	
+	@Column(name="BIG_XRAY", length=1000)
+	private String bigXray;
+	
 }
