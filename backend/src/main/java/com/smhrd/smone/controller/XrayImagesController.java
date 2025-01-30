@@ -37,16 +37,20 @@ public class XrayImagesController {
 	
 	// 진단하기 => 파일 업로드 => DB insert(RESULT=null)
 	@PostMapping("/diagnose")
-    public ResponseEntity<?> diagnoseXray(@RequestParam("pIdx") Integer pIdx,
-    									@RequestParam("files") List<MultipartFile> files) {
-		try {
-            List<XrayImages> saved = xrayService.insertXrayImages(pIdx, files);
-            return ResponseEntity.ok(saved);
-        } catch(Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업로드 실패: " + e.getMessage());
-        }
-    }
+	public ResponseEntity<?> diagnoseXray(
+	    @RequestParam("pIdx") Integer pIdx,
+	    @RequestParam("files") List<MultipartFile> files,
+	    @RequestParam(value="bigFilename", required=false) String bigFilename // 추가
+	) {
+	    try {
+	        List<XrayImages> saved = xrayService.insertXrayImages(pIdx, files, bigFilename);
+	        return ResponseEntity.ok(saved);
+	    } catch(Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                             .body("업로드 실패: " + e.getMessage());
+	    }
+	}
 
 	
 	// 특정 환자의 연-월-일 목록 (중복 없이, 최신순)

@@ -31,9 +31,9 @@ public class XrayImagesService {
     }
 
     // 새 X-RAY 업로드 AND DB insert(RESULT=null, PROCESSED_AT = NULL)
-    public List<XrayImages> insertXrayImages(Integer pIdx, List<MultipartFile> files) throws Exception {
+    public List<XrayImages> insertXrayImages(Integer pIdx, List<MultipartFile> files, String bigFilename) throws Exception {
         List<XrayImages> resultList = new ArrayList<>();
-        for(MultipartFile mf : files){
+        for(MultipartFile mf : files) {
             if(mf.isEmpty()) continue;
 
             // 1) 로컬 파일 저장
@@ -48,7 +48,15 @@ public class XrayImagesService {
             x.setImgPath(saveName);
             x.setProcessedAt(null);
             x.setResult(null);
-            resultList.add(xrayRepo.save(x));
+            
+            if(bigFilename != null && orig.equals(bigFilename)) {
+                x.setBigXray(saveName);
+            } else {
+                x.setBigXray(null);
+            }
+            
+            XrayImages saved = xrayRepo.save(x);
+            resultList.add(saved);
         }
         return resultList;
     }
