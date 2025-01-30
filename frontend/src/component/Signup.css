@@ -1,125 +1,150 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: black;
-  }
+/* src/component/Signup.css */
 
-  .join-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  .join-box {
-    padding: 40px 30px;
-    border-radius: 8px;
+/* 반투명 박스 */
+.signup-container {
     width: 450px;
+    margin: 100px auto 0 auto;
+    margin-bottom: 50px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    padding: 30px;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     text-align: center;
   }
   
-  
-  h1 {
-    color: #ffffff;
+  .signup-title {
+    font-size: 32px;
     margin-bottom: 20px;
-    font-size: 48px;
   }
   
-  form {
+  .signup-form {
     display: flex;
     flex-direction: column;
-  
-  }
-  
-  label {
+    gap: 15px;
     text-align: left;
-    font-size: 20px;
-    color: #ffffff;
+  }
+  .signup-form label {
+    font-weight: bold;
+    font-size: 14px;
     margin-bottom: 5px;
-    display: block;
   }
-  
-  input {
+  .signup-form input {
     padding: 10px;
-    border: 1px solid #cccccc;
+    border: none;
     border-radius: 4px;
-    font-size: 16px;
-    height: 30px;
-  }
-
-  input[type="password"] {
-    margin-bottom: 10px; /* 비밀번호 입력 박스 아래 간격 설정 */
-}
-.half-input-group {
-  display: flex; /* Align items in a row */
-  gap: 10px; /* Add 10px space between the inputs */
-  
-}
-
-.half-input {
-  flex: 1; /* Allow both inputs to share available space equally */
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 30px; /* Match height of other inputs */
-}
-  input:focus {
-    outline: none;
-    border-color: #ffffff;
-  }
-  .input-search-group {
-    display: flex; /* Align items horizontally */
-    align-items: center; /* Center vertically */
-    gap: 10px; /* Space between the input and button */
-}
-  .select-box1 {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    font-size: 16px;
-    height: 52px;
-    background-color: white;
-    margin-top: 0px;
+    font-size: 14px;
+    box-sizing: border-box;
   }
   
-
-.input-box {
-    
-  flex: 1; /* Allow the input box to grow and fill available space */
-}
-  .input-group {
+  .flex-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .small-btn, .search-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .small-btn:hover, .search-btn:hover {
+    background-color: #555;
+  }
+  
+  .submit-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .submit-btn:hover {
+    background-color: #555;
+  }
+  
+  /* 모달 */
+  .search-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    background-color: #fff;
+    z-index: 9999;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px; /* Space between input groups */
-}
-
-
-
-.search-btn {
-  margin-bottom: 10px;
-  height: 60px; /* Match the height of the input field */
-  padding: 0 50px; /* Add padding for better appearance */
-  border: 1px solid #333333;
-  background-color: #333333;
-  color: #ffffff;
-  cursor: pointer;
-  border-radius: 4px;
-}
+    overflow: hidden;
+  }
   
-  .join-button {
-    background-color: #333333;
-    color: #ffffff;
+  .modal-header {
+    position: relative;
+    flex: 0 0 auto;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  .modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+  }
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: red;
+    color: #fff;
     border: none;
-    height: 60px;
+    padding: 5px 10px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 20px;
   }
   
-  .join-button:hover {
-    background-color: #555555;
+  .modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
   }
   
-  
+  .map-area {
+    flex: 1;
+    background: #f1f1f1;
+  }
+  .list-area {
+    width: 300px;
+    padding: 10px;
+    overflow-y: auto;
+    border-left: 1px solid #ccc;
+  }
+  .list-area ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .list-area li {
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: #333;
+  }
+  .list-area li:hover {
+    background: #f7f7f7;
+  }
+  .list-area strong {
+    font-weight: bold;
+    color: #333;
+    display: block;
+  }
+  .list-area p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+  }

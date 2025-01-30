@@ -1,35 +1,41 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./component/Login";
-import Main from "./component/Main";
-import Signup from "./component/Signup";
-import Findid from "./component/Findid";
-import Changepw from "./component/Changepw";
-import IdentityCheck from "./component/IdentityCheck";
-import MyPage from "./component/MyPage";
-import PatientJoin from "./component/PatientJoin"; // PatientJoin 컴포넌트 추가
-import Loading from "./component/Loading";
-import Result from "./component/Result";
-import Diagnosis from "./component/Diagnosis";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
+import Signup from './component/Signup';
+import Login from './component/Login';
+import Main from './component/Main';
+import Patients from './component/Patients';
+import Changepw from './component/Changepw';
+import Findid from './component/Findid';
+import Findpw from './component/Findpw';
+import Mypage from './component/Mypage';
+import PatientEdit from './component/PatientEdit';
 
 function App() {
   return (
+    <div className="app-container">
+      {/* 배경 영상 */}
+      <video 
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="bg-video"
+        src="/video.mp4" // public 폴더에 있는 video.mp4
+      />
     <Router>
       <Routes>
-      <Route path="/login" element={<Login />} />
         <Route path="/" element={<Login />} />
-        <Route path="/main" element={<Main />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/Changepw" element={<Changepw />} />
-        <Route path="/find-id" element={<Findid />} />
-        <Route path="/identitycheck" element={<IdentityCheck />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/patient-join" element={<PatientJoin />} /> {/* PatientJoin 경로 추가 */}
-        <Route path="/loading" element={<Loading />} />
-        <Route path="/Result" element={<Result />} />
-        <Route path="/Diagnosis" element={<Diagnosis />} />
+        <Route path="/main" element={<Main />} />
+        <Route path='/patients' element={<Patients/>} />
+        <Route path='changepw' element={<Changepw/>} />
+        <Route path="/findid" element={<Findid />} />
+        <Route path="/findpw" element={<Findpw />} />
+        <Route path="/mypage" element={<Mypage/>} />
+        <Route path="/patients/edit/:pIdx" element={<PatientEdit />} />
       </Routes>
     </Router>
+    </div>
   );
 }
 

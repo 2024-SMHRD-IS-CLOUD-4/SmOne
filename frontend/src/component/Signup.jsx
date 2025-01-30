@@ -1,3 +1,4 @@
+// src/component/Signup.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -5,94 +6,120 @@ import "./Signup.css";
 
 function Signup() {
   const navigate = useNavigate();
+
+  // 폼 입력 상태
   const [formData, setFormData] = useState({
     userId: "",
     userPw: "",
     userName: "",
     role: "의사",
-    email: "",
+    emailId: "",
+    emailDomain: "",
     centerId: "",
-    postcode: "",
-    address: "",
-    detailAddress: "",
+    address: ""
   });
-  
-  const [isDuplicate, setIsDuplicate] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [setPlaces] = useState([]);
 
+  // 아이디 중복 여부
+  const [isDuplicate, setIsDuplicate] = useState(false);
+
+  // 기관 검색 모달 상태
+  const [showModal, setShowModal] = useState(false);
+  const [places, setPlaces] = useState([]);
+
+  // 입력 변경 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleAddressSearch = () => {
-    new window.daum.Postcode({
-      oncomplete: (data) => {
-        const fullAddress = `${data.zonecode} ${data.address}`;
-        setFormData({
-          ...formData,
-          postcode: data.zonecode,
-          address: data.address,
-          uAdd: `${fullAddress} ${formData.detailAddress}`,
-        });
-      },
-    }).open();
-  };
-
+  // 아이디 중복 체크
   const handleDuplicateCheck = async () => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_DB_URL}/users/check-duplicate/${formData.userId}`
+      const res = await axios.get(
+        `http://localhost:8090/SmOne/api/users/check-duplicate/${formData.userId}`
       );
-      setIsDuplicate(response.data);
-      if (response.data) {
+      setIsDuplicate(res.data); // true면 중복, false면 사용 가능
+      if (res.data) {
         alert("중복된 아이디 입니다.");
       } else {
         alert("사용 가능한 아이디 입니다.");
       }
     } catch (error) {
       console.error("중복 체크 에러:", error);
+      alert("서버 오류로 중복 체크에 실패했습니다.");
     }
   };
 
+  // 회원가입 제출
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // (1) 아이디 중복 여부
     if (isDuplicate) {
+      // 중복 아이디이면 가입 불가
       alert("중복된 아이디는 사용할 수 없습니다.");
       return;
     }
 
-    console.log("회원가입 데이터:", formData);
+    // (2) 각 필드가 비었는지 체크
+    if (!formData.userId.trim()) {
+      alert("아이디를 입력하세요.");
+      return;
+    }
+    if (!formData.userPw.trim()) {
+      alert("비밀번호를 입력하세요.");
+      return;
+    }
+    if (!formData.userName.trim()) {
+      alert("관리자명을 입력하세요.");
+      return;
+    }
+    if (!formData.emailId.trim()) {
+      alert("이메일 아이디를 입력하세요.");
+      return;
+    }
+    if (!formData.emailDomain.trim()) {
+      alert("이메일 도메인을 입력하세요.");
+      return;
+    }
+    if (!formData.centerId.trim()) {
+      alert("기관명을 입력하세요.");
+      return;
+    }
+    if (!formData.address.trim()) {
+      alert("주소를 선택하세요.");
+      return;
+    }
+
+    // (3) 이메일 합치기
+    const finalEmail = `${formData.emailId}@${formData.emailDomain}`;
+
+    // 서버로 전송할 객체
+    const sendData = {
+      ...formData,
+      email: finalEmail // 이메일 최종 문자열
+    };
+
+    console.log("회원가입 데이터:", sendData);
 
     try {
-      await axios.post(
-        `${process.env.REACT_APP_DB_URL}/users/register`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await axios.post("http://localhost:8090/SmOne/api/users/register", sendData, {
+        headers: { "Content-Type": "application/json" }
+      });
       alert("회원가입 성공!");
       navigate("/");
-    } catch (error) {
-      console.error("회원가입 에러:", error);
-      if (error.response) {
-        console.error("서버 응답 데이터:", error.response.data);
-      }
+    } catch (err) {
+      console.error("회원가입 에러:", err);
       alert("회원가입 실패!");
     }
   };
 
+  // 기관명 검색 (카카오 지도)
   const handleSearchCenter = () => {
     if (!formData.centerId.trim()) {
       alert("기관명을 입력해주세요.");
       return;
     }
-
     const ps = new window.kakao.maps.services.Places();
     ps.keywordSearch(formData.centerId, (data, status) => {
       if (status === window.kakao.maps.services.Status.OK) {
@@ -104,158 +131,181 @@ function Signup() {
     });
   };
 
+  // 모달 열릴 때 지도 생성
   useEffect(() => {
     if (showModal) {
       const container = document.getElementById("map");
       if (container) {
         const options = {
           center: new window.kakao.maps.LatLng(37.5665, 126.978),
-          level: 3,
+          level: 3
         };
         new window.kakao.maps.Map(container, options);
       }
     }
   }, [showModal]);
 
+  // 모달 닫기
   const closeModal = () => {
     setShowModal(false);
     setPlaces([]);
   };
 
-
   return (
-    <div>
-      <video className="video-background" autoPlay muted loop>
-        <source src="video.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+    <div className="signup-container">
+      <h1 className="signup-title">JOIN</h1>
 
-      <div className="join-container">
-        <div className="join-box">
-          <h1>JOIN</h1>
-          <form onSubmit={handleSubmit}>
-            <div className="input-group" style={{ display: 'flex'}}>
-            {formData.userId !== undefined && (
-              <input
-                type="text"
-                name="userId"
-                placeholder="아이디"
-                value={formData.userId}
-                onChange={handleChange}
-                required
-              />
-            )}
-              <button
-                type="button"
-                className="search-btn1"
-                onClick={handleDuplicateCheck}
-              >
-                중복 확인
-              </button>
-            </div>
-
-            <div className="input-group">
-              <label></label>
-              <input
-                type="password"
-                name="userPw"
-                placeholder="비밀번호"
-                value={formData.userPw}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <input
-                type="text"
-                name="userName"
-                placeholder="관리자명"
-                value={formData.userName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label></label>
-              <select name="role" value={formData.role} onChange={handleChange} className="select-box1">
-                <option value="의사">의사</option>
-                <option value="관리자">관리자</option>
-              </select>
-            </div>
-
-            <div className="input-group">
-              <label></label>
-              <input
-                type="email"
-                name="email"
-                placeholder="이메일"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label></label>
-              <input
-                type="text"
-                name="centerId"
-                placeholder="기관명"
-                value={formData.centerId}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label></label>
-              <div className="input-search-group">
-                <input
-                  type="text"
-                  name="postcode"
-                  placeholder="우편번호"
-                  value={formData.postcode}
-                  readOnly
-                  required
-                />
-                <button type="button" className="search-btn" onClick={handleAddressSearch}>
-                  검색
-                </button>
-              </div>
-            </div>
-
-            <div className="input-group">
-              <label></label>
-              <input
-                type="text"
-                name="address"
-                placeholder="주소"
-                value={formData.address}
-                readOnly
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label></label>
-              <input
-                type="text"
-                name="detailAddress"
-                placeholder="상세주소"
-                value={formData.detailAddress}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <button type="submit" className="join-button">
-              회원가입
-            </button>
-          </form>
+      <form className="signup-form" onSubmit={handleSubmit}>
+        
+        {/* 아이디 + 중복 버튼 */}
+        <label>아이디</label>
+        <div className="flex-row">
+          <input
+            type="text"
+            name="userId"
+            placeholder="아이디"
+            value={formData.userId}
+            onChange={handleChange}
+          />
+          <button type="button" className="small-btn" onClick={handleDuplicateCheck}>
+            중복 체크
+          </button>
         </div>
-      </div>
+
+        {/* 비밀번호 */}
+        <label>비밀번호</label>
+        <input
+          type="password"
+          name="userPw"
+          placeholder="비밀번호"
+          value={formData.userPw}
+          onChange={handleChange}
+        />
+
+        {/* 관리자명 */}
+        <label>관리자명</label>
+        <input
+          type="text"
+          name="userName"
+          placeholder="관리자명"
+          value={formData.userName}
+          onChange={handleChange}
+        />
+
+        {/* 직업: 의사 / 관리자 */}
+        <label>직업</label>
+        <div>
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="의사"
+              checked={formData.role === "의사"}
+              onChange={handleChange}
+            />
+            의사
+          </label>
+          <label style={{ marginLeft: 10 }}>
+            <input
+              type="radio"
+              name="role"
+              value="관리자"
+              checked={formData.role === "관리자"}
+              onChange={handleChange}
+            />
+            관리자
+          </label>
+        </div>
+
+        {/* 이메일: (이메일 아이디 + @ + 도메인) */}
+        <label>이메일</label>
+        <div className="flex-row">
+          <input
+            type="text"
+            name="emailId"
+            placeholder="이메일 아이디"
+            value={formData.emailId}
+            onChange={handleChange}
+            style={{ flex: 1 }}
+          />
+          <span style={{ margin: "0 8px", color: "#ccc", fontWeight: "bold" }}>
+            @
+          </span>
+          <input
+            type="text"
+            name="emailDomain"
+            placeholder="도메인"
+            value={formData.emailDomain}
+            onChange={handleChange}
+            style={{ flex: 1 }}
+          />
+        </div>
+
+        {/* 기관명 + 검색 버튼 */}
+        <label>기관명</label>
+        <div className="flex-row">
+          <input
+            type="text"
+            name="centerId"
+            placeholder="기관명을 입력하세요"
+            value={formData.centerId}
+            onChange={handleChange}
+          />
+          <button type="button" className="search-btn" onClick={handleSearchCenter}>
+            검색
+          </button>
+        </div>
+
+        {/* 주소 */}
+        <label>주소</label>
+        <input
+          type="text"
+          name="address"
+          placeholder="주소"
+          value={formData.address}
+          readOnly
+        />
+
+        {/* 제출 버튼 */}
+        <button type="submit" className="submit-btn">
+          회원가입
+        </button>
+      </form>
+
+      {/* 모달 */}
+      {showModal && (
+        <div className="search-modal">
+          <div className="modal-header">
+            <h2>지도 및 검색 결과</h2>
+            <button className="close-btn" onClick={closeModal}>닫기</button>
+          </div>
+          <div className="modal-body">
+            <div id="map" className="map-area"></div>
+            <div className="list-area">
+              <ul>
+                {places.map((place, index) => (
+                  <li
+                    key={index}
+                    onClick={() => {
+                      // 장소 클릭 시 => 기관명, 주소 업데이트
+                      setFormData({
+                        ...formData,
+                        centerId: place.place_name,
+                        address: place.address_name
+                      });
+                      alert(`선택된 주소: ${place.address_name}`);
+                      closeModal();
+                    }}
+                  >
+                    <strong>{place.place_name}</strong>
+                    <p>{place.address_name}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

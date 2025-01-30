@@ -1,486 +1,270 @@
-/* 전체 컨테이너 */
-.container {
-  font-family: Arial, sans-serif;
+/* src/component/Main.css */
+
+/* 전체 레이아웃 */
+.main-container {
+    position: relative;
+    width: calc(100% - 70px); /* Menu의 기본 너비(70px)만큼 조정 */
+    height: 100vh;
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    margin-left: 70px; /* Menu가 차지하는 공간만큼 이동 */
+    transition: margin-left 0.3s ease; /* 메뉴 확장 시 부드럽게 이동 */
+    flex-grow: 1;
+}
+
+/* Menu가 확장될 때 조정 */
+.menu-expanded .main-container {
+    margin-left: 220px; /* Menu가 확장될 때 메인 컨텐츠도 같이 이동 */
+    width: calc(100% - 220px);
+}
+.app-container {
+  display: flex;
+}
+
+/* 상단 바 */
+.top-bar {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+.main-team-logo {
+  width: 120px; /* 로고 크기 */
+  height: auto; /* 비율 유지 */
+  display: block;
+}
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.search-form input {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  width: 220px;
+  font-size: 16px;
+}
+.search-form button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+.search-form button:hover {
+  background: #555;
+}
+.diagnose-top-btn {
+  padding: 14px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #333;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.diagnose-top-btn:hover {
+  background: #555;
+}
+
+/* 사이드 메뉴 */
+.side-menu {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 220px;
+  height: calc(100vh - 80px);
+  background: rgba(0,0,0,0.8);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100%;
+  padding: 20px;
+  gap: 10px;
 }
-.video-background {
-  position: fixed; /* 화면에 고정 */
-  top: 0;
-  left: 0;
-  width: 100%; /* 화면 너비를 채움 */
-  height: 100%; /* 화면 높이를 채움 */
-  object-fit: cover; /* 화면 크기에 맞게 비율 유지하며 채움 */
-  z-index: -1; /* 콘텐츠 뒤로 배치 */
+.side-menu.open {
+  transform: translateX(0);
 }
-/* 헤더 */
-.header {
-  display: flex;
-  justify-content: space-between; /* 좌우로 분리 */
-  align-items: center;
-  padding: 10px 20px;
-  color: white;
-  height: 70px;
-}
-
-.logo {
-  width: 200px;
-  height: 200px;
-  margin-top: 50px;
-
-}
-
-.logo-container {
-  display: flex;
-  align-items: center; /* 로고와 버튼 세로 중앙 정렬 */
-  gap: 10px; /* 로고와 스마트 버튼 간격 */
-  
-}
-/* 스마트인재개발원 버튼 */
-.smart-button {
-  background: transparent;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  font-size: 20px;
-  cursor: pointer;
-  align-self: center; /* Center the button horizontally */
-}
-.no-results {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.7);
-  text-align: center;
+.menu-item {
+  background: none;
+  border: 1px solid #aaa;
   padding: 10px;
-}
-/* 진단하기 버튼 */
-.print-button {
-  background-color: #48699f;
-  color: white;
-  padding: 10px 15px;
-  border: none;
+  border-radius: 4px;
+  color: #fff;
   cursor: pointer;
-  height: 60px;
-  width: 150px;
-  margin-right: 70px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center; /* Align icon and text vertically */
-  justify-content: center; /* Center content horizontally */
-  gap: 10px; /* Space between icon and text */
+  text-align: left;
 }
-.print-button img {
-  width: 40px; /* Adjust size of the icon */
-  height: 40px;
-}
-.print-button:hover {
-  background-color: #005fa3;
+.menu-item:hover {
+  background: rgba(255,255,255,0.2);
 }
 
-/* 메인 컨텐츠 */
-.main {
-  display: flex;
+/* 본문 */
+.main-content {
   flex: 1;
-  overflow: auto;
-  color: black;
-  width: 100%;
+  display: flex;
+  height: calc(100vh - 80px);
+  overflow: hidden;
 }
 
 /* 왼쪽 패널 */
 .left-panel {
   width: 350px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  
+  overflow-y: auto; 
+  background-color: rgba(0,0,0,0.3);
+  padding: 10px;
+  color: #fff;
 }
-/* 환자 리스트 스크롤바 스타일 */
-.patient-list-container::-webkit-scrollbar {
-  width: 8px; /* 스크롤바 너비 */
+.panel-block {
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  padding: 10px;
+  color: #fff;
+  margin-bottom: 10px;
 }
-
-.patient-list-container::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1); /* 트랙 배경색 */
-  border-radius: 5px; /* 트랙의 모서리를 둥글게 */
+.patient-list {
+  list-style: none;
+  margin: 0; 
+  padding: 0;
 }
-
-.patient-list-container::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3); /* 스크롤바 색상 */
-  border-radius: 5px; /* 스크롤바의 모서리를 둥글게 */
-}
-
-.patient-list-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5); /* Hover 시 스크롤바 색상 */
-}
-/* 환자정보와 환자수정버튼이 들어있는 곳 */
-.patient-info-header {
-  background: rgba(0, 0, 0, 0.7);
-  border-radius:5px 5px 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-top: 10px;
-}
-
-.patient-info-title {
-  font-size: 25px;
-  font-weight: bold;
-  color: white;
-  margin-left: 15px;
-  margin-right: 120px; /* 버튼과의 간격 */
-}
-/* 환자리스트 박스 */
-.patient-list-container {
-  background: rgba(0, 0, 0, 0.7); /* Match the dark background */
-  padding: 20px; /* Consistent padding */
-  border-radius: 5px; /* Rounded bottom corners */
-  color: white; /* White text color */
-  display: flex;
-  flex-direction: column; /* Align content vertically */
-  gap: 10px; /* Space between list items */
-  max-height: 250px; /* Set max height */
-  overflow-y: auto; /* Enable scrolling for overflow */
-  margin-bottom: 20px; /* Space below the container */
-}
-.edit-patient-button {
-  background-color: #4187f6;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  font-size: 15px;
+.patient-list li {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding: 8px;
   cursor: pointer;
-  margin-left: auto;
+  border-radius: 6px;
+  color: #fff;
+  transition: background 0.2s;
 }
-
-.patient-list h3 {
-  margin: 0;
-  font-size: 25px; /* Match title font size */
-  font-weight: bold; /* Make the title bold */
-  color: white; /* White text for the title */
+.patient-list li:hover {
+  background: rgba(255,255,255,0.3);
 }
-/* 환자리스트에 들어있는 환자들 */
-.patient-item {
-  font-size: 15px; /* Consistent font size */
-  padding: 10px; /* Add padding around each item */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border between items */
-}
-
-.patient-item:last-child {
-  border-bottom: none; /* Remove border for the last item */
-}
-
 .pagination {
-  display: flex;
-  justify-content: center; /* Center align buttons */
   margin-top: 10px;
-  gap: 5px; /* Space between buttons */
+  display: flex;
+  gap: 5px;
+  justify-content: center; /* 버튼들을 가로 방향으로 가운데 정렬 */
+  align-items: center; /* 세로 방향 정렬 (필요 시) */
+  width: 100%; /* 부모 요소 기준으로 전체 너비 사용 */
 }
 
-.pagination-button {
-  background: rgba(255, 255, 255, 0.2); /* Semi-transparent buttons */
-  border: none;
-  border-radius: 5px;
-  padding: 5px 15px;
-  color: white; /* White text */
+.pagination button {
+  padding: 6px 10px;
+  border: 1px solid #999;
+  background: #fff;
   cursor: pointer;
-  font-size: 16px;
+  border-radius: 4px;
+}
+.patient-detail {
+  margin-top: 10px;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  padding: 10px;
+  color: #fff;
+}
+.patient-detail p {
+  margin-bottom: 8px; /* 간격을 5px로 조정 */
 }
 
-.pagination-button.active {
-  background-color: #4187f6; /* Highlight active button */
-  color: white;
+.btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #444;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 5px;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+.btn:hover {
+  background-color: #666;
+}
+.patient-reg-btn {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #444;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+.patient-reg-btn:hover {
+  background: #666;
 }
 
-.pagination-button:hover {
-  background-color: rgba(255, 255, 255, 0.4); /* Lighter hover effect */
-}
-/* 환자정보 박스 */
-.patient-info-container {
-  background: rgba(0, 0, 0, 0.7);
-  padding: 20px;
-  border-radius: 0 0 5px 5px; /* Only bottom-left and bottom-right corners */
-  color: white;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  height: 250px;
-}
-
-.patient-info-row {
-  font-size: 18px;
-}
-/* 진단날짜가 들어있는헤더 */
-.diagnosis-date-header {
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 5px 5px 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-top: 20px;
-  padding: 10px 20px;
-}
-
-.diagnosis-date-title {
-  font-size: 25px;
-  font-weight: bold;
-  color: white;
-}
-/* 진단날짜 박스 스타일 적용 안되면 result.css 파일에서 손볼것 */
-.diagnosis-date-container {
-  background: rgba(0, 0, 0, 0.7);
-  padding: 20px;
-  border-radius: 0 0 5px 5px;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  height: 100px;
-}
-.diagnosis-date-row {
-  font-size: 18px;
-  margin-left: 5px;
-}
-/* 오른쪽 패널 */
+/* 오른쪽 패널 (스크롤 없음) */
 .right-panel {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-right: 20px;
-  
-}
-
-/* 업로드 영역 */
-.upload-area {
-  display: flex;
-  gap: 20px; /* 두 네모칸 간격 */
-  align-items: center;
-}
-
-/* 과거 X-ray사진 등록 박스 */
-.diagnosis {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.7); /* 투명 배경 */
-  border-radius: 5px;
-
-}
-
-/* 큰 사진이 업로드 되는  박스 */
-.upload-box {
-  font-size: 50px;
-  color: white;
-  cursor: pointer;
-  text-align: center;
-  border-radius: 5px;
-  width: 100%;
-  height: 650px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.upload-box:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-/* 현재 X-ray사진 등록 박스 */
-.image-panel {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.7); /* 투명 배경 */
-  border-radius: 5px;
-  color: white;
-  height: 650px;
-}
-
-.uploaded-image {
-  width: 93%;
-  height: 93%;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-
-.current-image-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column; /* 수직 방향 배치 */
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 5px;
-  color: white;
-  height: 810px;  
-}
-
-.upload-box-row {
-  display: flex;
-  gap: 10px; /* 박스 간 간격 */
-  justify-content: center; /* 중앙 정렬 */
-  margin-top: 10px;
-}
-
-.image-panel-upload {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.xray-image {
-  width: 100%;
-  max-width: 300px;
-  border-radius: 5px;
-}
-
-/* 진단내용 스타일 */
-.diagnosis-info {
-  text-align: center;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.7); /* 투명 배경 */
-  color: white;
-  border-radius: 5px;
-  font-size: 30px;
-  flex-shrink: 0; /* 고정된 높이 유지 */
-  height: 90px;
+  overflow-y: hidden; 
+  background-color: transparent;
+  color: #fff;
+  position: relative;
+
 }
 
-  /* 이름입력, 생년월일, 검색버튼 통합 */
-  .search-bar {
-    display: flex;
-    flex-direction: row; /* 좌우 배치 */
-    align-items: center;
-  }
-  /* 이름입력하세요, 생년월일 6자리를 입력하세요 박스  */
-  .search-input1,
-  .search-input2 {
-    width: 400px; /* 입력 필드 너비 */
-    height: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-  }
-  
-  .search-button {
-    width: 70px; /* 버튼 고정 너비 */
-    height: 28px;
-    padding: 10px;
-    background-color: #4187f6;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    border: none;
-  }
-.search-results {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  background: rgba(0, 0, 0, 0.8); /* 어두운 배경 */
-  color: white;
-  border-radius: 5px;
-  margin-top: 5px;
-  max-height: 150px;
-  overflow-y: auto;
-}
-.search-results {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.xray-image {
-  width: 100%;
-  max-width: 680px;
-  border-radius: 5px;
-}
-/* 푸터 */
-.footer {
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 12px;
-}
-/* MyPage가 활성화되었을 때 스타일 */
-.right-panel.show-my-page {
-  justify-content: flex-start; /* MyPage 콘텐츠 위쪽부터 정렬 */
-  height: calc(97.9vh - 120px); /* 푸터 위까지만 확장 */
-  
-}
-
-/* MyPage 스타일 */
-.profile-container {
-  flex-grow: 1;
-  /* MyPage 내 스크롤 */
-  max-height: 950px; /* 부모 요소 높이에 맞춤 */
-  overflow: hidden;
-}
-
-.upload-box-row {
-  display: flex;
-  gap: 10px; /* 박스 간 간격 */
-  justify-content: center;
-  margin-top: 20px; /* 박스와 상단 간격 */
-}
-/* 작은 X-ray사진들이 들어가는 박스 */
-.upload-box-item {
-  position: relative; /* X 버튼을 상단에 배치하기 위해 필요 */
-  width: 100px;
-  height: 100px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 2px dashed white;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-
-.upload-box-item:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.upload-box-item img {
-  width: 90%;
-  height: 90%;
-  object-fit: cover;
-  border-radius: 5px;
-}
-.remove-image-button {
+/* 큰 불투명 박스 */
+.xray-panel {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: red;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  font-size: 12px;
-  cursor: pointer;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  border-left: 1px solid rgba(255,255,255,0.2); /* 왼쪽 테두리 추가 */
+  padding: 20px;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+/* X-ray 헤더 */
+.xray-header {
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
-.remove-image-button:hover {
-  background-color: darkred;
-}
-.upload-box-row {
+/* 과거/신규 2박스 */
+.xray-flex {
   display: flex;
-  gap: 10px; /* 박스 간 간격 */
-  justify-content: center; /* 중앙 정렬 */
-  margin-top: 20px; /* uploaded-image와의 간격 */
+  gap: 30px; /* 패널 간격 조금 더 넓힘 */
+}
+
+/* 각각의 X-ray 서브패널 (width 늘림 => 650px) */
+.xray-subpanel {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  margin-top: 10px;
+  padding: 20px;
+  color: #fff;
+  box-sizing: border-box;
+  width: 650px; /* 기존 설정 유지 */
+  
+  /* Flexbox를 활용한 중앙 정렬 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 
+/* 신규 환자 안내 */
+.new-patient-info {
+  color: #bbb;
+  font-size: 14px;
+}

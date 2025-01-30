@@ -8,7 +8,6 @@
 }
 
 body {
-    display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -89,9 +88,9 @@ body {
 .navigation ul li a .icon {
     position: relative;
     display: block;
-    min-width: 60px;
-    height: 60px;
-    line-height: 70px;
+    min-width: 63px;
+    height: 80px;
+    line-height: 78px;
     text-align: center;
     top: 7px;
 }
@@ -106,9 +105,10 @@ body {
     position: relative;
     display: block;
     padding-left: 10px;
-    height: 60px;
-    line-height: 60px;
+    height: 68px;
+    line-height: 78px;
     white-space: nowrap;
+    font-size: 30px;
 }
 /* 메뉴 오버레이 */
 .menu-overlay {
