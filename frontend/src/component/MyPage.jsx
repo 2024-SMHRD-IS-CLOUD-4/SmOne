@@ -9,8 +9,8 @@ function MyPage() {
         userId: "", // 세션에서 가져올 사용자 ID
         userName: "",
         role: "",
-        Mypage_email1: "",
-        Mypage_email2: "",
+        emailLocal: "",
+        emailDomain: "",
         centerId: "",
         address: "",
     });
@@ -217,7 +217,7 @@ function MyPage() {
                             <input
                                 type="email"
                                 name="email"
-                                className="Mypage_email1"
+                                className="emailLocal"
                                 placeholder="이메일을 입력하세요"
                                 value={userData.email}
                                 onChange={(e) => console.log("이메일 아이디:", e.target.value)}
@@ -226,7 +226,7 @@ function MyPage() {
                             <input
                                 type="text"
                                 name="emailDomainPart"
-                                className="Mypage_email2"
+                                className="emailDomain"
                                 placeholder="직접 입력"
                                 onChange={(e) => console.log("이메일 도메인:", e.target.value)}
                             />

@@ -212,8 +212,8 @@ form input[readonly] {
     /* margin-left: 10px; */
 }
 
-.Mypage_email1,
-.Mypage_email2 {
+.emailLocal,
+.emailDomain {
     padding: 10px;
     border: 1px solid #cccccc;
     border-radius: 4px;
