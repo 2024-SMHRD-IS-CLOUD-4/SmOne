@@ -13,6 +13,17 @@ body {
     z-index: -1; /* 콘텐츠 뒤로 배치 */
   }
 
+.changepw1,
+.changepw2,
+.changepw_id {
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 30px;
+  width: 428px;
+}
+
   .pass-container {
     display: flex;
     justify-content: center;

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Main.css";
 import MyPage from "./MyPage";
 import PatientJoin from "./PatientJoin";
+import Patientedit from "./Patientedit";
 // import XrayImage from "./x-ray.png";
 import Loading from "./Loading";
 import LogoImage from "./teamlogo.png";
@@ -11,6 +12,7 @@ import Menu from "./Menu"; // Menu 컴포넌트 추가
 function Main() {
   const [showMyPage, setShowMyPage] = useState(false);
   const [showPatientJoin, setShowPatientJoin] = useState(false);
+  const [showPatientedit, setShowPatientedit] = useState(false);
   const [image, setImage] = useState(null);
   const [imagePanelImage, setImagePanelImage] = useState(null); // image-panel 업로드 이미지
   const [searchInput, setSearchInput] = useState(""); // 이름 검색 상태
@@ -63,6 +65,7 @@ function Main() {
   const handleHomeClick = () => {
     setShowMyPage(false); // MyPage 비활성화
     setShowPatientJoin(false); // PatientJoin 비활성화
+    setShowPatientedit(false); // PatientJoin 비활성화
   };
   const handleImagePanelUpload = (event) => {
     const file = event.target.files[0];
@@ -74,6 +77,7 @@ function Main() {
   const handleProfileClick = () => {
     setShowMyPage(true); // Profile 클릭 시 MyPage 활성화
     setShowPatientJoin(false);
+    setShowPatientedit(false);
   };
   const toggleMyPage = () => {
     setShowMyPage((prevState) => !prevState);
@@ -156,7 +160,9 @@ function Main() {
     setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
   const handleEditPatient = () => {
-    navigate("/Patientedit"); // Patientedit.jsx로 이동
+    setShowPatientedit(true); // ✅ 추가
+    setShowMyPage(false);
+    setShowPatientJoin(false);
   };
   const handleDiagnosisClick = () => {
     if (!imagePanelImage) {
@@ -204,6 +210,7 @@ function Main() {
               onClick={() => {
                 setShowMyPage(false);
                 setShowPatientJoin(false);
+                setShowPatientedit(false);
                 setImage(null); // 업로드된 이미지 초기화
                 setImagePanelImage(null); // 패널에 업로드된 이미지 초기화
                 navigate("/Main");
@@ -320,7 +327,7 @@ function Main() {
             </div>
           </div>
           <div
-            className={`right-panel ${isLoading ? "loading-mode" : ""} ${showMyPage || showPatientJoin ? "show-my-page" : ""
+            className={`right-panel ${isLoading ? "loading-mode" : ""} ${showMyPage || showPatientJoin || showPatientedit ? "show-my-page" : ""
               }`}
           >
             {isLoading ? (
@@ -329,7 +336,8 @@ function Main() {
               <>
                 {showMyPage && <MyPage />}
                 {showPatientJoin && <PatientJoin />}
-                {!showMyPage && !showPatientJoin && (
+                {showPatientedit && <Patientedit />}
+                {!showMyPage && !showPatientJoin &&  !showPatientedit &&(
                   <div className="upload-area">
                     <div className="diagnosis">
                       <label htmlFor="image-upload" className="upload-box">

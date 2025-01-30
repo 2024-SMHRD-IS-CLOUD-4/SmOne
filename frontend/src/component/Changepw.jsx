@@ -80,28 +80,28 @@ const Changepw = () => {
             <input
               type="text"
               name="userId"
+              className="changepw_id"
               placeholder="아이디 입력"
               value={formData.userId}
               onChange={handleChange}
-              className="pw-input"
             />
             <label htmlFor="newPassword">새 비밀번호</label>
             <input
               type="password"
               name="newPassword"
+              className="changepw1"
               placeholder="새 비밀번호 입력"
               value={formData.newPassword}
               onChange={handleChange}
-              className="pw-input"
             />
             <label htmlFor="confirmNewPassword">비밀번호 확인</label>
             <input
               type="password"
               name="confirmNewPassword"
+              className="changepw2"
               placeholder="새 비밀번호 확인"
               value={formData.confirmNewPassword}
               onChange={handleChange}
-              className="pw-input"
             />
             <p className="pw-message">{passwordMatchMessage}</p>
             <button

@@ -77,7 +77,7 @@ function PatientJoin() {
 
         <div className="name-and-gender-group">
           <div className="name-group">
-            <label>이름</label>
+            <label></label>
             <input
               type="text"
               name="pName"
@@ -88,7 +88,7 @@ function PatientJoin() {
             />
           </div>
           <div className="gender-group">
-            <label>성별</label>
+            <label></label>
             <div className="radio-group">
               <span
                 className={`radio ${formData.gender === "남" ? "selected" : ""}`}
@@ -107,7 +107,7 @@ function PatientJoin() {
         </div>
 
         <div className="resident-number-group">
-          <label>주민번호</label>
+          <label></label>
           <div className="resident-number-container">
             <input
               type="text"
@@ -133,7 +133,7 @@ function PatientJoin() {
         </div>
 
         <div className="phone-number-group">
-          <label>전화번호</label>
+          <label></label>
           <div className="phone-number-container">
             <input
               type="text"
@@ -170,7 +170,7 @@ function PatientJoin() {
         </div>
 
         <div className="address-group">
-          <label>주소</label>
+          <label></label>
           <div className="postcode-wrapper">
             <input
               type="text"

@@ -31,16 +31,29 @@ body {
     text-align: center;
   }
   
-  h1 {
+  /* h1 {
     color: #ffffff;
     margin-bottom: 20px;
     font-size: 48px;
-  }
+  } */
+
+/* userId 전용 스타일 */
+.user-id-input,
+.user-pw-input {
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 30px;
+  width: 428px;
+}
+
+
   
-  form {
+  /* form {
     display: flex;
     flex-direction: column;
-  }
+  } */
   
   label {
     text-align: left;
@@ -78,6 +91,7 @@ body {
     border-radius: 4px;
     cursor: pointer;
     font-size: 20px;
+    margin-top: 25px;
   }
   
   .login-button:hover {
