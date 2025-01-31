@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./PatientJoin.css";
+import "./Patients.css";
 
-function PatientJoin() {
+function Patients() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     pName: "",
@@ -216,4 +216,4 @@ function PatientJoin() {
   );
 }
 
-export default PatientJoin;
+export default Patients;

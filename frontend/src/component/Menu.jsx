@@ -10,7 +10,7 @@ import {
   lockClosedOutline,
   logOutOutline,
 } from "ionicons/icons";
-import patientIcon from "./patient.png"; // Patient 아이콘 이미지 import
+import patientIcon from "./png/patient.png"; // Patient 아이콘 이미지 import
 
 const Menu = ({ onProfileClick, onPatientClick, onHomeClick }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -47,8 +47,8 @@ const Menu = ({ onProfileClick, onPatientClick, onHomeClick }) => {
   };
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8090/SmOne/api/users/logout", {}, { withCredentials: true });
-      // alert("로그아웃 성공!");
+      await axios.post(`${process.env.REACT_APP_DB_URL}/users/logout`, {}, { withCredentials: true });
+      alert("로그아웃 성공!");
       navigate("/");
     } catch (e) {
       console.error(e);

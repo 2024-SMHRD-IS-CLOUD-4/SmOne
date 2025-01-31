@@ -25,7 +25,7 @@ function PatientEdit() {
     // 마운트 시점에서 환자 정보(기존 값) 불러오기 -> 기본 값 표시
     useEffect(() => {
         // 서버에서 환자 목록 불러오기
-        axios.get("http://localhost:8090/SmOne/api/patients").then((res) => {
+        axios.get(`${process.env.REACT_APP_DB_URL}/patients`).then((res) => {
             
             // pIdx 일치하는 환자 찾기
             const found = res.data.find((p) => p.pIdx === parseInt(pIdx, 10));
@@ -162,7 +162,7 @@ function PatientEdit() {
 
           try {
             // PUT /api/patients/update/:pIdx
-            await axios.put(`http://localhost:8090/SmOne/api/patients/update/${pIdx}`, sendData);
+            await axios.put(`${process.env.REACT_APP_DB_URL}/patients/update/${pIdx}`, sendData);
             alert("환자 정보가 수정되었습니다.");
       
             // 수정 완료 후 /main 페이지로 이동

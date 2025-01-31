@@ -44,7 +44,7 @@ const IdentityCheck = () => {
   // 인증번호 확인
   const handleVerifyCode = async () => {
     try {
-      const response = await fetch("http://localhost:8090/SmOne/api/users/password/verify-code", {
+      const response = await fetch(`${process.env.REACT_APP_DB_URL}/users/password/verify-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

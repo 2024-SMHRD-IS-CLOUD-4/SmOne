@@ -47,7 +47,7 @@ const Findid = () => {
     console.log("전송 데이터:", sendData);
 
     try {
-      const response = await axios.post("http://localhost:8090/SmOne/api/users/findid", sendData);
+      const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/findid`, sendData);
       if (response && response.data) {
         setFoundUserId(response.data);
         alert(`아이디를 찾았습니다: ${response.data}`);

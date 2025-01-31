@@ -36,7 +36,7 @@ function Signup() {
   const handleDuplicateCheck = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:8090/SmOne/api/users/check-duplicate/${formData.userId}`
+        `${process.env.REACT_APP_DB_URL}/users/check-duplicate/${formData.userId}`
       );
       setIsDuplicate(res.data); // true면 중복, false면 사용 가능
       if (res.data) {
@@ -103,7 +103,7 @@ function Signup() {
     console.log("회원가입 데이터:", sendData);
 
     try {
-      await axios.post("http://localhost:8090/SmOne/api/users/register", sendData, {
+      await axios.post(`${process.env.REACT_APP_DB_URL}/users/register`, sendData, {
         headers: { "Content-Type": "application/json" }
       });
       alert("회원가입 성공!");

@@ -36,7 +36,7 @@ const Findpw = () => {
     }
 
     try {
-      await axios.post("http://localhost:8090/SmOne/api/users/password/send-email", {
+      await axios.post(`${process.env.REACT_APP_DB_URL}/users/password/send-email`, {
         userId: formData.userId,
         email: finalEmail,
       });

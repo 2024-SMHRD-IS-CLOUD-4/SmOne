@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./Result.css";
-import MyPage from "./MyPage";
-import PatientJoin from "./PatientJoin";
-import LogoImage from "./teamlogo.png";
+import LogoImage from "./png/teamlogo.png";
 
 function Result() {
   const location = useLocation();
@@ -125,11 +123,11 @@ function Result() {
             />
           </label>
           <button onClick={clearCanvas} className="clear-button">
-            <img src={require("./eraser.png")} alt="Eraser Icon" style={{ width: "24px", height: "24px" }} />
+            <img src={require("./png/eraser.png")} alt="Eraser Icon" style={{ width: "24px", height: "24px" }} />
           </button>
 
           <button className="print-button" onClick={handlePrintClick}>
-            <img src={require("./printerimg.png")} alt="Stethoscope Icon" />
+            <img src={require("./png/printerimg.png")} alt="Stethoscope Icon" />
             출력하기
           </button>
         </header>
@@ -159,8 +157,7 @@ function Result() {
             className={`right-panel ${showMyPage || showPatientJoin ? "show-my-page" : ""
               }`}
           >
-            {showMyPage && <MyPage />}
-            {showPatientJoin && <PatientJoin />}
+
 
             {!showMyPage && !showPatientJoin && (
               <div className="upload-area">
@@ -180,7 +177,6 @@ function Result() {
                     <canvas
                       ref={canvasRef}
                       className="drawing-canvas"
-                      style={{ cursor: "url('./signpen.png'), auto" }}
                       onMouseDown={startDrawing}
                       onMouseMove={draw}
                       onMouseUp={finishDrawing}

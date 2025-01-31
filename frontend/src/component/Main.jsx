@@ -3,16 +3,16 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Main.css";
 import Menu from "./Menu"; // Menu 컴포넌트 추가
-import MyPage from "./Mypage";
+import Mypage from "./Mypage";
 
 import DateList from "./Xray/DateList";
 import FirstVisitUI from "./Xray/FirstVisitUI";
 import SecondVisitUI from "./Xray/SecondVisitUI";
-import teamLogo from "./teamlogo.png"; // 로고 이미지 추가
+import teamLogo from "./png/teamlogo.png" // 로고 이미지 추가
 
 const Main = () => {
   const navigate = useNavigate();
-  const [showMyPage, setShowMyPage] = useState(false); // MyPage 표시 상태 추가
+  const [showMypage, setShowMypage] = useState(false); // Mypage 표시 상태 추가
 
   const [patients, setPatients] = useState([]);
   const [filtered, setFiltered] = useState([]);
@@ -40,7 +40,7 @@ const Main = () => {
 
   // Load patients
   useEffect(() => {
-    axios.get("http://localhost:8090/SmOne/api/patients")
+    axios.get(`${process.env.REACT_APP_DB_URL}/patients`)
       .then(res => {
         setPatients(res.data);
         setFiltered(res.data);
@@ -77,7 +77,7 @@ const Main = () => {
       return;
     }
     try {
-      const r = await axios.get(`http://localhost:8090/SmOne/api/xray/byDate?pIdx=${thePatient.pIdx}&date=${dateStr}`);
+      const r = await axios.get(`${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${thePatient.pIdx}&date=${dateStr}`);
       setOldImages(r.data);
       setOldBigPreview(null);
       setSelectedDate(dateStr);
@@ -100,7 +100,7 @@ const Main = () => {
     setDatePage(1);
 
     try {
-      const r2 = await axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${pt.pIdx}`);
+      const r2 = await axios.get(`${process.env.REACT_APP_DB_URL}/xray/dates?pIdx=${pt.pIdx}`);
       setDiagDates(r2.data);
       if (r2.data && r2.data.length > 0) {
         const firstDate = r2.data[0];
@@ -125,7 +125,7 @@ const Main = () => {
   // Logout
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8090/SmOne/api/users/logout", {}, { withCredentials: true });
+      await axios.post(`${process.env.REACT_APP_DB_URL}/users/logout`, {}, { withCredentials: true });
       // alert("로그아웃 성공!");
       navigate("/");
     } catch (e) {
@@ -186,13 +186,13 @@ const Main = () => {
       f.append("pIdx", selectedPatient.pIdx);
       newImages.forEach(item => f.append("files", item.file));
 
-      await axios.post("http://localhost:8090/SmOne/api/xray/diagnose", f, {
+      await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, f, {
         headers: { "Content-Type": "multipart/form-data" }
       });
       alert("진단 완료! (RESULT=null)");
       setDiagnosisMessage("진단내용 및 진단을 내린 대략적인 이유");
 
-      const r2 = await axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${selectedPatient.pIdx}`);
+      const r2 = await axios.get(`${process.env.REACT_APP_DB_URL}/xray/dates?pIdx=${selectedPatient.pIdx}`);
       setDiagDates(r2.data);
       setDatePage(1);
       if (r2.data && r2.data.length > 0) {
@@ -214,9 +214,9 @@ const Main = () => {
     const c = window.confirm(`정말로 [${thePatient.pName}] 환자를 삭제하시겠습니까?`);
     if (!c) return;
     try {
-      await axios.delete(`http://localhost:8090/SmOne/api/patients/${thePatient.pIdx}`);
+      await axios.delete(`${process.env.REACT_APP_DB_URL}/patients/${thePatient.pIdx}`);
       alert("삭제되었습니다.");
-      const newRes = await axios.get("http://localhost:8090/SmOne/api/patients");
+      const newRes = await axios.get(`${process.env.REACT_APP_DB_URL}/patients`);
       setPatients(newRes.data);
       setFiltered(newRes.data);
       setSelectedPatient(null);

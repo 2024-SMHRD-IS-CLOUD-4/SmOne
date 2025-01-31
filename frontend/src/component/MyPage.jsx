@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./MyPage.css";
+import "./Mypage.css";
 
 function Mypage() {
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ function Mypage() {
       email: fullEmail  // 최종 email만 합쳐서 백엔드 전달
     };
     try {
-      await axios.put("http://localhost:8090/SmOne/api/users/update", sendData, {
+      await axios.put(`${process.env.REACT_APP_DB_URL}/users/update`, sendData, {
         headers: { "Content-Type": "application/json" }
       });
       alert("정보가 수정되었습니다.");
@@ -81,7 +81,7 @@ function Mypage() {
   // 회원 탈퇴
   const handleDelete = async () => {
     try {
-      const response = await axios.post("http://localhost:8090/SmOne/api/users/delete", {
+      const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/delete`, {
         userId: userData.userId,
         password: deletePassword
       });
@@ -148,10 +148,10 @@ function Mypage() {
   };
 
   return (
-    <div className="mypage-container">
-      <h2 className="mypage-title">MY PAGE</h2>
+    <div className="Mypage-container">
+      <h2 className="Mypage-title">MY PAGE</h2>
       
-      <form className="mypage-form">
+      <form className="Mypage-form">
         <label>* 사용자 ID</label>
         <div className="userid-box">{userData.userId}</div>
 
@@ -232,7 +232,7 @@ function Mypage() {
           onChange={handleChange}
         />
 
-        <div className="mypage-btn-row">
+        <div className="Mypage-btn-row">
           <button type="button" className="action-btn" onClick={handleUpdate}>
             정보 수정
           </button>
@@ -252,13 +252,12 @@ function Mypage() {
             <h2>회원 탈퇴</h2>
             <button className="close-btn" onClick={closeDeleteModal}>닫기</button>
           </div>
-          <div className="modal-body1" style={{padding:"20px" }}>
+          <div className="modal-body" style={{ flexDirection:"column", padding:"20px" }}>
             <p>비밀번호를 입력해주세요</p>
             <input
               type="password"
               placeholder="비밀번호"
               value={deletePassword}
-              className="M_pw"
               onChange={e=> setDeletePassword(e.target.value)}
               style={{ width:"100%", marginBottom:"10px" }}
             />
