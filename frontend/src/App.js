@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from "react"; // useEffect 추가
 import './App.css';
 import Signup from './component/Signup';
 import Login from './component/Login';
@@ -13,6 +14,17 @@ import Result from './component/Result';
 import Diagnosis from './component/Diagnosis'
 
 function App() {
+  useEffect(() => {
+    // 카카오 맵 스크립트가 중복 로드되지 않도록 확인
+    if (!document.getElementById("kakao-map-script")) {
+      const script = document.createElement("script");
+      script.id = "kakao-map-script"; // 중복 로드를 방지하기 위한 ID
+      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_MAP_KEY}&libraries=services`;
+      script.async = true;
+      document.head.appendChild(script);
+    }
+  }, []);
+
   return (
     <div className="app-container">
       {/* 배경 영상 */}

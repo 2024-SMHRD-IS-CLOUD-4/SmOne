@@ -4,7 +4,6 @@ import axios from "axios";
 import "./Main.css";
 import Menu from "./Menu"; // Menu 컴포넌트 추가
 import Mypage from "./Mypage";
-
 import DateList from "./Xray/DateList";
 import FirstVisitUI from "./Xray/FirstVisitUI";
 import SecondVisitUI from "./Xray/SecondVisitUI";
@@ -126,7 +125,6 @@ const Main = () => {
   const handleLogout = async () => {
     try {
       await axios.post(`${process.env.REACT_APP_DB_URL}/users/logout`, {}, { withCredentials: true });
-      // alert("로그아웃 성공!");
       navigate("/");
     } catch (e) {
       console.error(e);

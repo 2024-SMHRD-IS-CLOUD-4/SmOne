@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import "./PatientEdit.css";
 
 function PatientEdit() {
     
@@ -174,7 +175,7 @@ function PatientEdit() {
         };
 
   return (
-    <div>
+    <div className='Patient-container'>
         <h2>환자 수정</h2>
       <form onSubmit={handleSubmit}>
         <div>
