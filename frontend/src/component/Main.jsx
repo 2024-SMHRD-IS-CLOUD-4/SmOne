@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Main.css";
 import Menu from "./Menu"; // Menu 컴포넌트 추가
-import MyPage from "./Mypage";
 
 import DateList from "./Xray/DateList";
 import FirstVisitUI from "./Xray/FirstVisitUI";
@@ -225,7 +224,18 @@ const Main = () => {
       alert("삭제 중 오류가 발생했습니다.");
     }
   };
-
+  const resetMainState = () => {
+    setSelectedPatient(null);
+    setOldImages([]);
+    setOldBigPreview(null);
+    setNewImages([]);
+    setNewBigPreview(null);
+    setDiagnosisMessage("");
+    setDiagDates([]);
+    setSelectedDate(null);
+    setDatePage(1);
+  };
+  
 
 
   // earliestDate / latestDate
@@ -282,6 +292,7 @@ const Main = () => {
         <div className="menu-container">
           <Menu
             onPatientClick={handlePatientClick}
+            onHomeClick={resetMainState}
           />
         </div>
         {/* 왼쪽 패널 */}

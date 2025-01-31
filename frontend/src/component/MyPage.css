@@ -2,6 +2,7 @@
 .mypage-container {
     width: 450px;
     margin: 100px auto 0 auto;
+    margin-bottom: 100px;
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     padding: 30px;

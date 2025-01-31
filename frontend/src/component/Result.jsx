@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./Result.css";
-import MyPage from "./MyPage";
-import PatientJoin from "./PatientJoin";
 import LogoImage from "./teamlogo.png";
 
 function Result() {
@@ -159,8 +157,6 @@ function Result() {
             className={`right-panel ${showMyPage || showPatientJoin ? "show-my-page" : ""
               }`}
           >
-            {showMyPage && <MyPage />}
-            {showPatientJoin && <PatientJoin />}
 
             {!showMyPage && !showPatientJoin && (
               <div className="upload-area">

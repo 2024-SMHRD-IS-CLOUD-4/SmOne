@@ -29,8 +29,8 @@ const Menu = ({ onProfileClick, onPatientClick, onHomeClick }) => {
   const handleClick = (index) => {
     setActiveIndex(index);
     if (menuItems[index].title === "Home") {
-      onHomeClick(); 
-      navigate("/Main"); 
+      if (onHomeClick) onHomeClick(); // Reset patient selection
+      navigate("/Main"); // Navigate back to main screen
     }
     if (menuItems[index].title === "My Page") {
       navigate("/mypage"); // MyPage로 이동
