@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Patients.css";
+import "./PatientJoin.css";
 
-function Patients() {
+function PatientJoin() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     pName: "",
-    gender: "",
+    gender: "남",
     birthPart1: "",
     birthPart2: "",
     phonePart1: "",
@@ -77,7 +77,7 @@ function Patients() {
 
         <div className="name-and-gender-group">
           <div className="name-group">
-          <label>이름</label>
+            <label>이름</label>
             <input
               type="text"
               name="pName"
@@ -88,7 +88,7 @@ function Patients() {
             />
           </div>
           <div className="gender-group">
-            <label></label>
+            <label>성별</label>
             <div className="radio-group">
               <span
                 className={`radio ${formData.gender === "남" ? "selected" : ""}`}
@@ -170,7 +170,7 @@ function Patients() {
         </div>
 
         <div className="address-group">
-          <label>우편번호</label>
+          <label>주소</label>
           <div className="postcode-wrapper">
             <input
               type="text"
@@ -216,4 +216,4 @@ function Patients() {
   );
 }
 
-export default Patients;
+export default PatientJoin;

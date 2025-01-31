@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./MyPage.css";
+import "./Mypage.css";
 
 function Mypage() {
   const navigate = useNavigate();
@@ -148,10 +148,10 @@ function Mypage() {
   };
 
   return (
-    <div className="mypage-container">
-      <h2 className="mypage-title">MY PAGE</h2>
+    <div className="Mypage-container">
+      <h2 className="Mypage-title">MY PAGE</h2>
       
-      <form className="mypage-form">
+      <form className="Mypage-form">
         <label>* 사용자 ID</label>
         <div className="userid-box">{userData.userId}</div>
 
@@ -232,7 +232,7 @@ function Mypage() {
           onChange={handleChange}
         />
 
-        <div className="mypage-btn-row">
+        <div className="Mypage-btn-row">
           <button type="button" className="action-btn" onClick={handleUpdate}>
             정보 수정
           </button>

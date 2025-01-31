@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css'; // (★) 로그인 전용 CSS
-import teamLogo from './teamlogo.png'; // (★) 로고 이미지 추가
+import teamLogo from './png/teamlogo.png'; // (★) 로고 이미지 추가
 
 const Login = () => {
   const [formData, setFormData] = useState({ userId: '', userPw: '' });
@@ -27,7 +27,7 @@ const Login = () => {
         { withCredentials: true }
       );
       if (response.status === 200) {
-        // alert('로그인 성공!');
+        alert('로그인 성공!');
         sessionStorage.setItem('userId', formData.userId);
         navigate('/main');
       } else {

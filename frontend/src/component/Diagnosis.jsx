@@ -23,7 +23,7 @@ function Diagnosis() {
 
     <div className="overlay-box">
     <button className="print-button" onClick={handlePrint}>
-            <img src={require("./printerimg.png")} alt="Print Icon" />
+            <img src={require("./png/printerimg.png")} alt="Print Icon" />
             출력하기
           </button>
           <button className="cancel-button" onClick={handleCancel}>
