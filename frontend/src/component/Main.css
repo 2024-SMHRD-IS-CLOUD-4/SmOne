@@ -64,6 +64,9 @@
   background: #555;
 }
 .diagnose-top-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* 아이콘과 텍스트 사이 간격 */
   padding: 14px 20px;
   border: none;
   border-radius: 6px;
@@ -73,9 +76,16 @@
   font-weight: bold;
   cursor: pointer;
 }
+
 .diagnose-top-btn:hover {
   background: #555;
 }
+
+.diagnose-icon {
+  width: 20px; /* 아이콘 크기 */
+  height: 20px;
+}
+
 
 /* 사이드 메뉴 */
 .side-menu {

@@ -129,7 +129,22 @@ function FirstVisitUI({
         })}
       </div>
 
-      <button onClick={handleNewPhotoRegister}>사진 등록</button>
+      <button
+        onClick={handleNewPhotoRegister}
+        style={{
+          backgroundColor: "#333333",  // 배경색 변경
+          color: "#fff",               // 글씨 색 흰색 유지
+          padding: "10px 16px",
+          border: "none",
+          borderRadius: "6px",
+          fontSize: "16px",
+          fontWeight: "bold",
+          cursor: "pointer"
+        }}
+      >
+        사진 등록
+      </button>
+
       <input
         ref={newFileInputRef}
         type="file"

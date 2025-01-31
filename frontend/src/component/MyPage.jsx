@@ -148,10 +148,10 @@ function Mypage() {
   };
 
   return (
-    <div className="Mypage-container">
-      <h2 className="Mypage-title">MY PAGE</h2>
+    <div className="mypage-container">
+      <h2 className="mypage-title">MY PAGE</h2>
       
-      <form className="Mypage-form">
+      <form className="mypage-form">
         <label>* 사용자 ID</label>
         <div className="userid-box">{userData.userId}</div>
 
@@ -232,7 +232,7 @@ function Mypage() {
           onChange={handleChange}
         />
 
-        <div className="Mypage-btn-row">
+        <div className="mypage-btn-row">
           <button type="button" className="action-btn" onClick={handleUpdate}>
             정보 수정
           </button>

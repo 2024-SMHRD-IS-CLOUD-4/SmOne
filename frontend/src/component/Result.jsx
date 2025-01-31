@@ -1,224 +1,364 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import "./Result.css";
-import LogoImage from "./png/teamlogo.png";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./Main.css";
+import Menu from "./Menu"; // Menu 컴포넌트 추가
+import MyPage from "./Mypage";
 
-function Result() {
-  const location = useLocation();
+import DateList from "./Xray/DateList";
+import FirstVisitUI from "./Xray/FirstVisitUI";
+import SecondVisitUI from "./Xray/SecondVisitUI";
+import teamLogo from "./png/teamlogo.png" // 로고 이미지 추가
+
+const Main = () => {
   const navigate = useNavigate();
-  const [showMyPage, setShowMyPage] = useState(false);
-  const [showPatientJoin, setShowPatientJoin] = useState(false);
-  const [image] = useState(location.state?.uploadedImage || null);
-  const [imagePanel] = useState(location.state?.uploadedImagePanel || null);
-  const [searchInput] = useState("");
-  const [searchInputbirth] = useState("");
-  const [setSearchResults] = useState([]);
-  const canvasRef = useRef(null);
-  const isDrawingRef = useRef(false);
-  const contextRef = useRef(null);
-  const [color, setColor] = useState("black"); // 기본 색상은 빨간색
-  // 색상 변경 핸들러 추가
+  const [showMyPage, setShowMyPage] = useState(false); // MyPage 표시 상태 추가
 
-  const patientList = [
-    { name: "김철수", birth: "900101" },
-    { name: "김지수", birth: "000101" },
-    { name: "최승찬", birth: "880505" },
-    { name: "박영희", birth: "850707" },
-    { name: "양윤성", birth: "950312" },
-    { name: "정현지", birth: "990102" },
-  ];
+  const [patients, setPatients] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [sideOpen, setSideOpen] = useState(false);
 
-  const handlePrintClick = () => {
-    navigate("/Diagnosis"); // Diagnosis 화면으로 즉시 이동
+  const [oldImages, setOldImages] = useState([]);
+  const [oldBigPreview, setOldBigPreview] = useState(null);
+
+  const [newImages, setNewImages] = useState([]);
+  const [newBigPreview, setNewBigPreview] = useState(null);
+  const newFileInputRef = useRef(null);
+
+  const [diagnosisMessage, setDiagnosisMessage] = useState("");
+
+  const [diagDates, setDiagDates] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [datePage, setDatePage] = useState(1);
+  const datesPerPage = 5;
+
+  // Load patients
+  useEffect(() => {
+    axios.get("http://localhost:8090/SmOne/api/patients")
+      .then(res => {
+        setPatients(res.data);
+        setFiltered(res.data);
+      })
+      .catch(err => console.error(err));
+  }, []);
+  const handlePrintPage = () => {
+    navigate("/diagnosis"); // Diagnosis 페이지로 이동
   };
 
-  const toggleMyPage = () => {
-    setShowMyPage((prevState) => !prevState);
-    setShowPatientJoin(false);
-  };
 
-  const handleSearchChange = () => {
-    const nameQuery = searchInput.trim();
-    const birthQuery = searchInputbirth.trim();
-
-    if (!nameQuery && !birthQuery) {
-      setSearchResults([]);
+  // X-ray by date
+  const handleDateClick = async (dateStr, thePatient) => {
+    if (!thePatient) {
+      alert("환자를 먼저 선택해주세요.");
       return;
     }
-
-    const filteredResults = patientList.filter((patient) => {
-      const matchesName = nameQuery === "" || patient.name.includes(nameQuery);
-      const matchesBirth = birthQuery === "" || patient.birth.includes(birthQuery);
-      return matchesName && matchesBirth;
-    });
-
-    setSearchResults(filteredResults);
-  };
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-
-    const context = canvas.getContext("2d");
-    context.lineWidth = 3; // 선 두께 설정
-    context.strokeStyle = color;
-    contextRef.current = context;
-  }, []);
-
-  const startDrawing = ({ nativeEvent }) => {
-    const { offsetX, offsetY } = nativeEvent;
-    contextRef.current.beginPath();
-    contextRef.current.moveTo(offsetX, offsetY);
-    isDrawingRef.current = true;
-  };
-
-  const draw = ({ nativeEvent }) => {
-    if (!isDrawingRef.current) return;
-    const { offsetX, offsetY } = nativeEvent;
-    contextRef.current.lineTo(offsetX, offsetY);
-    contextRef.current.stroke();
-  };
-
-  const finishDrawing = () => {
-    isDrawingRef.current = false;
-    contextRef.current.closePath();
-  };
-
-  const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    contextRef.current.clearRect(0, 0, canvas.width, canvas.height);
-  };
-  // 색상 변경 핸들러
-  const handleColorChange = (event) => {
-    const newColor = event.target.value;
-    setColor(newColor);
-    if (contextRef.current) {
-      contextRef.current.strokeStyle = newColor; // 새로운 색상 적용
+    try {
+      const r = await axios.get(`http://localhost:8090/SmOne/api/xray/byDate?pIdx=${thePatient.pIdx}&date=${dateStr}`);
+      setOldImages(r.data);
+      setOldBigPreview(null);
+      setSelectedDate(dateStr);
+    } catch (e) {
+      console.error(e);
+      alert("날짜별 X-ray 조회 실패");
     }
   };
 
+  // Patient click
+  const handlePatientClick = async (pt) => {
+    setSelectedPatient(pt);
+    setOldImages([]);
+    setOldBigPreview(null);
+    setNewImages([]);
+    setNewBigPreview(null);
+    setDiagnosisMessage("");
+    setDiagDates([]);
+    setSelectedDate(null);
+    setDatePage(1);
+
+    try {
+      const r2 = await axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${pt.pIdx}`);
+      setDiagDates(r2.data);
+      if (r2.data && r2.data.length > 0) {
+        const firstDate = r2.data[0];
+        setSelectedDate(firstDate);
+        handleDateClick(firstDate, pt);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const handleLogoClick = () => {
+    setSelectedPatient(null);
+    setOldImages([]);
+    setOldBigPreview(null);
+    setNewImages([]);
+    setNewBigPreview(null);
+    setDiagnosisMessage("");
+    setDiagDates([]);
+    setSelectedDate(null);
+    setDatePage(1);
+  };
+  // Logout
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:8090/SmOne/api/users/logout", {}, { withCredentials: true });
+      alert("로그아웃 성공!");
+      navigate("/");
+    } catch (e) {
+      console.error(e);
+      alert("로그아웃 실패");
+    }
+  };
+
+  // New X-ray
+  const handleNewPhotoRegister = () => {
+    if (!selectedPatient) {
+      alert("환자를 먼저 선택하세요.");
+      return;
+    }
+    if (newImages.length >= 5) {
+      alert("최대5장까지만 등록 가능합니다.");
+      return;
+    }
+    newFileInputRef.current.click();
+  };
+  const handleNewFileChange = (e) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const fs = e.target.files;
+    const temp = [];
+    for (let i = 0; i < fs.length; i++) {
+      if (newImages.length + temp.length >= 5) {
+        alert("5장 초과 불가");
+        break;
+      }
+      const file = fs[i];
+      const previewUrl = URL.createObjectURL(file);
+      temp.push({ id: Date.now() + i, file, previewUrl });
+    }
+    setNewImages(prev => [...prev, ...temp]);
+    e.target.value = null;
+  };
+  const handleRemoveNewImage = (id) => {
+    if (!window.confirm("이 이미지를 삭제하시겠습니까?")) return;
+    setNewImages(prev => prev.filter(x => x.id !== id));
+    const target = newImages.find(x => x.id === id);
+    if (target && target.previewUrl === newBigPreview) {
+      setNewBigPreview(null);
+    }
+  };
+
+  // Diagnose
+  const handleDiagnose = async () => {
+    if (!selectedPatient) {
+      alert("환자를 먼저 선택하세요.");
+      return;
+    }
+    if (newImages.length === 0) {
+      alert("X-ray 이미지를 등록하세요.");
+      return;
+    }
+    try {
+      const f = new FormData();
+      f.append("pIdx", selectedPatient.pIdx);
+      newImages.forEach(item => f.append("files", item.file));
+
+      await axios.post("http://localhost:8090/SmOne/api/xray/diagnose", f, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+      alert("진단 완료! (RESULT=null)");
+      setDiagnosisMessage("진단내용 및 진단을 내린 대략적인 이유");
+
+      const r2 = await axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${selectedPatient.pIdx}`);
+      setDiagDates(r2.data);
+      setDatePage(1);
+      if (r2.data && r2.data.length > 0) {
+        const fd = r2.data[0];
+        setSelectedDate(fd);
+        handleDateClick(fd, selectedPatient);
+      }
+    } catch (err) {
+      console.error("업로드 실패:", err);
+      alert("업로드 실패");
+    }
+  };
+
+  // Edit / Delete
+  const handleEditPatient = (thePatient) => {
+    navigate(`/patients/edit/${thePatient.pIdx}`);
+  };
+  const handleDeletePatient = async (thePatient) => {
+    const c = window.confirm(`정말로 [${thePatient.pName}] 환자를 삭제하시겠습니까?`);
+    if (!c) return;
+    try {
+      await axios.delete(`http://localhost:8090/SmOne/api/patients/${thePatient.pIdx}`);
+      alert("삭제되었습니다.");
+      const newRes = await axios.get("http://localhost:8090/SmOne/api/patients");
+      setPatients(newRes.data);
+      setFiltered(newRes.data);
+      setSelectedPatient(null);
+    } catch (err) {
+      console.error("삭제 실패:", err);
+      alert("삭제 중 오류가 발생했습니다.");
+    }
+  };
+
+
+
+  // earliestDate / latestDate
+  let earliestDate = null;
+  let latestDate = null;
+  if (diagDates && diagDates.length > 0) {
+    latestDate = diagDates[0];
+    earliestDate = diagDates[diagDates.length - 1];
+  }
+
+  const topRightElement = (
+    <div style={{ color: "#ccc", fontSize: "14px" }}>
+      * 최대5장, 현재 {newImages.length}장
+    </div>
+  );
+
   return (
-    <div>
-      <video className="video-background" autoPlay muted loop>
-        <source src="video.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <div className="container">
-        <header className="header">
-          <img
-            src={LogoImage}
-            alt="I Lung View Logo"
-            className="logo"
-            onClick={() => navigate("/Main")}
-            style={{ cursor: "pointer" }}
+    <div className="main-container">
+      {/* 상단 바 */}
+      <div className="top-bar">
+      <img src={teamLogo} alt="Team Logo" className="main-team-logo" onClick={handleLogoClick} style={{ cursor: "pointer" }} />
+        <button className="diagnose-top-btn" onClick={handlePrintPage}>
+          출력하기
+        </button>
+      </div>
+
+      {/* 사이드 메뉴 */}
+      <div className={`side-menu ${sideOpen ? "open" : ""}`}>
+        <button className="menu-item" onClick={() => navigate("/mypage")}>
+          마이 페이지
+        </button>
+        <button className="menu-item" onClick={handleLogout}>
+          로그아웃
+        </button>
+      </div>
+
+      {/* 본문 */}
+      <div className="main-content">
+        <div className="menu-container">
+          <Menu
+            onPatientClick={handlePatientClick}
           />
-          {/* 색상 선택기 */}
-          <label className="color-picker-label">
-            <input
-              type="color"
-              value={color}
-              onChange={handleColorChange}
-              className="color-picker"
-              title="Choose drawing color"
+        </div>
+        {/* 왼쪽 패널 */}
+        <div className="left-panel">
+          
+
+          {selectedPatient && (
+            <div className="patient-detail">
+              <h3 style={{ marginTop: 0 }}>환자 상세 정보</h3>
+              <p>환자 번호: {selectedPatient.pIdx}</p>
+              <p>환자 이름: {selectedPatient.pName}</p>
+              <p>생년월일: {selectedPatient.birth}</p>
+              <p>연락처: {selectedPatient.tel}</p>
+              <p>주소: {selectedPatient.pAdd}</p>
+
+              <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>
+                수정
+              </button>
+              <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>
+                삭제
+              </button>
+            </div>
+          )}
+
+          <div className="date-list-container panel-block" style={{ marginTop: "10px" }}>
+            <DateList
+              diagDates={diagDates}
+              currentPage={datePage}
+              setCurrentPage={setDatePage}
+              datesPerPage={datesPerPage}
+              onDateClick={(dateStr) => handleDateClick(dateStr, selectedPatient)}
             />
-          </label>
-          <button onClick={clearCanvas} className="clear-button">
-            <img src={require("./png/eraser.png")} alt="Eraser Icon" style={{ width: "24px", height: "24px" }} />
-          </button>
-
-          <button className="print-button" onClick={handlePrintClick}>
-            <img src={require("./png/printerimg.png")} alt="Stethoscope Icon" />
-            출력하기
-          </button>
-        </header>
-        <div className="main">
-          <div className="left-panel">
-            <button className="smart-button" onClick={toggleMyPage}>
-              스마트인재개발원
-            </button>
-            <div className="patient-info-header">
-              <span className="patient-info-title">환자 정보</span>
-            </div>
-            <div className="patient-info-container">
-              <div className="patient-info-row">환자 번호: 001</div>
-              <div className="patient-info-row">환자 성명: 김지수</div>
-              <div className="patient-info-row">생년월일: 000809</div>
-              <div className="patient-info-row">연락처: 010-2188-7111</div>
-              <div className="patient-info-row">주소: 광주광역시 동구 중앙로 196</div>
-            </div>
-            <div className="diagnosis-date-header">
-              <span className="diagnosis-date-title">진단 날짜</span>
-            </div>
-            <div className="diagnosis-date-container">
-              <div className="diagnosis-date-row">2025-01-13</div>
-            </div>
           </div>
-          <div
-            className={`right-panel ${showMyPage || showPatientJoin ? "show-my-page" : ""
-              }`}
-          >
+        </div>
 
+        {/* 오른쪽 패널 */}
+        <div className="right-panel">
+          <div className="xray-panel">
+            <div className="xray-header">
+              <h2 style={{ marginTop: 0 }}>X-ray 등록</h2>
+              {topRightElement}
+            </div>
 
-            {!showMyPage && !showPatientJoin && (
-              <div className="upload-area">
-                <div className="diagnosis">
-                  <label htmlFor="image-upload" className="upload-box">
-                    {image ? (
-                      <img
-                        src={image}
-                        alt="Uploaded"
-                        className="uploaded-image"
-                      />
-                    ) : (
-                      <span>+</span>
-                    )}
-                  </label>
-                  <div className="canvas-container">
-                    <canvas
-                      ref={canvasRef}
-                      className="drawing-canvas"
-                      onMouseDown={startDrawing}
-                      onMouseMove={draw}
-                      onMouseUp={finishDrawing}
-                      onMouseLeave={finishDrawing}
-                    ></canvas>
-                  </div>
-                </div>
-                <div className="image-panel">
-                  {imagePanel ? (
-                    <div className="canvas-container">
-                      <img
-                        src={imagePanel}
-                        alt="Uploaded to Panel"
-                        className="uploaded-image"
-                      />
-                      <canvas
-                        ref={canvasRef}
-                        className="drawing-canvas"
-                        onMouseDown={startDrawing}
-                        onMouseMove={draw}
-                        onMouseUp={finishDrawing}
-                        onMouseLeave={finishDrawing}
-                      ></canvas>
-                    </div>
-                  ) : (
-                    <span>No Image Uploaded</span>
-                  )}
-                </div>
+            {!selectedPatient ? (
+              <>
+                <p>선택한 환자: (없음)</p>
+                <span className="new-patient-info">
+                  신규 환자 (기존 X-ray 없음)
+                </span>
+                <FirstVisitUI
+                  newImages={newImages}
+                  setNewImages={setNewImages}
+                  newBigPreview={newBigPreview}
+                  setNewBigPreview={setNewBigPreview}
+                  handleNewPhotoRegister={handleNewPhotoRegister}
+                  handleNewFileChange={handleNewFileChange}
+                  handleRemoveNewImage={handleRemoveNewImage}
+                  diagnosisMessage={diagnosisMessage}
+                  newFileInputRef={newFileInputRef}
+                />
+              </>
+            ) : (
+              oldImages.length === 0 ? (
+                <>
+                  <p>선택한 환자: {selectedPatient.pName}</p>
+                  <span className="new-patient-info">
+                    신규 환자 (기존 X-ray 없음)
+                  </span>
+                  <FirstVisitUI
+                    newImages={newImages}
+                    setNewImages={setNewImages}
+                    newBigPreview={newBigPreview}
+                    setNewBigPreview={setNewBigPreview}
+                    handleNewPhotoRegister={handleNewPhotoRegister}
+                    handleNewFileChange={handleNewFileChange}
+                    handleRemoveNewImage={handleRemoveNewImage}
+                    diagnosisMessage={diagnosisMessage}
+                    newFileInputRef={newFileInputRef}
+                  />
+                </>
+              ) : (
+                <>
+                  <p>
+                    선택한 환자: {selectedPatient.pName} <br />
+                    최초 내원일: {earliestDate} / 최종 내원일: {latestDate}
+                  </p>
+                  <SecondVisitUI
+                    oldImages={oldImages}
+                    setOldImages={setOldImages}
+                    oldBigPreview={oldBigPreview}
+                    setOldBigPreview={setOldBigPreview}
 
-              </div>
-            )}
-            {!showMyPage && !showPatientJoin && (
-              <div className="diagnosis-info">
-                폐렴 확률 90% 이상 고위험 환자입니다. 빠른 시일내에 병원을 방문하기를 권장합니다.
-              </div>
+                    newImages={newImages}
+                    setNewImages={setNewImages}
+                    newBigPreview={newBigPreview}
+                    setNewBigPreview={setNewBigPreview}
+
+                    handleNewPhotoRegister={handleNewPhotoRegister}
+                    handleNewFileChange={handleNewFileChange}
+                    handleRemoveNewImage={handleRemoveNewImage}
+                    diagnosisMessage={diagnosisMessage}
+                    newFileInputRef={newFileInputRef}
+                    selectedDate={selectedDate}
+                    patientName={selectedPatient.pName}
+                    earliestDate={earliestDate}
+                    latestDate={latestDate}
+                  />
+                </>
+              )
             )}
           </div>
         </div>
-        <footer className="footer"></footer>
       </div>
     </div>
   );
-}
+};
 
-export default Result;
+export default Main;

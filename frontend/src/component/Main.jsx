@@ -3,16 +3,17 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Main.css";
 import Menu from "./Menu"; // Menu 컴포넌트 추가
-import MyPage from "./Mypage";
 
 import DateList from "./Xray/DateList";
 import FirstVisitUI from "./Xray/FirstVisitUI";
 import SecondVisitUI from "./Xray/SecondVisitUI";
 import teamLogo from "./png/teamlogo.png" // 로고 이미지 추가
+import stethoscopeIcon from "./png/stethoscope.png"; // 아이콘 이미지 추가
+
 
 const Main = () => {
   const navigate = useNavigate();
-  const [showMyPage, setShowMyPage] = useState(false); // MyPage 표시 상태 추가
+  const [showMypage, setShowMypage] = useState(false); // MyPage 표시 상태 추가
 
   const [patients, setPatients] = useState([]);
   const [filtered, setFiltered] = useState([]);
@@ -38,12 +39,14 @@ const Main = () => {
   const [datePage, setDatePage] = useState(1);
   const datesPerPage = 5;
 
-  // Load patients
+  // 환자 목록 (pIdx 내림차순)
   useEffect(() => {
     axios.get("http://localhost:8090/SmOne/api/patients")
       .then(res => {
-        setPatients(res.data);
-        setFiltered(res.data);
+        // pIdx 큰 순 => 최신 등록 환자 먼저
+        const sorted = [...res.data].sort((a,b)=> b.pIdx - a.pIdx);
+        setPatients(sorted);
+        setFiltered(sorted);
       })
       .catch(err => console.error(err));
   }, []);
@@ -122,17 +125,7 @@ const Main = () => {
     setSelectedDate(null);
     setDatePage(1);
   };
-  // Logout
-  const handleLogout = async () => {
-    try {
-      await axios.post("http://localhost:8090/SmOne/api/users/logout", {}, { withCredentials: true });
-      alert("로그아웃 성공!");
-      navigate("/");
-    } catch (e) {
-      console.error(e);
-      alert("로그아웃 실패");
-    }
-  };
+
 
   // New X-ray
   const handleNewPhotoRegister = () => {
@@ -246,7 +239,7 @@ const Main = () => {
     <div className="main-container">
       {/* 상단 바 */}
       <div className="top-bar">
-      <img src={teamLogo} alt="Team Logo" className="main-team-logo" onClick={handleLogoClick} style={{ cursor: "pointer" }} />
+        <img src={teamLogo} alt="Team Logo" className="main-team-logo" onClick={handleLogoClick} style={{ cursor: "pointer" }} />
         <form className="search-form" onSubmit={handleSearchSubmit}>
           <input
             type="text"
@@ -263,17 +256,8 @@ const Main = () => {
           <button type="submit">검색</button>
         </form>
         <button className="diagnose-top-btn" onClick={handleDiagnose}>
+          <img src={stethoscopeIcon} alt="진단 아이콘" className="diagnose-icon" />
           진단하기
-        </button>
-      </div>
-
-      {/* 사이드 메뉴 */}
-      <div className={`side-menu ${sideOpen ? "open" : ""}`}>
-        <button className="menu-item" onClick={() => navigate("/mypage")}>
-          마이 페이지
-        </button>
-        <button className="menu-item" onClick={handleLogout}>
-          로그아웃
         </button>
       </div>
 
