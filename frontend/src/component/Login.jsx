@@ -27,7 +27,7 @@ const Login = () => {
         { withCredentials: true }
       );
       if (response.status === 200) {
-        alert('로그인 성공!');
+        // alert('로그인 성공!');
         sessionStorage.setItem('userId', formData.userId);
         navigate('/main');
       } else {

@@ -29,8 +29,8 @@ const Menu = ({ onProfileClick, onPatientClick, onHomeClick }) => {
   const handleClick = (index) => {
     setActiveIndex(index);
     if (menuItems[index].title === "Home") {
-      if (onHomeClick) onHomeClick(); // Reset patient selection
-      navigate("/Main"); // Navigate back to main screen
+      onHomeClick(); 
+      navigate("/Main"); 
     }
     if (menuItems[index].title === "My Page") {
       navigate("/mypage"); // MyPage로 이동
@@ -48,7 +48,7 @@ const Menu = ({ onProfileClick, onPatientClick, onHomeClick }) => {
   const handleLogout = async () => {
     try {
       await axios.post("http://localhost:8090/SmOne/api/users/logout", {}, { withCredentials: true });
-      alert("로그아웃 성공!");
+      // alert("로그아웃 성공!");
       navigate("/");
     } catch (e) {
       console.error(e);
