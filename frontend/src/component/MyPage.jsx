@@ -252,12 +252,13 @@ function Mypage() {
             <h2>회원 탈퇴</h2>
             <button className="close-btn" onClick={closeDeleteModal}>닫기</button>
           </div>
-          <div className="modal-body" style={{ flexDirection:"column", padding:"20px" }}>
+          <div className="modal-body1" style={{padding:"20px" }}>
             <p>비밀번호를 입력해주세요</p>
             <input
               type="password"
               placeholder="비밀번호"
               value={deletePassword}
+              className="M_pw"
               onChange={e=> setDeletePassword(e.target.value)}
               style={{ width:"100%", marginBottom:"10px" }}
             />
