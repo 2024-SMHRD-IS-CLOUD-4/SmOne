@@ -1,116 +1,82 @@
-body {
-    margin: 0;
-    padding: 0;
-    height: 100vh; /* 화면 높이 전체를 채움 */
-    overflow: hidden; /* 스크롤 제거 */
-    font-family: Arial, sans-serif;
-  }
-  
-  .video-background {
-    position: fixed; /* 화면에 고정 */
-    top: 0;
-    left: 0;
-    width: 100%; /* 화면 너비를 채움 */
-    height: 100%; /* 화면 높이를 채움 */
-    object-fit: cover; /* 화면 크기에 맞게 비율 유지하며 채움 */
-    z-index: -1; /* 콘텐츠 뒤로 배치 */
-  }
-  
-  .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  .login-box {
-    padding: 40px 30px;
+/* src/component/Login.css */
 
+/* 전체 레이아웃 */
+.login-page {
+    width: 400px;
+    margin: 0 auto;        /* 수평 중앙 정렬 */
+    margin-top: 150px;     /* 상단 간격 */
+    margin-bottom: 200px;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 => 배경 영상 보이도록 */
     border-radius: 8px;
-    width: 450px;
-    text-align: center;
+    padding: 30px 25px;
+    color: #fff;
+    text-align: center;    /* 타이틀, 폼 라벨 등을 가운데 정렬 */
   }
-  
-  /* h1 {
-    color: #ffffff;
-    margin-bottom: 20px;
-    font-size: 48px;
-  } */
+  /* src/component/Login.css */
 
-/* userId 전용 스타일 */
-.user-id-input,
-.user-pw-input {
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 30px;
-  width: 428px;
+.team-logo {
+  width: 170px; /* 로고 크기 */
+  height: auto; /* 비율 유지 */
+  display: block;
+  margin: 0 auto 20px; /* 중앙 정렬 + 아래 간격 */
 }
 
-
+  /* 로그인 타이틀 */
+  .login-title {
+    margin-bottom: 20px;
+    font-size: 32px;
+  }
   
-  /* form {
+  /* 폼 스타일 */
+  .login-form {
     display: flex;
     flex-direction: column;
-  } */
+    gap: 15px; /* 각 요소 간격 */
+    text-align: left; /* label은 왼쪽 정렬 */
+  }
   
-  label {
-    text-align: left;
-    font-size: 20px;
-    color: #ffffff;
+  /* 라벨 */
+  .login-form label {
+    font-size: 14px;
+    font-weight: bold;
     margin-bottom: 5px;
   }
   
-  input[type="text2"] {
+  /* 인풋 */
+  .login-form input {
     padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    font-size: 20px;
-    height: 40px;
-    margin-bottom: 40px;
-  }
-  input[type="password2"] {
-    padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    font-size: 20px;
-    height: 40px;
-    margin-bottom: 40px; /* 비밀번호 입력 박스 아래 간격 설정 */
-}
-  input:focus {
-    outline: none;
-    border-color: #ffffff;
-  }
-  
-  .login-button {
-    background-color: #1b1c1d;
-    color: #ffffff;
     border: none;
-    height: 60px;
     border-radius: 4px;
-    cursor: pointer;
-    font-size: 20px;
-    margin-top: 25px;
+    font-size: 14px;
   }
   
-  .login-button:hover {
+  /* 로그인 버튼 */
+  .login-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #333333;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .login-btn:hover {
     background-color: #555555;
   }
   
-  .login-links {
-    margin-top: 30px;
+  /* 하단 링크(아이디 찾기, 비밀번호 찾기, 회원가입) */
+  .login-extra {
+    margin-top: 20px;
     display: flex;
-    justify-content: space-between;
-    font-size: 20px;
+    justify-content: space-around; /* 링크 간격 띄우기 */
+    font-size: 14px;
   }
   
-  .login-links a {
-    color: #ffffff;
-    text-decoration: none;
+  .login-extra span {
+    cursor: pointer;
+    color: #ccc;
   }
-  
-  .login-links a:hover {
+  .login-extra span:hover {
+    color: #fff;
     text-decoration: underline;
   }
-  

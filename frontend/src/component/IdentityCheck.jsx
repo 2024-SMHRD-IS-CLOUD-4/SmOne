@@ -91,7 +91,6 @@ const IdentityCheck = () => {
               type="text"
               id="userId"
               name="userId"
-              className="identity_id"
               placeholder="아이디 입력"
               value={formData.userId}
               onChange={handleChange}
@@ -103,7 +102,6 @@ const IdentityCheck = () => {
                 type="text"
                 id="emailLocalPart"
                 name="emailLocalPart"
-                className="identity_email1"
                 placeholder="이메일 아이디"
                 value={formData.emailLocalPart}
                 onChange={handleChange}
@@ -113,7 +111,6 @@ const IdentityCheck = () => {
                 type="text"
                 id="emailDomainPart"
                 name="emailDomainPart"
-                className="identity_email2"
                 placeholder="직접입력"
                 value={formData.emailDomainPart}
                 onChange={handleChange}
@@ -129,7 +126,6 @@ const IdentityCheck = () => {
               type="text"
               id="verificationCode"
               name="verificationCode"
-              className="identity_code"
               placeholder="인증번호 입력"
               value={formData.verificationCode}
               onChange={handleChange}

@@ -1,249 +1,150 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: black;
-  }
+/* src/component/Signup.css */
 
-  .join-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  .join-box {
-    padding: 40px 30px;
-    border-radius: 8px;
+/* 반투명 박스 */
+.signup-container {
     width: 450px;
+    margin: 100px auto 0 auto;
+    margin-bottom: 50px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    padding: 30px;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     text-align: center;
   }
   
- 
-  h1 {
-    color: #ffffff;
+  .signup-title {
+    font-size: 32px;
     margin-bottom: 20px;
-    font-size: 48px;
   }
   
-  form {
+  .signup-form {
     display: flex;
     flex-direction: column;
-  
-  }
-  
-  label {
+    gap: 15px;
     text-align: left;
-    font-size: 20px;
-    color: #ffffff;
+  }
+  .signup-form label {
+    font-weight: bold;
+    font-size: 14px;
     margin-bottom: 5px;
-    display: block;
   }
-  
-  input {
+  .signup-form input {
     padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    font-size: 16px;
-    height: 30px;
-    width: 195px;
-  }
-
-.half-input-group {
-  display: flex; /* Align items in a row */
-  gap: 10px; /* Add 10px space between the inputs */
-  
-}
-
-.email-input-group span {
-  display: flex; /* Flexbox 사용 */
-  justify-content: center; /* 좌우 가운데 정렬 */
-  align-items: center; /* 상하 가운데 정렬 */
-  font-size: 18px;
-  font-weight: bold; /* 더 두꺼운 스타일로 강조 (선택 사항) */
-  color: #000000; /* 글자 색상 */
-  width: 30px; /* 크기 조정 (필요 시 수정 가능) */
-  height: 35px; /* 입력 필드 높이에 맞춤 */
-}
-
-.join_email{
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 30px;
-  margin-top: -20px;
-  margin-bottom: 15px;
-  width: 428px;
-}
-.join_centerid{
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 30px;
-  width: 303px;
-
-}
-.join_postcode{
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 30px;
-  width: 303px;
-}
-.join_address{
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 30px;
-  width: 450px;
-}
-.join_detailAddress{
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 30px;
-  width: 450px;
-}
-
-
-.name-role-group {
-  display: flex; /* 가로 정렬 */
-  align-items: center; /* 세로 가운데 정렬 */
-  gap: 10px; /* 입력 필드와 셀렉트 박스 간격 */
-  width: 100%; /* 부모 요소가 충분히 넓어야 함 */
-  flex-wrap: nowrap; /* 줄바꿈 방지 */
-}
-
-.user-name-input {
-  flex: 3; /* 입력 필드가 더 많은 공간을 차지 */
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 54px;
-  box-sizing: border-box; /* 패딩 포함 */
-  width: 250px;
-}
-
-.role-select {
-  flex: 1; /* select 박스는 적당히 작은 공간만 차지 */
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 54px;
-  background-color: white;
-  box-sizing: border-box;
-}
-.duplicate-check-btn0{
-  height: 52px; /* Match the height of the input field */
-  width: 115px;
-  padding: -1px 50px; /* Add padding for better appearance */
-  border: 1px solid #333333;
-  background-color: #333333;
-  color: #ffffff;
-  cursor: pointer;
-  border-radius: 4px;
-  margin-left: 10px;
-}
-
-.userid_join{
-
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 30px;
-  width: 303px;
-}
-
-.userpw_join{
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 30px;
-  width: 430px;
-}
-
-.half-input {
-  flex: 1; /* Allow both inputs to share available space equally */
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 30px; /* Match height of other inputs */
-}
-  input:focus {
-    outline: none;
-    border-color: #ffffff;
-  }
-  .input-search-group {
-    display: flex; /* Align items horizontally */
-    align-items: center; /* Center vertically */
-    gap: 10px; /* Space between the input and button */
-}
-  .select-box1 {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    font-size: 16px;
-    height: 52px;
-    background-color: white;
-    margin-top: 0px;
-  }
-  
-
-.input-box {
-    
-  flex: 1; /* Allow the input box to grow and fill available space */
-}
-  .input-group {
-    display: flex;
-    margin-bottom: 10px; /* Space between input groups */
-}
-
-
-
-.center_search,
-.search-btn {
-  /* margin-bottom: 10px; */
-  height: 52px; /* Match the height of the input field */
-  width: 115px;
-  padding: 0 20px; /* Add padding for better appearance */
-  border: 1px solid #333333;
-  background-color: #333333;
-  color: #ffffff;
-  cursor: pointer;
-  border-radius: 4px;
-}
-  
-  .join-button {
-    background-color: #333333;
-    color: #ffffff;
-    border: none;
-    height: 60px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 20px;
-  }
-  
-  .join-button:hover {
-    background-color: #555555;
-  }
-  
-  .role-select0 {
-    width: 115px;
-    height: 52px;
     border: none;
     border-radius: 4px;
     font-size: 14px;
     box-sizing: border-box;
+  }
+  
+  .flex-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .small-btn, .search-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .small-btn:hover, .search-btn:hover {
+    background-color: #555;
+  }
+  
+  .submit-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .submit-btn:hover {
+    background-color: #555;
+  }
+  
+  /* 모달 */
+  .search-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
     background-color: #fff;
-    text-align: center;
+    z-index: 9999;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .modal-header {
+    position: relative;
+    flex: 0 0 auto;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  .modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+  }
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: red;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .map-area {
+    flex: 1;
+    background: #f1f1f1;
+  }
+  .list-area {
+    width: 300px;
+    padding: 10px;
+    overflow-y: auto;
+    border-left: 1px solid #ccc;
+  }
+  .list-area ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .list-area li {
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: #333;
+  }
+  .list-area li:hover {
+    background: #f7f7f7;
+  }
+  .list-area strong {
+    font-weight: bold;
+    color: #333;
+    display: block;
+  }
+  .list-area p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
   }

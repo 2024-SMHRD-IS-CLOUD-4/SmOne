@@ -1,482 +1,429 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Main.css";
-import MyPage from "./MyPage";
-import PatientJoin from "./PatientJoin";
-import Patientedit from "./Patientedit";
-// import XrayImage from "./x-ray.png";
-import Loading from "./Loading";
-import LogoImage from "./teamlogo.png";
 import Menu from "./Menu"; // Menu 컴포넌트 추가
+import MyPage from "./Mypage";
 
-function Main() {
-  const [showMyPage, setShowMyPage] = useState(false);
-  const [showPatientJoin, setShowPatientJoin] = useState(false);
-  const [showPatientedit, setShowPatientedit] = useState(false);
-  const [image, setImage] = useState(null);
-  const [imagePanelImage, setImagePanelImage] = useState(null); // image-panel 업로드 이미지
-  const [searchInput, setSearchInput] = useState(""); // 이름 검색 상태
-  const [searchInputbirth, setSearchInputbirth] = useState(""); // 생년월일 검색 상태
-  const [searchResults, setSearchResults] = useState([]); // 검색 결과 상태를 추가
-  const [isLoading, setIsLoading] = useState(false);
+import DateList from "./Xray/DateList";
+import FirstVisitUI from "./Xray/FirstVisitUI";
+import SecondVisitUI from "./Xray/SecondVisitUI";
+import teamLogo from "./teamlogo.png"; // 로고 이미지 추가
+
+const Main = () => {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1); // State for the current page
-  const patientsPerPage = 5; // Number of patients per page
-  const [boxImages, setBoxImages] = useState(Array(5).fill(null)); // 박스 5개의 초기 상태
+  const [showMyPage, setShowMyPage] = useState(false); // MyPage 표시 상태 추가
+
+  const [patients, setPatients] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+
+  const [nameSearch, setNameSearch] = useState("");
+  const [birthSearch, setBirthSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const patientsPerPage = 5;
+  const [sideOpen, setSideOpen] = useState(false);
+
+  const [oldImages, setOldImages] = useState([]);
+  const [oldBigPreview, setOldBigPreview] = useState(null);
+
+  const [newImages, setNewImages] = useState([]);
+  const [newBigPreview, setNewBigPreview] = useState(null);
+  const newFileInputRef = useRef(null);
+
+  const [diagnosisMessage, setDiagnosisMessage] = useState("");
+
+  const [diagDates, setDiagDates] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [datePage, setDatePage] = useState(1);
+  const datesPerPage = 5;
+
+  // Load patients
+  useEffect(() => {
+    axios.get("http://localhost:8090/SmOne/api/patients")
+      .then(res => {
+        setPatients(res.data);
+        setFiltered(res.data);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  // Search
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const f = patients.filter(p => {
+      const nm = nameSearch ? p.pName.includes(nameSearch) : true;
+      const bt = birthSearch ? p.birth.startsWith(birthSearch) : true;
+      return nm && bt;
+    });
+    setFiltered(f);
+    setCurrentPage(1);
+  };
+  const totalPages = Math.ceil(filtered.length / patientsPerPage);
+  const indexOfLast = currentPage * patientsPerPage;
+  const indexOfFirst = indexOfLast - patientsPerPage;
+  const currentPatients = filtered.slice(indexOfFirst, indexOfLast);
+
+  const goFirst = () => setCurrentPage(1);
+  const goLast = () => setCurrentPage(totalPages);
+  const goPrev = () => setCurrentPage(prev => Math.max(prev - 1, 1));
+  const goNext = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  const handlePageChange = (p) => setCurrentPage(p);
+
+  // X-ray by date
+  const handleDateClick = async (dateStr, thePatient) => {
+    if (!thePatient) {
+      alert("환자를 먼저 선택해주세요.");
+      return;
+    }
+    try {
+      const r = await axios.get(`http://localhost:8090/SmOne/api/xray/byDate?pIdx=${thePatient.pIdx}&date=${dateStr}`);
+      setOldImages(r.data);
+      setOldBigPreview(null);
+      setSelectedDate(dateStr);
+    } catch (e) {
+      console.error(e);
+      alert("날짜별 X-ray 조회 실패");
+    }
+  };
+
+  // Patient click
+  const handlePatientClick = async (pt) => {
+    setSelectedPatient(pt);
+    setOldImages([]);
+    setOldBigPreview(null);
+    setNewImages([]);
+    setNewBigPreview(null);
+    setDiagnosisMessage("");
+    setDiagDates([]);
+    setSelectedDate(null);
+    setDatePage(1);
+
+    try {
+      const r2 = await axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${pt.pIdx}`);
+      setDiagDates(r2.data);
+      if (r2.data && r2.data.length > 0) {
+        const firstDate = r2.data[0];
+        setSelectedDate(firstDate);
+        handleDateClick(firstDate, pt);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const handleLogoClick = () => {
+    setSelectedPatient(null);
+    setOldImages([]);
+    setOldBigPreview(null);
+    setNewImages([]);
+    setNewBigPreview(null);
+    setDiagnosisMessage("");
+    setDiagDates([]);
+    setSelectedDate(null);
+    setDatePage(1);
+  };
+  // Logout
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:8090/SmOne/api/users/logout", {}, { withCredentials: true });
+      // alert("로그아웃 성공!");
+      navigate("/");
+    } catch (e) {
+      console.error(e);
+      alert("로그아웃 실패");
+    }
+  };
+
+  // New X-ray
+  const handleNewPhotoRegister = () => {
+    if (!selectedPatient) {
+      alert("환자를 먼저 선택하세요.");
+      return;
+    }
+    if (newImages.length >= 5) {
+      alert("최대5장까지만 등록 가능합니다.");
+      return;
+    }
+    newFileInputRef.current.click();
+  };
+  const handleNewFileChange = (e) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const fs = e.target.files;
+    const temp = [];
+    for (let i = 0; i < fs.length; i++) {
+      if (newImages.length + temp.length >= 5) {
+        alert("5장 초과 불가");
+        break;
+      }
+      const file = fs[i];
+      const previewUrl = URL.createObjectURL(file);
+      temp.push({ id: Date.now() + i, file, previewUrl });
+    }
+    setNewImages(prev => [...prev, ...temp]);
+    e.target.value = null;
+  };
+  const handleRemoveNewImage = (id) => {
+    if (!window.confirm("이 이미지를 삭제하시겠습니까?")) return;
+    setNewImages(prev => prev.filter(x => x.id !== id));
+    const target = newImages.find(x => x.id === id);
+    if (target && target.previewUrl === newBigPreview) {
+      setNewBigPreview(null);
+    }
+  };
+
+  // Diagnose
+  const handleDiagnose = async () => {
+    if (!selectedPatient) {
+      alert("환자를 먼저 선택하세요.");
+      return;
+    }
+    if (newImages.length === 0) {
+      alert("X-ray 이미지를 등록하세요.");
+      return;
+    }
+    try {
+      const f = new FormData();
+      f.append("pIdx", selectedPatient.pIdx);
+      newImages.forEach(item => f.append("files", item.file));
+
+      await axios.post("http://localhost:8090/SmOne/api/xray/diagnose", f, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+      alert("진단 완료! (RESULT=null)");
+      setDiagnosisMessage("진단내용 및 진단을 내린 대략적인 이유");
+
+      const r2 = await axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${selectedPatient.pIdx}`);
+      setDiagDates(r2.data);
+      setDatePage(1);
+      if (r2.data && r2.data.length > 0) {
+        const fd = r2.data[0];
+        setSelectedDate(fd);
+        handleDateClick(fd, selectedPatient);
+      }
+    } catch (err) {
+      console.error("업로드 실패:", err);
+      alert("업로드 실패");
+    }
+  };
+
+  // Edit / Delete
+  const handleEditPatient = (thePatient) => {
+    navigate(`/patients/edit/${thePatient.pIdx}`);
+  };
+  const handleDeletePatient = async (thePatient) => {
+    const c = window.confirm(`정말로 [${thePatient.pName}] 환자를 삭제하시겠습니까?`);
+    if (!c) return;
+    try {
+      await axios.delete(`http://localhost:8090/SmOne/api/patients/${thePatient.pIdx}`);
+      alert("삭제되었습니다.");
+      const newRes = await axios.get("http://localhost:8090/SmOne/api/patients");
+      setPatients(newRes.data);
+      setFiltered(newRes.data);
+      setSelectedPatient(null);
+    } catch (err) {
+      console.error("삭제 실패:", err);
+      alert("삭제 중 오류가 발생했습니다.");
+    }
+  };
 
 
 
-  const patientList = [
-    { name: "김철수", birth: "900101", phone: "010-1234-5678" },
-    { name: "김철수", birth: "900102", phone: "010-1234-5678" },
-    { name: "김철수", birth: "900103", phone: "010-1234-5678" },
-    { name: "김철수", birth: "900104", phone: "010-1234-5678" },
-    { name: "김철수", birth: "900105", phone: "010-1234-5678" },
-    { name: "김철수", birth: "900106", phone: "010-1234-5678" },
-    { name: "김철수", birth: "900107", phone: "010-1234-5678" },
-    { name: "김철수", birth: "900108", phone: "010-1234-5678" },
-    { name: "김지수", birth: "000000", phone: "010-1234-5678" },
-    { name: "김지수", birth: "000101", phone: "010-1234-5678" },
-    { name: "김지수", birth: "000202", phone: "010-1234-5678" },
-    { name: "김지수", birth: "000303", phone: "010-1234-5678" },
-    { name: "최승찬", birth: "880505", phone: "010-1234-5678" },
-    { name: "최승찬", birth: "880505", phone: "010-1234-5678" },
-    { name: "최승찬", birth: "880505", phone: "010-1234-5678" },
-  ];
-  const totalPages = Math.ceil(patientList.length / patientsPerPage); // Total number of pages
+  // earliestDate / latestDate
+  let earliestDate = null;
+  let latestDate = null;
+  if (diagDates && diagDates.length > 0) {
+    latestDate = diagDates[0];
+    earliestDate = diagDates[diagDates.length - 1];
+  }
 
-  // Get patients for the current page
-  const currentPatients = patientList.slice(
-    (currentPage - 1) * patientsPerPage,
-    currentPage * patientsPerPage
+  const topRightElement = (
+    <div style={{ color: "#ccc", fontSize: "14px" }}>
+      * 최대5장, 현재 {newImages.length}장
+    </div>
   );
 
-  // Handle page change
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
-    }
-  };
-  const handleHomeClick = () => {
-    setShowMyPage(false); // MyPage 비활성화
-    setShowPatientJoin(false); // PatientJoin 비활성화
-    setShowPatientedit(false); // PatientJoin 비활성화
-  };
-  const handleImagePanelUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImagePanelImage(imageUrl);
-    }
-  };
-  const handleProfileClick = () => {
-    setShowMyPage(true); // Profile 클릭 시 MyPage 활성화
-    setShowPatientJoin(false);
-    setShowPatientedit(false);
-  };
-  const toggleMyPage = () => {
-    setShowMyPage((prevState) => !prevState);
-    setShowPatientJoin(false);
-  };
-
-  const togglePatientJoin = () => {
-    setShowPatientJoin((prevState) => !prevState);
-    setShowMyPage(false);
-  };
-
-  const handleBoxImageUpload = (event, index) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      const updatedImages = [...boxImages];
-      updatedImages[index] = imageUrl;
-      setBoxImages(updatedImages);
-    }
-  };
-  const handleBoxImageClick = (event, index) => {
-    // 박스에 이미지가 있는 경우 업로드 창을 차단
-    if (boxImages[index]) {
-      event.preventDefault(); // 기본 동작 차단
-      setImage(boxImages[index]); // 패널 이미지로 설정
-    }
-  };
-  const [panelBoxImages, setPanelBoxImages] = useState(Array(5).fill(null)); // image-panel의 5개 박스 초기 상태
-
-  const handlePanelBoxImageUpload = (event, index) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      const updatedImages = [...panelBoxImages];
-      updatedImages[index] = imageUrl;
-      setPanelBoxImages(updatedImages);
-    }
-  };
-
-  const handlePanelBoxImageClick = (index) => {
-    if (panelBoxImages[index]) {
-      setImagePanelImage(panelBoxImages[index]); // 클릭한 이미지가 image-panel-upload에 표시되도록 설정
-    }
-  };
-
-  const handleRemovePanelBoxImage = (index) => {
-    const updatedImages = [...panelBoxImages];
-    updatedImages[index] = null; // 해당 박스의 이미지를 삭제
-    setPanelBoxImages(updatedImages);
-  };
-
-  const handleRemoveBoxImage = (index) => {
-    const updatedImages = [...boxImages];
-    updatedImages[index] = null; // 해당 박스의 이미지를 삭제
-    setBoxImages(updatedImages);
-  };
-
-  const handlePatientClick = () => {
-    setShowPatientJoin(true);
-    setShowMyPage(false);
-  };
-  const handleSearchChange = (nameQuery, birthQuery) => {
-    nameQuery = nameQuery.trim(); // 이름 검색 값
-    birthQuery = birthQuery.trim(); // 생년월일 검색 값
-  
-    if (!nameQuery && !birthQuery) {
-      setSearchResults([]); // 검색 조건이 없으면 빈 결과로 설정
-      return;
-    }
-  
-    // 조건에 따라 환자 리스트 필터링
-    const filteredResults = patientList.filter((patient) => {
-      const matchesName = nameQuery === "" || patient.name.includes(nameQuery);
-      const matchesBirth =
-        birthQuery === "" || patient.birth.startsWith(birthQuery); // 생년월일 앞자리만 체크
-      return matchesName && matchesBirth; // 이름과 생년월일 모두 일치하는 경우
-    });
-
-    setSearchResults(filteredResults);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
-  };
-  const handleEditPatient = () => {
-    setShowPatientedit(true); // ✅ 추가
-    setShowMyPage(false);
-    setShowPatientJoin(false);
-  };
-  const handleDiagnosisClick = () => {
-    if (!imagePanelImage) {
-      alert("이미지를 업로드해주세요!");
-      return;
-    }// 현재 보여줄 환자 리스트 (검색 결과 혹은 전체 리스트)
-    const currentPatients = (searchResults.length > 0 ? searchResults : patientList).slice(
-      (currentPage - 1) * patientsPerPage,
-      currentPage * patientsPerPage
-    );
-
-    const totalPages = Math.ceil(
-      (searchResults.length > 0 ? searchResults.length : patientList.length) / patientsPerPage
-    );
-
-    const handlePageChange = (pageNumber) => {
-      setCurrentPage(pageNumber);
-    };
-
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      navigate("/Result", {
-        state: {
-          uploadedImage: image,
-          uploadedImagePanel: imagePanelImage,
-        },
-      });
-    }, 3000);
-  };
-
   return (
-    <div>
-      <video className="video-background" autoPlay muted loop>
-        <source src="video.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <div className="container">
-        <header className="header">
-          <div className="logo-container">
-            <img
-              src={LogoImage}
-              alt="I Lung View Logo"
-              className="logo"
-              onClick={() => {
-                setShowMyPage(false);
-                setShowPatientJoin(false);
-                setShowPatientedit(false);
-                setImage(null); // 업로드된 이미지 초기화
-                setImagePanelImage(null); // 패널에 업로드된 이미지 초기화
-                navigate("/Main");
-              }}
-              style={{ cursor: "pointer" }}
-            />
+    <div className="main-container">
+      {/* 상단 바 */}
+      <div className="top-bar">
+      <img src={teamLogo} alt="Team Logo" className="main-team-logo" onClick={handleLogoClick} style={{ cursor: "pointer" }} />
+        <form className="search-form" onSubmit={handleSearchSubmit}>
+          <input
+            type="text"
+            placeholder="이름을 입력하세요"
+            value={nameSearch}
+            onChange={(e) => setNameSearch(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="생년월일 6자리를 입력하세요"
+            value={birthSearch}
+            onChange={(e) => setBirthSearch(e.target.value)}
+          />
+          <button type="submit">검색</button>
+        </form>
+        <button className="diagnose-top-btn" onClick={handleDiagnose}>
+          진단하기
+        </button>
+      </div>
+
+      {/* 사이드 메뉴 */}
+      <div className={`side-menu ${sideOpen ? "open" : ""}`}>
+        <button className="menu-item" onClick={() => navigate("/mypage")}>
+          마이 페이지
+        </button>
+        <button className="menu-item" onClick={handleLogout}>
+          로그아웃
+        </button>
+      </div>
+
+      {/* 본문 */}
+      <div className="main-content">
+        <div className="menu-container">
+          <Menu
+            onPatientClick={handlePatientClick}
+          />
+        </div>
+        {/* 왼쪽 패널 */}
+        <div className="left-panel">
+          <h2 style={{ marginTop: 0 }}>환자 정보</h2>
+          <ul className="patient-list panel-block">
+            {currentPatients.length > 0 ? (
+              currentPatients.map((pt, idx) => (
+                <li key={pt.pIdx || idx} onClick={() => handlePatientClick(pt)}>
+                  {pt.pName} - {pt.birth.slice(0, 6)}-****** ({pt.tel})
+                </li>
+              ))
+            ) : (
+              <li>등록된 환자 정보가 없습니다.</li>
+            )}
+          </ul>
+
+          <div className="pagination">
+            <button onClick={goFirst} disabled={currentPage === 1}>{"<<"}</button>
+            <button onClick={goPrev} disabled={currentPage === 1}>{"<"}</button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
+              <button
+                key={num}
+                onClick={() => handlePageChange(num)}
+                style={{ backgroundColor: currentPage === num ? "#ccc" : "#fff" }}
+              >
+                {num}
+              </button>
+            ))}
+            <button onClick={goNext} disabled={currentPage === totalPages}>{">"}</button>
+            <button onClick={goLast} disabled={currentPage === totalPages}>{">>"}</button>
           </div>
 
-          {/* 검색 창 */}
-          <div className="search-bar">
-            <input
-              type="text"
-              placeholder="이름을 입력하세요"
-              value={searchInput}
-              className="search-input1"
-              onChange={(e) => {
-                setSearchInput(e.target.value);
-                handleSearchChange(e.target.value, searchInputbirth);
-              }}
-            />
-            <input
-              type="text"
-              placeholder="생년월일 6자리를 입력하세요"
-              value={searchInputbirth}
-              className="search-input2"
-              onChange={(e) => {
-                setSearchInputbirth(e.target.value);
-                handleSearchChange(searchInput, e.target.value);
-              }}
-            />
-            <button className="search-button" onClick={handleSearchChange}>검색</button>
-          </div>
-          <button className="print-button" onClick={handleDiagnosisClick}>
-            <img src={require("./stethoscope.png")} alt="Stethoscope Icon" />
-            진단하기
-          </button>
-        </header>
+          {selectedPatient && (
+            <div className="patient-detail">
+              <h3 style={{ marginTop: 0 }}>환자 상세 정보</h3>
+              <p>환자 번호: {selectedPatient.pIdx}</p>
+              <p>환자 이름: {selectedPatient.pName}</p>
+              <p>생년월일: {selectedPatient.birth}</p>
+              <p>연락처: {selectedPatient.tel}</p>
+              <p>주소: {selectedPatient.pAdd}</p>
 
-        <div className="main">
-          <div className="menu-container">
-            <Menu onProfileClick={handleProfileClick}
-              onPatientClick={handlePatientClick}
-              onHomeClick={handleHomeClick} />
-          </div>
-          <div className="left-panel">
-            <button className="smart-button" onClick={toggleMyPage}>
-              스마트인재개발원
-            </button>
-            <div className="patient-list-container">
-              <h3>환자 리스트</h3>
-              <div className="patient-list">
-                {searchInput || searchInputbirth ? (
-                  // 검색을 수행한 경우
-                  searchResults.length > 0 ? (
-                    searchResults.map((patient, index) => (
-                      <div key={index} className="patient-item">
-                        <span> {patient.name}</span> |{" "}
-                        <span> {patient.birth}</span> |{" "}
-                        <span> {patient.phone}</span>
-                      </div>
-                    ))
-                  ) : (
-                    // 검색 결과가 없을 경우
-                    <div className="no-results">
-                      일치하는 환자가 없습니다.
-                    </div>
-                  )
-                ) : (
-                  // 검색을 하지 않았을 경우 기본 5명의 환자 리스트
-                  currentPatients.map((patient, index) => (
-                    <div key={index} className="patient-item">
-                      <span> {patient.name}</span> |{" "}
-                      <span> {patient.birth}</span> |{" "}
-                      <span> {patient.phone}</span>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              {/* 페이지네이션 (검색 결과가 없거나 검색을 하지 않았을 때만 표시) */}
-              {!searchInput && !searchInputbirth && (
-                <div className="pagination">
-                  {Array.from({ length: totalPages }, (_, index) => (
-                    <button
-                      key={index}
-                      className={`pagination-button ${currentPage === index + 1 ? "active" : ""
-                        }`}
-                      onClick={() => handlePageChange(index + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="patient-info-header">
-              <span className="patient-info-title">환자 정보</span>
-              <button className="edit-patient-button" onClick={handleEditPatient}>
-                환자 수정
+              <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>
+                수정
+              </button>
+              <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>
+                삭제
               </button>
             </div>
-            <div className="patient-info-container">
-              <div className="patient-info-row">환자 번호: 001</div>
-              <div className="patient-info-row">환자 성명: 김지수</div>
-              <div className="patient-info-row">생년월일: 920208</div>
-              <div className="patient-info-row">연락처: 010-2188-7111</div>
-              <div className="patient-info-row">주소: 광주광역시 동구 중앙로 196</div>
-            </div>
-            <div className="diagnosis-date-header">
-              <span className="diagnosis-date-title">진단 날짜</span>
-            </div>
-            <div className="diagnosis-date-container">
-              <div className="diagnosis-date-row">2025-01-13</div>
-            </div>
+          )}
+
+          <div className="date-list-container panel-block" style={{ marginTop: "10px" }}>
+            <DateList
+              diagDates={diagDates}
+              currentPage={datePage}
+              setCurrentPage={setDatePage}
+              datesPerPage={datesPerPage}
+              onDateClick={(dateStr) => handleDateClick(dateStr, selectedPatient)}
+            />
           </div>
-          <div
-            className={`right-panel ${isLoading ? "loading-mode" : ""} ${showMyPage || showPatientJoin || showPatientedit ? "show-my-page" : ""
-              }`}
-          >
-            {isLoading ? (
-              <Loading />
-            ) : (
+        </div>
+
+        {/* 오른쪽 패널 */}
+        <div className="right-panel">
+          <div className="xray-panel">
+            <div className="xray-header">
+              <h2 style={{ marginTop: 0 }}>X-ray 등록</h2>
+              {topRightElement}
+            </div>
+
+            {!selectedPatient ? (
               <>
-                {showMyPage && <MyPage />}
-                {showPatientJoin && <PatientJoin />}
-                {showPatientedit && <Patientedit />}
-                {!showMyPage && !showPatientJoin &&  !showPatientedit &&(
-                  <div className="upload-area">
-                    <div className="diagnosis">
-                      <label htmlFor="image-upload" className="upload-box">
-                        {image ? (
-                          <img src={image} alt="Uploaded Image" className="uploaded-image" />
-                        ) : (
-                          <span>과거 X-Ray 사진을<br /> 올려주세요</span>
-                        )}
-                      </label>
-                      <input
-                        id="image-upload"
-                        type="file"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        onChange={handleImageUpload}
-                      />
-                      {/* 박스 5개 추가 */}
-                      <div className="upload-box-row">
-                        {[...Array(5)].map((_, index) => (
-                          <div
-                            key={index}
-                            className="upload-box-item"
-                            onClick={() => {
-                              if (boxImages[index]) {
-                                setImage(boxImages[index]); // 클릭한 이미지가 image-upload에 표시되도록 설정
-                              }
-                            }}
-                          >
-                            <label htmlFor={`box-upload-${index}`} style={{ cursor: 'pointer' }}>
-                              {boxImages[index] ? (
-                                <img
-                                  src={boxImages[index]}
-                                  alt={`Box ${index + 1}`}
-                                  style={{ marginLeft: '5px', width: '90%', height: '90%', borderRadius: '5px' }}
-                                />
-                              ) : (
-                                <span>X-ray {index + 1}</span>
-                              )}
-                            </label>
-                            {boxImages[index] && (
-                              <button
-                                className="remove-image-button"
-                                onClick={(e) => {
-                                  e.stopPropagation(); // 버튼 클릭 시 부모 클릭 이벤트 차단
-                                  handleRemoveBoxImage(index);
-                                }}
-                              >
-                                X
-                              </button>
-                            )}
-                            {!boxImages[index] && (
-                              <input
-                                id={`box-upload-${index}`}
-                                type="file"
-                                accept="image/*"
-                                style={{ display: "none" }}
-                                onChange={(event) => handleBoxImageUpload(event, index)}
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-
-
-                    </div>
-                    <div className="current-image-panel">
-                      <label htmlFor="image-panel-upload" className="upload-box">
-                        {imagePanelImage ? (
-                          <img
-                            src={imagePanelImage}
-                            alt="Uploaded to Panel"
-                            className="uploaded-image"
-                          />
-                        ) : (
-                          <span> 현재 X-Ray 사진을<br /> 올려주세요</span>
-                        )}
-                      </label>
-                      <input
-                        id="image-panel-upload"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImagePanelUpload}
-                        style={{ display: "none" }}
-                      />
-                      {/* 5개의 박스 추가 */}
-                      <div className="upload-box-row">
-                        {[...Array(5)].map((_, index) => (
-                          <div
-                            key={index}
-                            className="upload-box-item"
-                            onClick={() => handlePanelBoxImageClick(index)} // 클릭 이벤트
-                          >
-                            <label htmlFor={`panel-box-upload-${index}`} style={{ cursor: 'pointer' }}>
-                              {panelBoxImages[index] ? (
-                                <img
-                                  src={panelBoxImages[index]}
-                                  alt={`Panel Box ${index + 1}`}
-                                  style={{ marginLeft: '5px', width: '90%', height: '90%', borderRadius: '5px' }}
-                                />
-                              ) : (
-                                <span>X-ray {index + 1}</span>
-                              )}
-                            </label>
-                            {panelBoxImages[index] && (
-                              <button
-                                className="remove-image-button"
-                                onClick={(e) => {
-                                  e.stopPropagation(); // 버튼 클릭 시 부모 클릭 이벤트 차단
-                                  handleRemovePanelBoxImage(index);
-                                }}
-                              >
-                                X
-                              </button>
-                            )}
-                            {!panelBoxImages[index] && (
-                              <input
-                                id={`panel-box-upload-${index}`}
-                                type="file"
-                                accept="image/*"
-                                style={{ display: "none" }}
-                                onChange={(event) => handlePanelBoxImageUpload(event, index)}
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                  </div>
-                )}
-
+                <p>선택한 환자: (없음)</p>
+                <span className="new-patient-info">
+                  신규 환자 (기존 X-ray 없음)
+                </span>
+                <FirstVisitUI
+                  newImages={newImages}
+                  setNewImages={setNewImages}
+                  newBigPreview={newBigPreview}
+                  setNewBigPreview={setNewBigPreview}
+                  handleNewPhotoRegister={handleNewPhotoRegister}
+                  handleNewFileChange={handleNewFileChange}
+                  handleRemoveNewImage={handleRemoveNewImage}
+                  diagnosisMessage={diagnosisMessage}
+                  newFileInputRef={newFileInputRef}
+                />
               </>
+            ) : (
+              oldImages.length === 0 ? (
+                <>
+                  <p>선택한 환자: {selectedPatient.pName}</p>
+                  <span className="new-patient-info">
+                    신규 환자 (기존 X-ray 없음)
+                  </span>
+                  <FirstVisitUI
+                    newImages={newImages}
+                    setNewImages={setNewImages}
+                    newBigPreview={newBigPreview}
+                    setNewBigPreview={setNewBigPreview}
+                    handleNewPhotoRegister={handleNewPhotoRegister}
+                    handleNewFileChange={handleNewFileChange}
+                    handleRemoveNewImage={handleRemoveNewImage}
+                    diagnosisMessage={diagnosisMessage}
+                    newFileInputRef={newFileInputRef}
+                  />
+                </>
+              ) : (
+                <>
+                  <p>
+                    선택한 환자: {selectedPatient.pName} <br />
+                    최초 내원일: {earliestDate} / 최종 내원일: {latestDate}
+                  </p>
+                  <SecondVisitUI
+                    oldImages={oldImages}
+                    setOldImages={setOldImages}
+                    oldBigPreview={oldBigPreview}
+                    setOldBigPreview={setOldBigPreview}
+
+                    newImages={newImages}
+                    setNewImages={setNewImages}
+                    newBigPreview={newBigPreview}
+                    setNewBigPreview={setNewBigPreview}
+
+                    handleNewPhotoRegister={handleNewPhotoRegister}
+                    handleNewFileChange={handleNewFileChange}
+                    handleRemoveNewImage={handleRemoveNewImage}
+                    diagnosisMessage={diagnosisMessage}
+                    newFileInputRef={newFileInputRef}
+                    selectedDate={selectedDate}
+                    patientName={selectedPatient.pName}
+                    earliestDate={earliestDate}
+                    latestDate={latestDate}
+                  />
+                </>
+              )
             )}
           </div>
         </div>
-        <footer className="footer"></footer>
       </div>
     </div>
   );
-}
+};
 
 export default Main;

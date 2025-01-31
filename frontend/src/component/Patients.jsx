@@ -7,7 +7,7 @@ function PatientJoin() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     pName: "",
-    gender: "남",
+    gender: "",
     birthPart1: "",
     birthPart2: "",
     phonePart1: "",
@@ -77,7 +77,7 @@ function PatientJoin() {
 
         <div className="name-and-gender-group">
           <div className="name-group">
-            <label></label>
+          <label>이름</label>
             <input
               type="text"
               name="pName"
@@ -107,7 +107,7 @@ function PatientJoin() {
         </div>
 
         <div className="resident-number-group">
-          <label></label>
+          <label>주민번호</label>
           <div className="resident-number-container">
             <input
               type="text"
@@ -133,7 +133,7 @@ function PatientJoin() {
         </div>
 
         <div className="phone-number-group">
-          <label></label>
+          <label>전화번호</label>
           <div className="phone-number-container">
             <input
               type="text"
@@ -170,7 +170,7 @@ function PatientJoin() {
         </div>
 
         <div className="address-group">
-          <label></label>
+          <label>우편번호</label>
           <div className="postcode-wrapper">
             <input
               type="text"

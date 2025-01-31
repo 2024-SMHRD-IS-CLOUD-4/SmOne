@@ -1,223 +1,168 @@
-html, body {
-    overflow: hidden; /* 스크롤 비활성화 */
+/* 반투명 박스(폼) */
+.mypage-container {
+    width: 450px;
+    margin: 100px auto 0 auto;
+    margin-bottom: 100px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    padding: 30px;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    text-align: center;
   }
-
-
-/* 프로필 페이지 컨테이너 */
-.profile-container {
-    font-family: Arial, sans-serif;
+  
+  .mypage-title {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+  
+  /* 폼: 왼쪽 정렬 */
+  .mypage-form {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    /* 세로 중앙 정렬 */
-    align-items: center;
-    /* 가로 중앙 정렬 */
-    background: rgba(0, 0, 0, 0.7);
-    /* 투명 배경 */
-    border-radius: 5px;
-    padding: 25px;
-    width: 1370px;
-    
-}
-
-/* 헤더 */
-.profile-header {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.profile-header h1 {
-    font-size: 48px;
-    margin: 0;
-}
-
-/* 폼 컨테이너 */
-.profile-form-container {
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 450px;
-}
-
-/* 라벨 스타일 */
-form label {
+    gap: 15px;
     text-align: left;
-    font-size: 20px;
-    color: #ffffff;
+  }
+  .mypage-form label {
+    font-weight: bold;
+    font-size: 14px;
     margin-bottom: 5px;
     display: block;
-}
-
-/* 입력 필드 스타일
-form input {
+  }
+  .mypage-form input {
     padding: 10px;
-    border: 1px solid #cccccc;
+    border: none;
     border-radius: 4px;
-    font-size: 16px;
-    height: 50px;
-    width: 500px;
-    margin-bottom: 10px;
-}
-
-form input[readonly] {
-    background: #f0f0f0;
-    cursor: not-allowed;
-} */
-
-/* 주소 입력 필드 */
-.profile-address-input {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.profile-address-input input {
-    flex: 1;
-}
-
-.profile-address-input button {
-    padding: 10px 15px;
-    background: #48699f;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    height: 60px;
-}
-
-.profile-address-input button:hover {
-    background: #005fa3;
-}
-
-/* 버튼 섹션 */
-.profile-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    gap: 10px;
-    /* 버튼 간격 추가 */
-}
-
-.profile-buttons button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
     font-size: 14px;
-    height: 50px;
-    background-color: #1b1c1d;
-    color: white;
-}
-
-.profile-buttons button:first-child {
-    background-color: #1b1c1d;
-    color: white;
-}
-
-.profile-buttons button:hover {
-    background: #555555;
-}
-
-.profile-buttons button.profile-danger-button {
-    background: #1b1c1d;
-    color: white;
-}
-
-.profile-buttons button.profile-danger-button:hover {
-    background: #555555;
-}
-
-.right-panel00 {
-    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+  }
+  
+  /* 사용자 ID 영역 */
+  .userid-box {
+    background: #999;
+    color: #000;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  /* 플렉스 줄 */
+  .flex-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  /* 버튼 정렬 */
+  .mypage-btn-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  /* 공통 버튼 */
+  .action-btn,
+  .small-btn,
+  .search-btn {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .action-btn:hover,
+  .small-btn:hover,
+  .search-btn:hover {
+    background-color: #555;
+  }
+  
+  /* 모달 공통 */
+  .search-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    background-color: #fff;
+    z-index: 9999;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 5px;
-    padding: 20px;
-    height: 740px;
-    width: 1379px;
-    overflow: hidden; /* 넘치는 내용 숨김 */
-}
-
-
-.Mypage_email,
-.Mypage_address {
+    overflow: hidden;
+  }
+  
+  .modal-header {
+    position: relative;
+    flex: 0 0 auto;
     padding: 10px;
-    border: 1px solid #cccccc;
+    border-bottom: 1px solid #ccc;
+    background: #f5f5f5;
+  }
+  .modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+  }
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #d33;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
     border-radius: 4px;
-    font-size: 16px;
-    height: 30px;
-    width: 436px;
-}
-.Mypage_name {
-    padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    font-size: 16px;
-    height: 30px;
-    width: 312px;
-    
-}
-.Mypage_center {
-    padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    font-size: 16px;
-    height: 30px;
-    width: 312px;
-}
-
-.Mypage_button {
-    height: 52px;
-    width: 115px;
-    padding: -1px 50px;
-    border: 1px solid #333333;
-    background-color: #333333;
-    color: #ffffff;
     cursor: pointer;
-    border-radius: 4px;
-    margin-left: 10px;
-}
-.role_select00 {
+  }
+  .close-btn:hover {
+    background: #f66;
+  }
+  
+  .modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    background: #fff;
+  }
+  
+  /* 지도 */
+  .map-area {
+    flex: 1;
+    background: #f1f1f1;
+  }
+  
+  /* 목록 */
+  .list-area {
+    width: 300px;
     padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    font-size: 16px;
-    height: 52px;
-    width: 115px;
-    background-color: white;
-    box-sizing: border-box;
-    margin-top: 20px;
-    margin-left: -10px;
-}
-
-.Mypage_span {
-    margin: 7px;
-    
-}
-.Mp_btn1,
-.Mp_btn2,
-.Mp_btn3 {
-    height: 52px;
-    width: 126px;
-    padding: -1px 50px;
-    border: 1px solid #333333;
-    background-color: #333333;
-    color: #ffffff;
+    overflow-y: auto;
+    border-left: 1px solid #ccc;
+  }
+  .list-area ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .list-area li {
+    margin-bottom: 10px;
     cursor: pointer;
-    border-radius: 4px;
-    /* margin-left: 10px; */
-}
-
-.emailLocal,
-.emailDomain {
-    padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    font-size: 16px;
-    height: 30px;
-    width: 190px;
-}
+    color: #333;
+  }
+  .list-area li:hover {
+    background: #f7f7f7;
+  }
+  .list-area strong {
+    font-weight: bold;
+    color: #333;
+    display: block;
+  }
+  .list-area p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+  }
+  

@@ -1,15 +1,20 @@
 .Patient-container {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 5px;
-    padding: 20px;
-    height: 770px;
-    width: 1379px;
-  }
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  padding: 20px;
+  height: 700px;
+  width: 520px;
+  position: absolute; /* Ensures proper centering */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
   
   .form-wrapper {
     max-width: 500px;
@@ -24,9 +29,10 @@
   }
   .patient-title {
     align-items: center;
-    font-size: 50px;
+    font-size: 30px;
     margin-bottom: 20px;
     text-align: center;
+    color: white;
   }
   .name-and-gender-group {
     display: flex; /* 한 줄로 배치 */
@@ -48,6 +54,7 @@
   .radio-group {
     display: flex;
     gap: 10px; /* 성별 버튼 간격 */
+    margin-top: 25px;
   }
   
   .radio {
@@ -87,7 +94,7 @@
   }
   
   .postcode-search-button {
-    background-color: #1b1c1d;
+    background-color: #333;
     color: white;
     border: none;
     border-radius: 5px;
@@ -105,7 +112,7 @@
   .submit-button {
     width: 100%;
     padding: 15px;
-    background-color: #1b1c1d;
+    background-color: #333;
     color: #fff;
     border: none;
     cursor: pointer;
@@ -117,7 +124,7 @@
     background-color: #555555;
   }
   .address-group {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
   
   .address-group label {
@@ -157,10 +164,11 @@
     display: flex;
     align-items: center;
     gap: 5px; /* 필드와 대시(-) 간격 */
+    margin-bottom: 10px;
   }
   
   .phone-number-box {
-    width: 134px;
+    width: 132px;
     height: 20px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -177,10 +185,11 @@
     display: flex;
     align-items: center;
     gap: 5px; /* 필드와 대시(-) 간격 */
+    margin-bottom: 10px;
   }
   
   .resident-number-box {
-    width: 230px; /* 필드 너비 */
+    width: 225px; /* 필드 너비 */
     height: 20px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -193,4 +202,11 @@
     font-weight: bold;
     color: #ffffff;
   }
-  
+  .name-group label,
+.resident-number-group label,
+.phone-number-group label,
+.address-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #ffffff;
+}
