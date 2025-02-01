@@ -84,7 +84,7 @@ const IdentityCheck = () => {
       </video>
       <div className="pass-container">
         <div className="pass-box">
-          <h1>IDENTITY CHECK</h1>
+          <h1>본인확인</h1>
           <form>
             <label htmlFor="userId">아이디</label>
             <input

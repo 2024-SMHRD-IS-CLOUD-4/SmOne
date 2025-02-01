@@ -21,11 +21,6 @@
   overflow: hidden;
 }
 
-/* 로고 스타일 */
-.team-logo {
-  height: 50px; /* 로고 높이 */
-  width: auto; /* 비율 유지 */
-}
 .print-button {
   position: absolute; /* 위치를 절대값으로 설정 */
   top: 20px; /* 상단에서 20px */

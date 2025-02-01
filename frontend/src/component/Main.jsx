@@ -484,8 +484,8 @@ function Main() {
               <p>연락처: {selectedPatient.tel}</p>
               <p>주소: {selectedPatient.pAdd}</p>
 
-              <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>수정</button>
-              <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>삭제</button>
+              <button className="btn" onClick={() => handleEditPatient(selectedPatient)}  style={{ fontWeight: "bold" }} >수정</button>
+              <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}  style={{ fontWeight: "bold" }} >삭제</button>
             </div>
           )}
 

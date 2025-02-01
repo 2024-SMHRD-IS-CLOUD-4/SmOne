@@ -78,6 +78,8 @@ function Patients() {
   return (
     <form onSubmit={handleSubmit}>
       <div className="Patient-container">
+         {/* 🔙 뒤로가기 버튼 추가 */}
+       <button className="back-btn" onClick={() => navigate(-1)}>X</button>
         <div className="form-wrapper">
           <h1 className="patient-title">환자 등록</h1>
 

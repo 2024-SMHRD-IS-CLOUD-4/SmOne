@@ -1,0 +1,49 @@
+/* src/component/PrintPage.css */
+
+.print-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .print-topbar {
+    height: 60px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
+  .print-content {
+    flex: 1;
+    background: #fff; /* 인쇄 시 흰 배경 */
+    color: #000;
+    padding: 20px;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+  
+  /* 테이블 예시 */
+  .print-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  .print-table th, .print-table td {
+    border: 1px solid #333;
+    padding: 10px;
+    vertical-align: middle;
+  }
+  
+  /* 인쇄 스타일 */
+  @media print {
+    .print-topbar {
+      display: none; /* 상단 바 숨김 */
+    }
+    .print-content {
+      margin: 0;
+      padding: 0;
+    }
+  }
+  

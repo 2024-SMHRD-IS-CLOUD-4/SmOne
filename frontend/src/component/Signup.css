@@ -2,37 +2,34 @@
 
 /* 반투명 박스 */
 .signup-container {
-  width: 450px;
-  height: 685px;
-  margin: 100px auto 0 auto;
-  margin-bottom: 50px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 8px;
-  padding: 30px;
-  color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  text-align: center;
-}
-
-.signup-title {
-  font-size: 32px;
-  margin-bottom: 20px;
-}
-
-.signup-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  text-align: left;
-}
-
-.signup-form label {
-  font-weight: bold;
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-/* .signup-form input {
+    width: 450px;
+    margin: 100px auto 0 auto;
+    margin-bottom: 50px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    padding: 30px;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+  
+  .signup-title {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+  
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+  }
+  .signup-form label {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  .signup-form input {
     padding: 10px;
     border: none;
     border-radius: 4px;
