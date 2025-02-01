@@ -1,6 +1,3 @@
-/* src/component/Main.css */
-
-/* 전체 레이아웃 */
 .main-container {
   position: relative;
   width: 100%;
@@ -9,23 +6,22 @@
   display: flex;
   flex-direction: column;
 }
-/* 로고 버튼 스타일 */
+
 .logo-button {
   background: none;
   border: none;
   cursor: pointer;
   position: absolute;
- 
   top: 10px;
 }
 
 .logo-image {
-  width: 160px; /* 너비 50px */
-  height: 85px; /* 높이 50px */
+  width: 160px;
+  height: 85px;
   margin-left: 125px;
   margin-top: 20px;
 }
-/* 검색 버튼 스타일 */
+
 .search-button {
   padding: 10px;
   border: none;
@@ -35,22 +31,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px; /* 버튼 크기 조정 */
+  width: 40px;
   height: 43px;
-  transition: background 0.3s ease-in-out; /* 부드러운 효과 추가 */
+  transition: background 0.3s ease-in-out;
 }
 
 .search-button:hover {
   background: #555;
 }
 
-/* 돋보기 아이콘 크기 */
 .search-icon {
   width: 20px;
   height: 20px;
 }
 
-/* 상단 바 */
 .top-bar {
   position: relative;
   width: 100%;
@@ -88,11 +82,11 @@
 .search-form button:hover {
   background: #555;
 }
-/* 진단하기 버튼 내부 아이콘 스타일 */
+
 .diagnose-top-btn {
   display: flex;
   align-items: center;
-  gap: 8px; /* 아이콘과 텍스트 간격 */
+  gap: 8px;
   padding: 14px 20px;
   border: none;
   border-radius: 6px;
@@ -101,7 +95,7 @@
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s ease-in-out; /* 부드러운 색상 전환 */
+  transition: background 0.3s ease-in-out;
 }
 
 .diagnose-top-btn:hover {
@@ -113,14 +107,11 @@
   cursor: not-allowed;
 }
 
-/* 아이콘 크기 조정 */
 .stethoscope-icon {
   width: 20px;
   height: 20px;
 }
 
-
-/* 사이드 메뉴 */
 .side-menu {
   position: absolute;
   top: 80px;
@@ -151,16 +142,14 @@
   background: rgba(255,255,255,0.2);
 }
 
-/* 본문 컨텐츠 */
 .main-content {
   flex: 1;
   display: flex;
   height: calc(100vh - 80px);
   overflow: hidden;
-  margin-left: 70px; /* 기존 70px에서 20px 추가 */
+  margin-left: 70px;
 }
 
-/* 왼쪽 패널 */
 .left-panel {
   width: 350px;
   overflow-y: auto;
@@ -197,15 +186,15 @@
 .pagination {
   margin-top: 10px;
   display: flex;
-  justify-content: center; /* 가운데 정렬 */
-  border-radius: 6px; /* 둥글게 */
-  overflow: hidden; /* 내부 버튼이 넘치지 않도록 */
+  justify-content: center;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .pagination button {
   padding: 8px 12px;
-  border: none; /* 기존 테두리 제거 */
-  background: #fff; /* 버튼 기본 배경 */
+  border: none;
+  background: #fff;
   cursor: pointer;
   font-size: 14px;
   font-weight: bold;
@@ -213,24 +202,21 @@
 }
 
 .pagination button:hover {
-  background: #bbb; /* 호버 시 색상 변경 */
+  background: #bbb;
 }
 
 .pagination button:disabled {
-  background: #eee; /* 비활성화 버튼 색상 */
+  background: #eee;
 }
 
-/* 첫 번째 버튼 (왼쪽 끝) */
 .pagination button:first-child {
   border-radius: 6px 0 0 6px;
 }
 
-/* 마지막 버튼 (오른쪽 끝) */
 .pagination button:last-child {
   border-radius: 0 6px 6px 0;
 }
 
-/* 현재 페이지 버튼 강조 */
 .pagination button.active {
   background: #333;
   color: white;
@@ -243,7 +229,7 @@
   padding: 10px;
   color: #fff;
 }
-/* 수정 및 삭제 버튼 스타일 */
+
 .btn {
   padding: 8px 12px;
   border: none;
@@ -252,7 +238,7 @@
   color: #fff;
   cursor: pointer;
   margin-right: 5px;
-  transition: background 0.3s ease-in-out; /* 부드러운 색상 전환 */
+  transition: background 0.3s ease-in-out;
 }
 
 .btn:hover {
@@ -270,7 +256,6 @@
   font-size: 14px;
 }
 
-/* 오른쪽 패널 */
 .right-panel {
   flex: 1;
   padding: 20px;
@@ -280,7 +265,6 @@
   position: relative;
 }
 
-/* X-ray 패널 */
 .xray-panel {
   position: relative; 
   width: 96%;
@@ -311,13 +295,11 @@
   box-sizing: border-box;
   width: 650px;
   height: 670px;
-
-  /* 요소 내부의 컨텐츠를 가운데 정렬 */
   display: flex;
-  flex-direction: column; /* 세로 정렬 */
-  justify-content: center; /* 수직 중앙 정렬 */
-  align-items: center; /* 수평 중앙 정렬 */
-  text-align: center; /* 텍스트 중앙 정렬 */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .new-patient-info {
@@ -325,7 +307,6 @@
   font-size: 14px;
 }
 
-/* 패널 내부 하단 고정용 박스 */
 .bottom-diagnosis-box-inside {
   position: absolute;
   left: 0;
@@ -343,5 +324,5 @@
   font-weight: bold;
 }
 .patient-detail p {
-  margin: 6px 0; /* 위아래 4px 간격 추가 */
+  margin: 6px 0;
 }
