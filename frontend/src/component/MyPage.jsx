@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { KakaoMapContext } from "../App";
 import axios from "axios";
 import "./Mypage.css";
 
 function Mypage() {
   const navigate = useNavigate();
-
+  const kakaoMaps = useContext(KakaoMapContext); // ✅ Context에서 API 가져오기
   // 이메일을 아이디/도메인으로 분리 예시
   const [userData, setUserData] = useState({
     userId: "",
@@ -17,7 +18,7 @@ function Mypage() {
     address: ""
   });
 
-  const [places, setPlaces] = useState([]); 
+  const [places, setPlaces] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState("");
@@ -39,13 +40,13 @@ function Mypage() {
   // 입력값 검증 (간단 예시)
   const validateInputs = () => {
     const { userName, role, emailLocal, emailDomain, centerId, address } = userData;
-    if(!userName.trim() || !role.trim() || !emailLocal.trim() || !emailDomain.trim() || !centerId.trim() || !address.trim()){
+    if (!userName.trim() || !role.trim() || !emailLocal.trim() || !emailDomain.trim() || !centerId.trim() || !address.trim()) {
       alert("모든 필드를 입력해주세요.");
       return false;
     }
     const fullEmail = `${emailLocal}@${emailDomain}`;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailRegex.test(fullEmail)){
+    if (!emailRegex.test(fullEmail)) {
       alert("유효한 이메일 아이디/도메인을 입력하세요.");
       return false;
     }
@@ -54,7 +55,7 @@ function Mypage() {
 
   // 정보 수정
   const handleUpdate = async () => {
-    if(!validateInputs()) return;
+    if (!validateInputs()) return;
 
     const fullEmail = `${userData.emailLocal}@${userData.emailDomain}`;
     const sendData = {
@@ -67,7 +68,7 @@ function Mypage() {
       });
       alert("정보가 수정되었습니다.");
       navigate("/main");
-    } catch(err){
+    } catch (err) {
       console.error(err);
       alert("정보 수정에 실패했습니다.");
     }
@@ -85,12 +86,12 @@ function Mypage() {
         userId: userData.userId,
         password: deletePassword
       });
-      if(response.status===200){
+      if (response.status === 200) {
         alert("회원 탈퇴 성공!");
         sessionStorage.clear();
         navigate("/");
       }
-    } catch(err){
+    } catch (err) {
       console.error(err);
       if (err.response?.status === 401) {
         alert("비밀번호가 일치하지 않습니다.");
@@ -102,33 +103,38 @@ function Mypage() {
 
   // 기관명 검색
   const handleSearchCenter = () => {
-    if(!userData.centerId.trim()){
+    if (!userData.centerId.trim()) {
       alert("기관명을 입력하세요!");
       return;
     }
-    const ps = new window.kakao.maps.services.Places();
-    ps.keywordSearch(userData.centerId, (data, status)=>{
-      if(status === window.kakao.maps.services.Status.OK){
-        setPlaces(data);
-        setShowModal(true);
-      } else {
-        alert("검색 결과가 없습니다.");
-      }
-    });
+
+    if (kakaoMaps) { // ✅ undefined 방지
+      const ps = new kakaoMaps.services.Places();
+      ps.keywordSearch(userData.centerId, (data, status) => {
+        if (status === kakaoMaps.services.Status.OK) {
+          setPlaces(data);
+          setShowModal(true);
+        } else {
+          alert("검색 결과가 없습니다.");
+        }
+      });
+    } else {
+      console.error("카카오 지도 API가 로드되지 않았습니다.");
+    }
   };
 
   // 모달 뜨면 지도 초기화
-  useEffect(()=>{
-    if(showModal){
+  useEffect(() => {
+    if (showModal) {
       const mapContainer = document.getElementById("map");
       const mapOption = {
         center: new window.kakao.maps.LatLng(37.5665, 126.978),
         level: 3
       };
       const map = new window.kakao.maps.Map(mapContainer, mapOption);
-      if(places.length>0){
+      if (places.length > 0) {
         const bounds = new window.kakao.maps.LatLngBounds();
-        places.forEach(p=>{
+        places.forEach(p => {
           const markerPosition = new window.kakao.maps.LatLng(p.y, p.x);
           bounds.extend(markerPosition);
           new window.kakao.maps.Marker({ map, position: markerPosition });
@@ -136,7 +142,7 @@ function Mypage() {
         map.setBounds(bounds);
       }
     }
-  },[showModal, places]);
+  }, [showModal, places]);
 
   const closeModal = () => {
     setShowModal(false);
@@ -149,65 +155,71 @@ function Mypage() {
 
   return (
     <div className="mypage-container">
-       {/* 🔙 뒤로가기 버튼 추가 */}
-       <button className="back-btn" onClick={() => navigate(-1)}>X</button>
+      {/* 🔙 뒤로가기 버튼 추가 */}
+      <button className="back-btn" onClick={() => navigate(-1)}>X</button>
       <h2 className="mypage-title">마이페이지</h2>
-      
+
       <form className="mypage-form">
         <label>* 사용자 ID</label>
         <div className="userid-box">{userData.userId}</div>
 
-        <label>관리자명</label>
-        <input
-          type="text"
-          name="userName"
-          value={userData.userName}
-          placeholder="관리자명을 입력하세요"
-          onChange={handleChange}
-        />
-
-        <label>사용자 직업</label>
-        <div className="flex-row" style={{ gap:"20px" }}>
-          <label>
+        <div className="flex-container">
+          <div className="input-group">
+            <label>관리자명</label>
             <input
-              type="radio"
-              name="role"
-              value="의사"
-              checked={userData.role==="의사"}
+              type="text"
+              name="userName"
+              className="Mp_Uname"
+              value={userData.userName}
+              placeholder="관리자명을 입력하세요"
               onChange={handleChange}
             />
-            의사
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="role"
-              value="관리자"
-              checked={userData.role==="관리자"}
-              onChange={handleChange}
-            />
-            관리자
-          </label>
+          </div>
+          <div className="role-group">
+            <label style={{ marginBottom: "30px"}}>사용자 직업</label>
+            <div className="flex-row" style={{ gap: "20px" }}>
+              <label>
+                <input
+                  type="radio"
+                  name="role"
+                  value="의사"
+                  checked={userData.role === "의사"}
+                  onChange={handleChange}
+                />
+                의사
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="role"
+                  value="관리자"
+                  checked={userData.role === "관리자"}
+                  onChange={handleChange}
+                />
+                관리자
+              </label>
+            </div>
+          </div>
         </div>
 
         <label>이메일</label>
-        <div className="flex-row" style={{ gap:"5px" }}>
+        <div className="flex-row" style={{ gap: "5px" }}>
           <input
             type="text"
             name="emailLocal"
+            className="Mp_email1"
             value={userData.emailLocal}
             placeholder="이메일 아이디"
             onChange={handleChange}
-            style={{ width:"150px" }}
           />
           <span>@</span>
           <input
             type="text"
             name="emailDomain"
+            className="Mp_email2"
             value={userData.emailDomain}
             placeholder="도메인"
             onChange={handleChange}
-            style={{ width:"150px" }}
           />
         </div>
 
@@ -217,6 +229,7 @@ function Mypage() {
             type="text"
             name="centerId"
             value={userData.centerId}
+            className="Mp_centerId"
             placeholder="기관명을 입력하세요"
             onChange={handleChange}
           />
@@ -225,11 +238,12 @@ function Mypage() {
           </button>
         </div>
 
-        <label>기관 주소</label>
+        
         <input
           type="text"
           name="address"
           value={userData.address}
+          className="Mp_add"
           placeholder="주소를 입력하세요"
           onChange={handleChange}
         />
@@ -241,7 +255,7 @@ function Mypage() {
           <button type="button" className="action-btn" onClick={handlePasswordChangePage}>
             비밀번호 변경
           </button>
-          <button type="button" className="action-btn" onClick={()=> setShowDeleteModal(true)}>
+          <button type="button" className="action-btn" onClick={() => setShowDeleteModal(true)}>
             탈퇴하기
           </button>
         </div>
@@ -254,17 +268,17 @@ function Mypage() {
             <h2>회원 탈퇴</h2>
             <button className="close-btn" onClick={closeDeleteModal}>닫기</button>
           </div>
-          <div className="modal-body" style={{ flexDirection:"column", padding:"20px" }}>
+          <div className="modal-body" style={{ flexDirection: "column", padding: "20px" }}>
             <p>비밀번호를 입력해주세요</p>
             <input
               type="password"
               placeholder="비밀번호"
               value={deletePassword}
-              onChange={e=> setDeletePassword(e.target.value)}
-              style={{ width:"100%", marginBottom:"10px" }}
+              onChange={e => setDeletePassword(e.target.value)}
+              style={{ width: "100%", marginBottom: "10px" }}
             />
-            <div style={{ textAlign:"right" }}>
-              <button className="small-btn" onClick={handleDelete} style={{ marginRight:"10px" }}>
+            <div style={{ textAlign: "right" }}>
+              <button className="small-btn" onClick={handleDelete} style={{ marginRight: "10px" }}>
                 탈퇴하기
               </button>
               <button className="small-btn" onClick={closeDeleteModal}>
@@ -286,10 +300,10 @@ function Mypage() {
             <div className="map-area" id="map"></div>
             <div className="list-area">
               <ul>
-                {places.map((place, i)=> (
+                {places.map((place, i) => (
                   <li
                     key={i}
-                    onClick={()=>{
+                    onClick={() => {
                       // ▼ place_name => centerId / address_name => address
                       setUserData(prev => ({
                         ...prev,

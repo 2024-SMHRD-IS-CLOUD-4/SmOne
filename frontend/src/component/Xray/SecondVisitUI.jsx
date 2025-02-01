@@ -51,10 +51,10 @@ function SecondVisitUI({
   };
   const handleWheelOld = (e) => {
     e.preventDefault();
-    let delta = e.deltaY<0?0.1:-0.1;
+    let delta = e.deltaY < 0 ? 0.1 : -0.1;
     let newZ = oldZoom + delta;
-    if(newZ<0.5) newZ=0.5;
-    if(newZ>4.0) newZ=4.0;
+    if (newZ < 0.5) newZ = 0.5;
+    if (newZ > 4.0) newZ = 4.0;
     setOldZoom(newZ);
   };
   const handleOldMouseDown = (e) => {
@@ -64,7 +64,7 @@ function SecondVisitUI({
     setOldStartY(e.clientY - oldOffsetY);
   };
   const handleOldMouseMove = (e) => {
-    if(!oldDragging) return;
+    if (!oldDragging) return;
     e.preventDefault();
     setOldOffsetX(e.clientX - oldStartX);
     setOldOffsetY(e.clientY - oldStartY);
@@ -79,20 +79,20 @@ function SecondVisitUI({
   };
   const handleOldDragStart = (e) => e.preventDefault();
 
-  const oldTotalScale = oldBaseScale*oldZoom;
+  const oldTotalScale = oldBaseScale * oldZoom;
   const oldTransform = {
-    position:"absolute",
-    left:"50%",
-    top:"50%",
-    transform:`
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    transform: `
       translate(-50%, -50%)
       translate(${oldOffsetX}px, ${oldOffsetY}px)
       scale(${oldTotalScale})
     `,
-    transformOrigin:"center center",
-    cursor: oldDragging?"grabbing":"grab",
-    maxWidth:"none",
-    userSelect:"none"
+    transformOrigin: "center center",
+    cursor: oldDragging ? "grabbing" : "grab",
+    maxWidth: "none",
+    userSelect: "none"
   };
 
   const oldXrayTitle = selectedDate ? `${selectedDate} X-ray` : "과거 X-ray";
@@ -125,10 +125,10 @@ function SecondVisitUI({
   };
   const handleWheelNew = (e) => {
     e.preventDefault();
-    let delta = e.deltaY<0?0.1:-0.1;
+    let delta = e.deltaY < 0 ? 0.1 : -0.1;
     let newZ = newZoom + delta;
-    if(newZ<0.5) newZ=0.5;
-    if(newZ>4.0) newZ=4.0;
+    if (newZ < 0.5) newZ = 0.5;
+    if (newZ > 4.0) newZ = 4.0;
     setNewZoom(newZ);
   };
   const handleNewMouseDown = (e) => {
@@ -138,7 +138,7 @@ function SecondVisitUI({
     setNewStartY(e.clientY - newOffsetY);
   };
   const handleNewMouseMove = (e) => {
-    if(!newDragging) return;
+    if (!newDragging) return;
     e.preventDefault();
     setNewOffsetX(e.clientX - newStartX);
     setNewOffsetY(e.clientY - newStartY);
@@ -153,35 +153,35 @@ function SecondVisitUI({
   };
   const handleNewDragStart = (e) => e.preventDefault();
 
-  const newTotalScale = newBaseScale*newZoom;
+  const newTotalScale = newBaseScale * newZoom;
   const newTransform = {
-    position:"absolute",
-    left:"50%",
-    top:"50%",
-    transform:`
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    transform: `
       translate(-50%, -50%)
       translate(${newOffsetX}px, ${newOffsetY}px)
       scale(${newTotalScale})
     `,
-    transformOrigin:"center center",
-    cursor: newDragging?"grabbing":"grab",
-    maxWidth:"none",
-    userSelect:"none"
+    transformOrigin: "center center",
+    cursor: newDragging ? "grabbing" : "grab",
+    maxWidth: "none",
+    userSelect: "none"
   };
 
   return (
-    <div className="xray-flex" style={{ position:"relative" }}>
+    <div className="xray-flex" style={{ position: "relative" }}>
       {/* 과거 X-ray */}
       <div className="xray-subpanel">
-        <h4 style={{ marginTop:0 }}>{oldXrayTitle}</h4>
+        <h4 style={{ marginTop: 0 }}>{oldXrayTitle}</h4>
         <div
           style={{
-            width:`${previewBoxWidth}px`,
-            height:`${previewBoxHeight}px`,
-            border:"2px dashed #999",
-            marginBottom:"10px",
-            overflow:"hidden",
-            position:"relative"
+            width: `${previewBoxWidth}px`,
+            height: `${previewBoxHeight}px`,
+            border: "2px dashed #999",
+            marginBottom: "10px",
+            overflow: "hidden",
+            position: "relative"
           }}
           onWheel={handleWheelOld}
           onMouseDown={handleOldMouseDown}
@@ -200,35 +200,35 @@ function SecondVisitUI({
               style={oldTransform}
             />
           ) : (
-            <div style={{ color:"#999" }}>
+            <div style={{ color: "#999" }}>
               과거 이미지를 클릭하면 확대
             </div>
           )}
         </div>
 
         <div style={{
-          display:"flex",
-          gap:"8px",
-          flexWrap:"wrap",
-          maxWidth:"550px",
-          marginBottom:"20px"
+          display: "flex",
+          gap: "8px",
+          flexWrap: "wrap",
+          maxWidth: "550px",
+          marginBottom: "20px"
         }}>
-          {oldImages.length===0 && <p>(none)</p>}
-          {oldImages.map((item, i)=>(
+          {oldImages.length === 0 && <p>(none)</p>}
+          {oldImages.map((item, i) => (
             <div
-              key={item.imgIdx||i}
+              key={item.imgIdx || i}
               style={{
-                position:"relative",
-                width:"80px", height:"80px",
-                border:"2px dashed #999",
-                cursor:"pointer"
+                position: "relative",
+                width: "80px", height: "80px",
+                border: "2px dashed #999",
+                cursor: "pointer"
               }}
-              onClick={()=>handleOldThumbClick(item)}
+              onClick={() => handleOldThumbClick(item)}
             >
               <img
                 src={`http://localhost:8090/SmOne/images/${item.imgPath}`}
                 alt="old-thumb"
-                style={{ width:"100%", height:"100%", objectFit:"cover" }}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </div>
           ))}
@@ -237,15 +237,15 @@ function SecondVisitUI({
 
       {/* 신규 X-ray */}
       <div className="xray-subpanel">
-        <h4 style={{ marginTop:0 }}>신규 X-ray 등록</h4>
+        <h4 style={{ marginTop: 0 }}>신규 X-ray 등록</h4>
         <div
           style={{
-            width:`${previewBoxWidth}px`,
-            height:`${previewBoxHeight}px`,
-            border:"2px dashed #999",
-            marginBottom:"10px",
-            overflow:"hidden",
-            position:"relative"
+            width: `${previewBoxWidth}px`,
+            height: `${previewBoxHeight}px`,
+            border: "2px dashed #999",
+            marginBottom: "10px",
+            overflow: "hidden",
+            position: "relative"
           }}
           onWheel={handleWheelNew}
           onMouseDown={handleNewMouseDown}
@@ -264,37 +264,37 @@ function SecondVisitUI({
               style={newTransform}
             />
           ) : (
-            <div style={{ color:"#999" }}>
+            <div style={{ color: "#999" }}>
               신규 이미지를 클릭하면 확대
             </div>
           )}
         </div>
 
         <div style={{
-          display:"flex",
-          gap:"8px",
-          flexWrap:"wrap",
-          maxWidth:"550px",
-          marginBottom:"10px"
+          display: "flex",
+          gap: "8px",
+          flexWrap: "wrap",
+          maxWidth: "550px",
+          marginBottom: "10px"
         }}>
-          {Array.from({ length:5 }).map((_, i) => {
+          {Array.from({ length: 5 }).map((_, i) => {
             const item = newImages[i];
-            if(!item){
-              if(newImages.length<5){
+            if (!item) {
+              if (newImages.length < 5) {
                 return (
                   <div
                     key={`plus-${i}`}
                     style={{
-                      width:"80px", height:"80px",
-                      border:"2px dashed #999",
-                      display:"flex",
-                      alignItems:"center",
-                      justifyContent:"center",
-                      cursor:"pointer"
+                      width: "80px", height: "80px",
+                      border: "2px dashed #999",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer"
                     }}
                     onClick={handleNewPhotoRegister}
                   >
-                    <span style={{ fontSize:"24px"}}>+</span>
+                    <span style={{ fontSize: "24px" }}>+</span>
                   </div>
                 );
               } else {
@@ -302,11 +302,11 @@ function SecondVisitUI({
                   <div
                     key={`full-${i}`}
                     style={{
-                      width:"80px", height:"80px",
-                      border:"2px dashed #999",
-                      display:"flex",
-                      alignItems:"center",
-                      justifyContent:"center"
+                      width: "80px", height: "80px",
+                      border: "2px dashed #999",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
                     }}
                   >
                     (full)
@@ -318,20 +318,20 @@ function SecondVisitUI({
                 <div
                   key={item.id}
                   style={{
-                    position:"relative",
-                    width:"80px", height:"80px",
-                    border:"2px dashed #999",
-                    cursor:"pointer"
+                    position: "relative",
+                    width: "80px", height: "80px",
+                    border: "2px dashed #999",
+                    cursor: "pointer"
                   }}
-                  onClick={()=>handleNewThumbClick(item)}
+                  onClick={() => handleNewThumbClick(item)}
                 >
                   <img
                     src={item.previewUrl}
                     alt="new-thumb"
-                    style={{ width:"100%", height:"100%", objectFit:"cover" }}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   />
                   <button
-                    onClick={(e)=>{
+                    onClick={(e) => {
                       e.stopPropagation();
                       handleRemoveNewImage(item.id);
                     }}
@@ -355,7 +355,32 @@ function SecondVisitUI({
           })}
         </div>
 
-        <button onClick={handleNewPhotoRegister}>사진 등록</button>
+        <button
+          onClick={handleNewPhotoRegister}
+          style={{
+            width: "120px",  // 버튼 너비
+            height: "30px", // 버튼 높이
+            padding: "4px", // 내부 패딩 조정
+            border: "none",
+            borderRadius: "6px",
+            background: "#333", // 버튼 색상 변경
+            color: "white",
+            fontSize: "12px", // 크기에 맞게 글자 크기 조정
+            fontWeight: "bold",
+            cursor: "pointer",
+            transition: "background 0.3s ease-in-out, transform 0.2s",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onMouseEnter={(e) => (e.target.style.background = "#555")}
+          onMouseLeave={(e) => (e.target.style.background = "#333")}
+          onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
+          onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
+        >
+          사진 등록
+        </button>
+
       </div>
     </div>
   );

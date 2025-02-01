@@ -13,15 +13,15 @@ function Result() {
   const navigate = useNavigate();
 
   // Main에서 넘어온 데이터
-  const [patient, setPatient] = useState(location.state?.patient || null);
-  const [newlyUploaded, setNewlyUploaded] = useState(location.state?.newlyUploaded || []);
-  const [aiResult, setAiResult] = useState(location.state?.aiResult || "");
+  const [patient] = useState(location.state?.patient || null);
+  const [newlyUploaded] = useState(location.state?.newlyUploaded || []);
+  const [aiResult] = useState(location.state?.aiResult || "");
 
   // DB에서 가져오는 X-ray, 날짜
   const [diagDates, setDiagDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [oldImages, setOldImages] = useState([]);
-  const [selectedOldImage, setSelectedOldImage] = useState(null);
+  const [setSelectedOldImage] = useState(null);
   const [oldBigPreview, setOldBigPreview] = useState(null);
 
   // 페이지네이션(날짜)
@@ -35,7 +35,7 @@ function Result() {
       return;
     }
     // 1) 환자 pIdx로 진단 날짜 목록 조회
-    axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${patient.pIdx}`)
+    axios.get(`${process.env.REACT_APP_DB_URL}/xray/dates?pIdx=${patient.pIdx}`)
       .then(res => {
         const list = res.data;
         setDiagDates(list);
@@ -51,30 +51,31 @@ function Result() {
   // selectedDate 바뀌면 X-ray 목록 로드
   useEffect(()=> {
     if(selectedDate && patient){
-      axios.get(`http://localhost:8090/SmOne/api/xray/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
+      axios.get(`${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
         .then(res => {
           setOldImages(res.data);
+
           // BIG_XRAY가 있으면 우선 확대
           const foundBig = res.data.find(x=> x.bigXray!==null);
           if(foundBig){
             setSelectedOldImage(foundBig);
-            setOldBigPreview(`http://localhost:8090/SmOne/images/${foundBig.bigXray}`);
+            setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${foundBig.bigXray}`);
           } else {
             // 첫 이미지로 확대
             if(res.data.length>0){
               setSelectedOldImage(res.data[0]);
-              setOldBigPreview(`http://localhost:8090/SmOne/images/${res.data[0].imgPath}`);
+              setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${res.data[0].imgPath}`);
             }
           }
         })
         .catch(e=> console.error(e));
     }
-  }, [selectedDate, patient]);
+  }, [selectedDate, patient, setSelectedOldImage]);
 
   // 썸네일 클릭
   function handleOldThumbClick(item){
     setSelectedOldImage(item);
-    setOldBigPreview(`http://localhost:8090/SmOne/images/${item.imgPath}`);
+    setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${item.imgPath}`);
   }
 
   // 날짜 클릭
@@ -160,7 +161,7 @@ function Result() {
                   onClick={()=> handleOldThumbClick(item)}
                 >
                   <img
-                    src={`http://localhost:8090/SmOne/images/${item.imgPath}`}
+                    src={`${process.env.REACT_APP_DB_URL2}/images/${item.imgPath}`}
                     alt="thumb"
                   />
                 </div>

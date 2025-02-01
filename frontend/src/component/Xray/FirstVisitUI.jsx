@@ -205,7 +205,33 @@ function FirstVisitUI({
           })}
         </div>
 
-        <button onClick={handleNewPhotoRegister}>사진 등록</button>
+        <button
+          onClick={handleNewPhotoRegister}
+          style={{
+            width: "120px",  // 버튼 너비
+            height: "30px", // 버튼 높이
+            padding: "4px", // 내부 패딩 조정
+            border: "none",
+            borderRadius: "6px",
+            background: "#333", // 버튼 색상 변경
+            color: "white",
+            fontSize: "12px", // 크기에 맞게 글자 크기 조정
+            fontWeight: "bold",
+            cursor: "pointer",
+            transition: "background 0.3s ease-in-out, transform 0.2s",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onMouseEnter={(e) => (e.target.style.background = "#555")}
+          onMouseLeave={(e) => (e.target.style.background = "#333")}
+          onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
+          onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
+        >
+          사진 등록
+        </button>
+
+
       </div>
     </div>
   );
