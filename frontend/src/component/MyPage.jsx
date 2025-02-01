@@ -62,7 +62,7 @@ function Mypage() {
       email: fullEmail  // 최종 email만 합쳐서 백엔드 전달
     };
     try {
-      await axios.put("http://localhost:8090/SmOne/api/users/update", sendData, {
+      await axios.put(`${process.env.REACT_APP_DB_URL}/users/update`, sendData, {
         headers: { "Content-Type": "application/json" }
       });
       alert("정보가 수정되었습니다.");
@@ -81,7 +81,7 @@ function Mypage() {
   // 회원 탈퇴
   const handleDelete = async () => {
     try {
-      const response = await axios.post("http://localhost:8090/SmOne/api/users/delete", {
+      const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/delete`, {
         userId: userData.userId,
         password: deletePassword
       });
@@ -149,7 +149,9 @@ function Mypage() {
 
   return (
     <div className="mypage-container">
-      <h2 className="mypage-title">MY PAGE</h2>
+       {/* 🔙 뒤로가기 버튼 추가 */}
+       <button className="back-btn" onClick={() => navigate(-1)}>X</button>
+      <h2 className="mypage-title">마이페이지</h2>
       
       <form className="mypage-form">
         <label>* 사용자 ID</label>

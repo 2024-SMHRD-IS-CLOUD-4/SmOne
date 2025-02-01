@@ -1,6 +1,8 @@
 package com.smhrd.smone.service;
 
+import com.smhrd.smone.model.Center;
 import com.smhrd.smone.model.User;
+import com.smhrd.smone.repository.CenterRepository;
 import com.smhrd.smone.repository.UserRepository;
 
 import jakarta.mail.MessagingException;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 import java.util.Random;
 
@@ -19,14 +23,33 @@ public class UserService {
 	@Autowired
 	private final UserRepository userRepository;
 	private final JavaMailSender mailSender;
+	private final CenterRepository centerRepository;
 
-	public UserService(UserRepository userRepository, JavaMailSender mailSender) {
+	public UserService(UserRepository userRepository, JavaMailSender mailSender, CenterRepository centerRepository) {
 		this.userRepository = userRepository;
 		this.mailSender = mailSender;
+		this.centerRepository = centerRepository;
 	}
 
 	// 회원가입
+	@Transactional
 	public User registerUser(User user) {
+		
+		String centerId = user.getCenterId();
+		
+		// center테이블에 이미 있는지 확인
+		boolean centerExists = centerRepository.existsById(centerId);
+		
+		// 없으면 center테이블에 새 레코드 삽입
+		if(!centerExists) {
+			Center newCenter = new Center();
+			newCenter.setCenterId(centerId);
+			
+			// address 컬럼을 center 테이블의 centerAdd에 맵핑
+			newCenter.setCenterAdd(user.getAddress());
+			
+			centerRepository.save(newCenter);
+		}
 		return userRepository.save(user);
 	}
 

@@ -10,7 +10,7 @@ import Findpw from './component/Findpw';
 import Mypage from './component/Mypage';
 import PatientEdit from './component/PatientEdit';
 import Result from './component/Result';
-import Diagnosis from './component/Diagnosis'
+import PrintPage from './component/PrintPage';
 
 function App() {
   return (
@@ -35,8 +35,8 @@ function App() {
         <Route path="/findpw" element={<Findpw />} />
         <Route path="/mypage" element={<Mypage/>} />
         <Route path="/patients/edit/:pIdx" element={<PatientEdit />} />
-        <Route path="/result" element={<Result/>} />
-        <Route path="/diagnosis" element={<Diagnosis/>} />
+        <Route path='/result' element={<Result/>} />
+        <Route path='print' element={<PrintPage/>} />
       </Routes>
     </Router>
     </div>

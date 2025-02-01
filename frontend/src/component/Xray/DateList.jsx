@@ -1,4 +1,6 @@
+import "./DateList.css"
 // src/component/Xray/DateList.jsx
+
 function DateList({
   diagDates,
   currentPage, setCurrentPage,
@@ -18,19 +20,19 @@ function DateList({
 
   return (
     <div>
-      <h3 style={{ marginTop:0 }}>진단 날짜</h3>
+      <h2 style={{ marginTop: 0 }}>진단 날짜</h2>
       {diagDates.length === 0 ? (
         <p>등록된 진단 날짜가 없습니다.</p>
       ) : (
         <>
-          <ul style={{ listStyle:"none", padding:0 }}>
+          <ul style={{ listStyle: "none", padding: 0 }}>
             {currentDates.map((d, i) => (
               <li
                 key={i}
                 style={{
-                  marginBottom:"5px",
-                  padding:"5px",
-                  cursor:"pointer"
+                  marginBottom: "5px",
+                  padding: "5px",
+                  cursor: "pointer"
                 }}
                 onClick={() => onDateClick(d)}
               >
@@ -40,24 +42,22 @@ function DateList({
           </ul>
 
           {/* 페이지네이션 */}
-          <div style={{ marginTop:"5px" }}>
-            <button onClick={goFirst} disabled={currentPage===1}>{"<<"}</button>
-            <button onClick={goPrev} disabled={currentPage===1}>{"<"}</button>
+          <div className="date-pagination">
+            <button onClick={goFirst} disabled={currentPage === 1}>{"<<"}</button>
+            <button onClick={goPrev} disabled={currentPage === 1}>{"<"}</button>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
               <button
                 key={num}
                 onClick={() => goPage(num)}
-                style={{
-                  margin:"0 2px",
-                  backgroundColor: currentPage===num ? "#ccc" : "#fff"
-                }}
+                className={currentPage === num ? "active" : ""}
               >
                 {num}
               </button>
             ))}
-            <button onClick={goNext} disabled={currentPage===totalPages}>{">"}</button>
-            <button onClick={goLast} disabled={currentPage===totalPages}>{">>"}</button>
+            <button onClick={goNext} disabled={currentPage === totalPages}>{">"}</button>
+            <button onClick={goLast} disabled={currentPage === totalPages}>{">>"}</button>
           </div>
+
         </>
       )}
     </div>

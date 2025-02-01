@@ -1,364 +1,190 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+// src/component/Result.jsx
+
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Main.css";
-import Menu from "./Menu"; // Menu 컴포넌트 추가
-import MyPage from "./Mypage";
+import "./Result.css";
 
-import DateList from "./Xray/DateList";
-import FirstVisitUI from "./Xray/FirstVisitUI";
-import SecondVisitUI from "./Xray/SecondVisitUI";
-import teamLogo from "./png/teamlogo.png" // 로고 이미지 추가
+import DateList from "./Xray/DateList"; // 날짜 리스트 재사용
+// (만약 필요없다면 제거 가능)
 
-const Main = () => {
+function Result() {
+  const location = useLocation();
   const navigate = useNavigate();
-  const [showMyPage, setShowMyPage] = useState(false); // MyPage 표시 상태 추가
 
-  const [patients, setPatients] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-  const [selectedPatient, setSelectedPatient] = useState(null);
-  const [sideOpen, setSideOpen] = useState(false);
+  // Main에서 넘어온 데이터
+  const [patient, setPatient] = useState(location.state?.patient || null);
+  const [newlyUploaded, setNewlyUploaded] = useState(location.state?.newlyUploaded || []);
+  const [aiResult, setAiResult] = useState(location.state?.aiResult || "");
 
-  const [oldImages, setOldImages] = useState([]);
-  const [oldBigPreview, setOldBigPreview] = useState(null);
-
-  const [newImages, setNewImages] = useState([]);
-  const [newBigPreview, setNewBigPreview] = useState(null);
-  const newFileInputRef = useRef(null);
-
-  const [diagnosisMessage, setDiagnosisMessage] = useState("");
-
+  // DB에서 가져오는 X-ray, 날짜
   const [diagDates, setDiagDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [oldImages, setOldImages] = useState([]);
+  const [selectedOldImage, setSelectedOldImage] = useState(null);
+  const [oldBigPreview, setOldBigPreview] = useState(null);
+
+  // 페이지네이션(날짜)
   const [datePage, setDatePage] = useState(1);
   const datesPerPage = 5;
 
-  // Load patients
-  useEffect(() => {
-    axios.get("http://localhost:8090/SmOne/api/patients")
+  useEffect(()=> {
+    if(!patient){
+      alert("잘못된 접근입니다. 메인으로 이동합니다.");
+      navigate("/main");
+      return;
+    }
+    // 1) 환자 pIdx로 진단 날짜 목록 조회
+    axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${patient.pIdx}`)
       .then(res => {
-        setPatients(res.data);
-        setFiltered(res.data);
+        const list = res.data;
+        setDiagDates(list);
+
+        // 가장 최신 날짜를 자동 선택
+        if(list.length>0){
+          setSelectedDate(list[0]);
+        }
       })
-      .catch(err => console.error(err));
-  }, []);
-  const handlePrintPage = () => {
-    navigate("/diagnosis"); // Diagnosis 페이지로 이동
-  };
+      .catch(e=> console.error(e));
+  }, [patient, navigate]);
 
+  // selectedDate 바뀌면 X-ray 목록 로드
+  useEffect(()=> {
+    if(selectedDate && patient){
+      axios.get(`http://localhost:8090/SmOne/api/xray/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
+        .then(res => {
+          setOldImages(res.data);
+          // BIG_XRAY가 있으면 우선 확대
+          const foundBig = res.data.find(x=> x.bigXray!==null);
+          if(foundBig){
+            setSelectedOldImage(foundBig);
+            setOldBigPreview(`http://localhost:8090/SmOne/images/${foundBig.bigXray}`);
+          } else {
+            // 첫 이미지로 확대
+            if(res.data.length>0){
+              setSelectedOldImage(res.data[0]);
+              setOldBigPreview(`http://localhost:8090/SmOne/images/${res.data[0].imgPath}`);
+            }
+          }
+        })
+        .catch(e=> console.error(e));
+    }
+  }, [selectedDate, patient]);
 
-  // X-ray by date
-  const handleDateClick = async (dateStr, thePatient) => {
-    if (!thePatient) {
-      alert("환자를 먼저 선택해주세요.");
-      return;
-    }
-    try {
-      const r = await axios.get(`http://localhost:8090/SmOne/api/xray/byDate?pIdx=${thePatient.pIdx}&date=${dateStr}`);
-      setOldImages(r.data);
-      setOldBigPreview(null);
-      setSelectedDate(dateStr);
-    } catch (e) {
-      console.error(e);
-      alert("날짜별 X-ray 조회 실패");
-    }
-  };
-
-  // Patient click
-  const handlePatientClick = async (pt) => {
-    setSelectedPatient(pt);
-    setOldImages([]);
-    setOldBigPreview(null);
-    setNewImages([]);
-    setNewBigPreview(null);
-    setDiagnosisMessage("");
-    setDiagDates([]);
-    setSelectedDate(null);
-    setDatePage(1);
-
-    try {
-      const r2 = await axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${pt.pIdx}`);
-      setDiagDates(r2.data);
-      if (r2.data && r2.data.length > 0) {
-        const firstDate = r2.data[0];
-        setSelectedDate(firstDate);
-        handleDateClick(firstDate, pt);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  const handleLogoClick = () => {
-    setSelectedPatient(null);
-    setOldImages([]);
-    setOldBigPreview(null);
-    setNewImages([]);
-    setNewBigPreview(null);
-    setDiagnosisMessage("");
-    setDiagDates([]);
-    setSelectedDate(null);
-    setDatePage(1);
-  };
-  // Logout
-  const handleLogout = async () => {
-    try {
-      await axios.post("http://localhost:8090/SmOne/api/users/logout", {}, { withCredentials: true });
-      alert("로그아웃 성공!");
-      navigate("/");
-    } catch (e) {
-      console.error(e);
-      alert("로그아웃 실패");
-    }
-  };
-
-  // New X-ray
-  const handleNewPhotoRegister = () => {
-    if (!selectedPatient) {
-      alert("환자를 먼저 선택하세요.");
-      return;
-    }
-    if (newImages.length >= 5) {
-      alert("최대5장까지만 등록 가능합니다.");
-      return;
-    }
-    newFileInputRef.current.click();
-  };
-  const handleNewFileChange = (e) => {
-    if (!e.target.files || e.target.files.length === 0) return;
-    const fs = e.target.files;
-    const temp = [];
-    for (let i = 0; i < fs.length; i++) {
-      if (newImages.length + temp.length >= 5) {
-        alert("5장 초과 불가");
-        break;
-      }
-      const file = fs[i];
-      const previewUrl = URL.createObjectURL(file);
-      temp.push({ id: Date.now() + i, file, previewUrl });
-    }
-    setNewImages(prev => [...prev, ...temp]);
-    e.target.value = null;
-  };
-  const handleRemoveNewImage = (id) => {
-    if (!window.confirm("이 이미지를 삭제하시겠습니까?")) return;
-    setNewImages(prev => prev.filter(x => x.id !== id));
-    const target = newImages.find(x => x.id === id);
-    if (target && target.previewUrl === newBigPreview) {
-      setNewBigPreview(null);
-    }
-  };
-
-  // Diagnose
-  const handleDiagnose = async () => {
-    if (!selectedPatient) {
-      alert("환자를 먼저 선택하세요.");
-      return;
-    }
-    if (newImages.length === 0) {
-      alert("X-ray 이미지를 등록하세요.");
-      return;
-    }
-    try {
-      const f = new FormData();
-      f.append("pIdx", selectedPatient.pIdx);
-      newImages.forEach(item => f.append("files", item.file));
-
-      await axios.post("http://localhost:8090/SmOne/api/xray/diagnose", f, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
-      alert("진단 완료! (RESULT=null)");
-      setDiagnosisMessage("진단내용 및 진단을 내린 대략적인 이유");
-
-      const r2 = await axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${selectedPatient.pIdx}`);
-      setDiagDates(r2.data);
-      setDatePage(1);
-      if (r2.data && r2.data.length > 0) {
-        const fd = r2.data[0];
-        setSelectedDate(fd);
-        handleDateClick(fd, selectedPatient);
-      }
-    } catch (err) {
-      console.error("업로드 실패:", err);
-      alert("업로드 실패");
-    }
-  };
-
-  // Edit / Delete
-  const handleEditPatient = (thePatient) => {
-    navigate(`/patients/edit/${thePatient.pIdx}`);
-  };
-  const handleDeletePatient = async (thePatient) => {
-    const c = window.confirm(`정말로 [${thePatient.pName}] 환자를 삭제하시겠습니까?`);
-    if (!c) return;
-    try {
-      await axios.delete(`http://localhost:8090/SmOne/api/patients/${thePatient.pIdx}`);
-      alert("삭제되었습니다.");
-      const newRes = await axios.get("http://localhost:8090/SmOne/api/patients");
-      setPatients(newRes.data);
-      setFiltered(newRes.data);
-      setSelectedPatient(null);
-    } catch (err) {
-      console.error("삭제 실패:", err);
-      alert("삭제 중 오류가 발생했습니다.");
-    }
-  };
-
-
-
-  // earliestDate / latestDate
-  let earliestDate = null;
-  let latestDate = null;
-  if (diagDates && diagDates.length > 0) {
-    latestDate = diagDates[0];
-    earliestDate = diagDates[diagDates.length - 1];
+  // 썸네일 클릭
+  function handleOldThumbClick(item){
+    setSelectedOldImage(item);
+    setOldBigPreview(`http://localhost:8090/SmOne/images/${item.imgPath}`);
   }
 
-  const topRightElement = (
-    <div style={{ color: "#ccc", fontSize: "14px" }}>
-      * 최대5장, 현재 {newImages.length}장
-    </div>
-  );
+  // 날짜 클릭
+  function handleDateClick(dateStr){
+    setSelectedDate(dateStr);
+  }
+
+  // 뒤로가기 => 메인
+  function handleGoBack(){
+    navigate("/main");
+  }
+  // 출력하기 => /print
+  function handlePrint(){
+    navigate("/print", {
+      state: {
+        patient,
+        aiResult,
+        newlyUploaded
+      }
+    });
+  }
 
   return (
-    <div className="main-container">
-      {/* 상단 바 */}
-      <div className="top-bar">
-      <img src={teamLogo} alt="Team Logo" className="main-team-logo" onClick={handleLogoClick} style={{ cursor: "pointer" }} />
-        <button className="diagnose-top-btn" onClick={handlePrintPage}>
-          출력하기
-        </button>
-      </div>
-
-      {/* 사이드 메뉴 */}
-      <div className={`side-menu ${sideOpen ? "open" : ""}`}>
-        <button className="menu-item" onClick={() => navigate("/mypage")}>
-          마이 페이지
-        </button>
-        <button className="menu-item" onClick={handleLogout}>
-          로그아웃
-        </button>
-      </div>
-
-      {/* 본문 */}
-      <div className="main-content">
-        <div className="menu-container">
-          <Menu
-            onPatientClick={handlePatientClick}
-          />
+    <div className="result-container">
+      <div className="result-topbar">
+        <h2>진단 결과 페이지</h2>
+        <div>
+          <button onClick={handleGoBack}>뒤로가기</button>
+          <button onClick={handlePrint} style={{ marginLeft:"10px" }}>출력하기</button>
         </div>
-        {/* 왼쪽 패널 */}
-        <div className="left-panel">
-          
+      </div>
 
-          {selectedPatient && (
-            <div className="patient-detail">
-              <h3 style={{ marginTop: 0 }}>환자 상세 정보</h3>
-              <p>환자 번호: {selectedPatient.pIdx}</p>
-              <p>환자 이름: {selectedPatient.pName}</p>
-              <p>생년월일: {selectedPatient.birth}</p>
-              <p>연락처: {selectedPatient.tel}</p>
-              <p>주소: {selectedPatient.pAdd}</p>
+      {/* 메인 레이아웃 */}
+      <div className="result-main">
+        {/* 왼쪽 패널: 환자 정보 + 진단 날짜 */}
+        <div className="result-left-panel">
+          <div className="result-patient-detail">
+            <h3>환자 정보</h3>
+            {patient ? (
+              <>
+                <p>이름: {patient.pName}</p>
+                <p>생년월일: {patient.birth}</p>
+                <p>연락처: {patient.tel}</p>
+                <p>주소: {patient.pAdd}</p>
+              </>
+            ) : (
+              <p>정보 없음</p>
+            )}
+          </div>
 
-              <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>
-                수정
-              </button>
-              <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>
-                삭제
-              </button>
-            </div>
-          )}
-
-          <div className="date-list-container panel-block" style={{ marginTop: "10px" }}>
+          <div className="result-date-list">
             <DateList
               diagDates={diagDates}
               currentPage={datePage}
               setCurrentPage={setDatePage}
               datesPerPage={datesPerPage}
-              onDateClick={(dateStr) => handleDateClick(dateStr, selectedPatient)}
+              onDateClick={handleDateClick}
             />
           </div>
         </div>
 
-        {/* 오른쪽 패널 */}
-        <div className="right-panel">
-          <div className="xray-panel">
-            <div className="xray-header">
-              <h2 style={{ marginTop: 0 }}>X-ray 등록</h2>
-              {topRightElement}
+        {/* 오른쪽 패널: X-ray (왼쪽), 진단 결과 (오른쪽) */}
+        <div className="result-right-panel">
+          <div className="result-xray-area">
+            <div className="big-preview-box">
+              {oldBigPreview ? (
+                <img
+                  src={oldBigPreview}
+                  alt="old-big"
+                  className="big-preview-img"
+                />
+              ) : (
+                <div style={{ color:"#ccc" }}>X-ray가 없습니다.</div>
+              )}
             </div>
 
-            {!selectedPatient ? (
-              <>
-                <p>선택한 환자: (없음)</p>
-                <span className="new-patient-info">
-                  신규 환자 (기존 X-ray 없음)
-                </span>
-                <FirstVisitUI
-                  newImages={newImages}
-                  setNewImages={setNewImages}
-                  newBigPreview={newBigPreview}
-                  setNewBigPreview={setNewBigPreview}
-                  handleNewPhotoRegister={handleNewPhotoRegister}
-                  handleNewFileChange={handleNewFileChange}
-                  handleRemoveNewImage={handleRemoveNewImage}
-                  diagnosisMessage={diagnosisMessage}
-                  newFileInputRef={newFileInputRef}
-                />
-              </>
-            ) : (
-              oldImages.length === 0 ? (
-                <>
-                  <p>선택한 환자: {selectedPatient.pName}</p>
-                  <span className="new-patient-info">
-                    신규 환자 (기존 X-ray 없음)
-                  </span>
-                  <FirstVisitUI
-                    newImages={newImages}
-                    setNewImages={setNewImages}
-                    newBigPreview={newBigPreview}
-                    setNewBigPreview={setNewBigPreview}
-                    handleNewPhotoRegister={handleNewPhotoRegister}
-                    handleNewFileChange={handleNewFileChange}
-                    handleRemoveNewImage={handleRemoveNewImage}
-                    diagnosisMessage={diagnosisMessage}
-                    newFileInputRef={newFileInputRef}
+            {/* 썸네일 목록 */}
+            <div className="thumb-list" style={{ marginTop:"10px" }}>
+              {oldImages.map((item)=>(
+                <div
+                  key={item.imgIdx}
+                  className="thumb-item"
+                  onClick={()=> handleOldThumbClick(item)}
+                >
+                  <img
+                    src={`http://localhost:8090/SmOne/images/${item.imgPath}`}
+                    alt="thumb"
                   />
-                </>
-              ) : (
-                <>
-                  <p>
-                    선택한 환자: {selectedPatient.pName} <br />
-                    최초 내원일: {earliestDate} / 최종 내원일: {latestDate}
-                  </p>
-                  <SecondVisitUI
-                    oldImages={oldImages}
-                    setOldImages={setOldImages}
-                    oldBigPreview={oldBigPreview}
-                    setOldBigPreview={setOldBigPreview}
+                </div>
+              ))}
+            </div>
+          </div>
 
-                    newImages={newImages}
-                    setNewImages={setNewImages}
-                    newBigPreview={newBigPreview}
-                    setNewBigPreview={setNewBigPreview}
-
-                    handleNewPhotoRegister={handleNewPhotoRegister}
-                    handleNewFileChange={handleNewFileChange}
-                    handleRemoveNewImage={handleRemoveNewImage}
-                    diagnosisMessage={diagnosisMessage}
-                    newFileInputRef={newFileInputRef}
-                    selectedDate={selectedDate}
-                    patientName={selectedPatient.pName}
-                    earliestDate={earliestDate}
-                    latestDate={latestDate}
-                  />
-                </>
-              )
-            )}
+          <div className="result-diagnosis-area">
+            <h3>AI 진단 결과</h3>
+            <p>{aiResult}</p>
+            <hr style={{ margin:"20px 0" }}/>
+            <h4>이번에 업로드된 파일들</h4>
+            {newlyUploaded && newlyUploaded.length>0 ? (
+              <ul>
+                {newlyUploaded.map((fn, i)=>
+                  <li key={i}>{fn}</li>
+                )}
+              </ul>
+            ) : <p>(없음)</p>}
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
-export default Main;
+export default Result;

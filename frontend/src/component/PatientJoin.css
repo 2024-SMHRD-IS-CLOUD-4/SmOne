@@ -15,23 +15,7 @@
   transform: translate(-50%, -50%);
 }
 
-.back-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 6px 10px;
-  background-color: #444;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.back-btn:hover {
-  background-color: #666;
-}
-
+  
   .form-wrapper {
     max-width: 500px;
     width: 100%;

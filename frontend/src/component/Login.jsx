@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css'; // (★) 로그인 전용 CSS
-import teamLogo from './png/teamlogo.png'; // (★) 로고 이미지 추가
 
 const Login = () => {
   const [formData, setFormData] = useState({ userId: '', userPw: '' });
@@ -52,7 +51,6 @@ const Login = () => {
 
   return (
     <div className="login-page">
-      <img src={teamLogo} alt="Team Logo" className="team-logo" />
       <h1 className="login-title">LOGIN</h1>
 
       <form className="login-form" onSubmit={handleSubmit}>

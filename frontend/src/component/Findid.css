@@ -3,8 +3,7 @@
 /* 전체 컨테이너 (반투명 박스) */
 .findid-container {
   width: 450px;
-  margin: 200px auto 0 auto;
-  margin-bottom: 200px;
+  margin: 100px auto 0 auto;
   background-color: rgba(0, 0, 0, 0.5); 
   border-radius: 8px;
   padding: 30px;
