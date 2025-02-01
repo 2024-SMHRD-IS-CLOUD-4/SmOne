@@ -24,20 +24,22 @@ const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
     { title: "로그아웃", icon: logOutOutline },
   ];
 
-  const handleClick = (index) => {
+  const handleClick = (event, index) => {
+    event.preventDefault(); // URL에 # 추가 방지
     setActiveIndex(index);
+
     if (menuItems[index].title === "메인화면") {
-      if (onHomeClick) onHomeClick(); // Reset patient selection
-      navigate("/main"); // Navigate back to main screen
+      if (onHomeClick) onHomeClick();
+      navigate("/main");
     }
     if (menuItems[index].title === "마이페이지") {
-      navigate("/mypage"); // MyPage로 이동
+      navigate("/mypage");
     }
     if (menuItems[index].title === "환자등록") {
-      navigate("/patients"); // 환자 등록 페이지로 이동
+      navigate("/patients");
     }
     if (menuItems[index].title === "로그아웃") {
-      handleLogout(); // 로그아웃 실행
+      handleLogout();
     }
   };
   const toggleMenu = () => {
@@ -53,7 +55,7 @@ const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
       alert("로그아웃 실패");
     }
   };
-  
+
   return (
     <>
       {isExpanded && <div className="menu-overlay" onClick={toggleMenu}></div>}
@@ -67,9 +69,9 @@ const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
             <li
               key={index}
               className={`list ${activeIndex === index ? "active" : ""}`}
-              onClick={() => handleClick(index)}
+              onClick={(e) => handleClick(e, index)}
             >
-              <a href="#">
+              <a href="/">
                 <span className="icon">
                   {item.image ? (
                     <img src={item.image} alt={`${item.title} icon`} className="menu-image" />

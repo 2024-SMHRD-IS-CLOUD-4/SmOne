@@ -112,10 +112,11 @@ function Result() {
         {/* 왼쪽 패널: 환자 정보 + 진단 날짜 */}
         <div className="result-left-panel">
           <div className="result-patient-detail">
-            <h3>환자 정보</h3>
+            <h2>환자 정보</h2>
             {patient ? (
               <>
-                <p>이름: {patient.pName}</p>
+                <p>환자 번호 :{patient.pIdx}</p>
+                <p>환자 이름: {patient.pName}</p>
                 <p>생년월일: {patient.birth}</p>
                 <p>연락처: {patient.tel}</p>
                 <p>주소: {patient.pAdd}</p>
