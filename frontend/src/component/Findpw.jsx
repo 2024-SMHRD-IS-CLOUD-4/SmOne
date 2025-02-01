@@ -59,7 +59,7 @@ const Findpw = () => {
     }
 
     try {
-      await axios.post("http://localhost:8090/SmOne/api/users/password/verify-code", {
+      await axios.post(`${process.env.REACT_APP_DB_URL}/users/password/verify-code`, {
         userId: formData.userId,
         verificationCode: formData.verificationCode,
       });
@@ -82,7 +82,7 @@ const Findpw = () => {
 
   return (
     <div className="findpw-container">
-      <h1 className="findpw-title">비밀번호 찾기</h1>
+      <h1 className="findpw-title">본인 인증</h1>
 
       <div className="findpw-form">
         {/* 아이디 */}
@@ -141,7 +141,7 @@ const Findpw = () => {
 
         {/* 비밀번호 변경 이동 버튼 */}
         <button
-          className="changepw-btn"
+          className="findpw-btn"
           onClick={handleNavigateToChangePw}
           disabled={!isCodeVerified}
         >

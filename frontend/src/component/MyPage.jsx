@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { KakaoMapContext } from "../App";
 import axios from "axios";
 import "./Mypage.css";
 
 function Mypage() {
   const navigate = useNavigate();
-
+  const kakaoMaps = useContext(KakaoMapContext); // ✅ Context에서 API 가져오기
   // 이메일을 아이디/도메인으로 분리 예시
   const [userData, setUserData] = useState({
     userId: "",
@@ -106,15 +107,20 @@ function Mypage() {
       alert("기관명을 입력하세요!");
       return;
     }
-    const ps = new window.kakao.maps.services.Places();
-    ps.keywordSearch(userData.centerId, (data, status)=>{
-      if(status === window.kakao.maps.services.Status.OK){
-        setPlaces(data);
-        setShowModal(true);
-      } else {
-        alert("검색 결과가 없습니다.");
-      }
-    });
+    
+    if (kakaoMaps) { // ✅ undefined 방지
+      const ps = new kakaoMaps.services.Places();
+      ps.keywordSearch(userData.centerId, (data, status) => {
+        if (status === kakaoMaps.services.Status.OK) {
+          setPlaces(data);
+          setShowModal(true);
+        } else {
+          alert("검색 결과가 없습니다.");
+        }
+      });
+    } else {
+      console.error("카카오 지도 API가 로드되지 않았습니다.");
+    }
   };
 
   // 모달 뜨면 지도 초기화

@@ -123,9 +123,10 @@
 
 .patient-title1 {
   align-items: center;
-  font-size: 50px;
+  font-size: 30px;
   margin-bottom: 20px;
   text-align: center;
+  color: white;
 }
 
 .name-and-gender-group {

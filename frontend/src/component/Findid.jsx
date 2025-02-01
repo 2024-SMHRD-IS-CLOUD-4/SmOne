@@ -70,8 +70,8 @@ const Findid = () => {
   };
 
   return (
-    <div className="findid-container">
-      <h1 className="findid-title">FIND ID</h1>
+    <div className={`findid-container ${foundUserId ? "expanded" : ""}`}>
+      <h1 className="findid-title">아이디 찾기</h1>
 
       <div className="findid-form">
         {/* 기관명/직책 */}
@@ -101,6 +101,7 @@ const Findid = () => {
         <input
           type="text"
           name="userName"
+          className="findid_name"
           placeholder="관리자명을 입력하세요"
           value={formData.userName}
           onChange={handleChange}
@@ -112,10 +113,10 @@ const Findid = () => {
           <input
             type="text"
             name="emailId"
+            className="email-input"
             placeholder="이메일 아이디"
             value={formData.emailId}
             onChange={handleChange}
-            className="email-input"
           />
           <span className="at-symbol">@</span>
           <input

@@ -52,7 +52,7 @@ const Login = () => {
   return (
     <div className="login-page">
       <img src={teamLogo} alt="Team Logo" className="team-logo" />
-      <h1 className="login-title">LOGIN</h1>
+      <h1 className="login-title"></h1>
 
       <form className="login-form" onSubmit={handleSubmit}>
         <label>아이디</label>

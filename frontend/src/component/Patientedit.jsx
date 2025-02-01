@@ -96,26 +96,14 @@ function PatientEdit() {
 
     // 입력 핸들러 => 숫자만 입력해야 하는곳(주민번호, 전화번호) 정규식 처리
     const handleChange = (e) => {
-        const{name, value, maxLength} = e.target;
-
-        // 숫자 입력 필드라면 숫자만 남김
-        if(
-            name === "birthPart1" ||
-            name === "birthPart2" ||
-            name === "phonePart1" ||
-            name === "phonePart2" ||
-            name === "phonePart3"
-        ) {
-            const onlyNums = value.replace(/\D/g, "");
-            setFormData((prev) => ({
-                ...prev,
-                [name]: onlyNums.slice(0, maxLength),
-            }));
-        }else{
-            // 일반 입력
-            setFormData((prev) => ({...prev, [name]: value}));
-        }
-    };
+      const { name, value, maxLength } = e.target;
+      if (["birthPart1", "birthPart2", "phonePart1", "phonePart2", "phonePart3"].includes(name)) {
+          setFormData((prev) => ({ ...prev, [name]: value.replace(/\D/g, "").slice(0, maxLength) }));
+      } else {
+          setFormData((prev) => ({ ...prev, [name]: value }));
+      }
+  };
+  
 
     // 입력중에 maxLength까지 채우면 다음 필드로 포커스 이동
     const handleNextFocus = (e, nextField) => {
@@ -176,13 +164,16 @@ function PatientEdit() {
 
   return (
     <div className='Patient-container'>
-        <h2>환자 수정</h2>
+      <div className="form-wrapper">
+        <h1  className="patient-title1">환자 수정</h1>
       <form onSubmit={handleSubmit}>
-        <div>
+      <div className="name-and-gender-group">
+      <div className="name-group">
           <label>환자 이름</label>
           <input
             type="text"
             name="pName"
+            className="patient-name"
             placeholder="환자 이름"
             value={formData.pName}
             onChange={handleChange}
@@ -191,29 +182,31 @@ function PatientEdit() {
         </div>
 
         <div>
-          <label>성별</label>
-          <input
-            type="radio"
-            name="gender"
-            value="남"
-            checked={formData.gender === "남"}
-            onChange={handleChange}
-          /> 남
-          <input
-            type="radio"
-            name="gender"
-            value="여"
-            checked={formData.gender === "여"}
-            onChange={handleChange}
-          /> 여
+          {/* <label>성별</label> */}
+          <div className="radio-group">
+              <span
+                className={`radio ${formData.gender === "남" ? "selected" : ""}`}
+                onClick={() => setFormData({ ...formData, gender: "남" })}
+              >
+                남
+              </span>
+              <span
+                className={`radio ${formData.gender === "여" ? "selected" : ""}`}
+                onClick={() => setFormData({ ...formData, gender: "여" })}
+              >
+                여
+              </span>
+            </div>
+            </div>
         </div>
 
-        <div>
+        <div className="resident-number-group">
           <label>주민번호</label>
-          <div style={{ display: "flex", gap: "5px" }}>
+          <div className="resident-number-container" style={{ display: "flex", gap: "5px" }}>
             <input
               type="text"
               name="birthPart1"
+              className="resident-number-box"
               placeholder="앞 6자리"
               maxLength={6}
               value={formData.birthPart1}
@@ -221,10 +214,11 @@ function PatientEdit() {
               onInput={(e) => handleNextFocus(e, "birthPart2")}
               required
             />
-            <span>-</span>
+            <span className="resident-number-dash">-</span>
             <input
               type="text"
               name="birthPart2"
+              className="resident-number-box"
               placeholder="뒤 7자리"
               maxLength={7}
               value={formData.birthPart2}
@@ -234,12 +228,13 @@ function PatientEdit() {
           </div>
         </div>
 
-        <div>
+        <div className="phone-number-group">
           <label>전화번호</label>
           <div style={{ display: "flex", gap: "5px" }}>
             <input
               type="text"
               name="phonePart1"
+              className="phone-number-box"
               placeholder="010"
               maxLength={3}
               value={formData.phonePart1}
@@ -247,10 +242,11 @@ function PatientEdit() {
               onInput={(e) => handleNextFocus(e, "phonePart2")}
               required
             />
-            <span>-</span>
+            <span className="phone-number-dash">-</span>
             <input
               type="text"
               name="phonePart2"
+              className="phone-number-box"
               placeholder="0000"
               maxLength={4}
               value={formData.phonePart2}
@@ -258,10 +254,11 @@ function PatientEdit() {
               onInput={(e) => handleNextFocus(e, "phonePart3")}
               required
             />
-            <span>-</span>
+            <span className="phone-number-dash">-</span>
             <input
               type="text"
               name="phonePart3"
+              className="phone-number-box"
               placeholder="0000"
               maxLength={4}
               value={formData.phonePart3}
@@ -271,38 +268,38 @@ function PatientEdit() {
           </div>
         </div>
 
-        <div>
+        <div className="address-group">
           <label>우편번호</label>
+          <div className="postcode-wrapper">
           <input
             type="text"
             name="postcode"
+            className="postcode-field"
             placeholder="우편번호"
             value={formData.postcode}
             readOnly
             required
           />
-          <button type="button" onClick={handleAddressSearch}>
+          <button type="button"
+          className="postcode-search-button"
+          onClick={handleAddressSearch}
+          >
             검색
           </button>
         </div>
-
-        <div>
-          <label>주소</label>
           <input
             type="text"
             name="address"
+            className="address-field"
             placeholder="주소"
             value={formData.address}
             readOnly
             required
           />
-        </div>
-
-        <div>
-          <label>상세주소</label>
           <input
             type="text"
             name="detailAddress"
+            className="address-field"
             placeholder="상세주소"
             value={formData.detailAddress}
             onChange={handleChange}
@@ -310,10 +307,11 @@ function PatientEdit() {
           />
         </div>
 
-        <button type="submit" style={{ marginTop: "10px" }}>
+        <button type="submit"  className="submit-button" style={{ marginTop: "10px" }}>
           환자 수정
         </button>
       </form>
+        </div>
     </div>
   );
 }

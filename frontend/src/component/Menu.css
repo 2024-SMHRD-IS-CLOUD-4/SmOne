@@ -20,7 +20,6 @@ body {
     left: 0; /* 화면 왼쪽에 고정 */
     height: 550px;
     width: 70px;
-
     border-left: 10px rgba(0, 0, 0, 0.8);
     overflow-x: hidden;
     transition: width 0.5s;
@@ -50,12 +49,13 @@ body {
     width: 100%;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
+    transition: background-color 0.3s ease; /* 부드러운 색상 전환 효과 */
 }
 
-.navigation ul li.active {
-    background: #4187f6;
-}
 
+.navigation ul li:hover {
+    background: #555555; /* 기존보다 조금 더 밝은 회색 */
+}
 .navigation ul li a {
     position: relative;
     display: block;

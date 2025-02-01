@@ -1,221 +1,187 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+// src/component/Result.jsx
+
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Result.css";
-import LogoImage from "./png/teamlogo.png";
+
+import DateList from "./Xray/DateList"; // 날짜 리스트 재사용
+// (만약 필요없다면 제거 가능)
 
 function Result() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [showMyPage, setShowMyPage] = useState(false);
-  const [showPatientJoin, setShowPatientJoin] = useState(false);
-  const [image] = useState(location.state?.uploadedImage || null);
-  const [imagePanel] = useState(location.state?.uploadedImagePanel || null);
-  const [searchInput] = useState("");
-  const [searchInputbirth] = useState("");
-  const [setSearchResults] = useState([]);
-  const canvasRef = useRef(null);
-  const isDrawingRef = useRef(false);
-  const contextRef = useRef(null);
-  const [color, setColor] = useState("black"); // 기본 색상은 빨간색
-  // 색상 변경 핸들러 추가
 
-  const patientList = [
-    { name: "김철수", birth: "900101" },
-    { name: "김지수", birth: "000101" },
-    { name: "최승찬", birth: "880505" },
-    { name: "박영희", birth: "850707" },
-    { name: "양윤성", birth: "950312" },
-    { name: "정현지", birth: "990102" },
-  ];
+  // Main에서 넘어온 데이터
+  const [patient, setPatient] = useState(location.state?.patient || null);
+  const [newlyUploaded, setNewlyUploaded] = useState(location.state?.newlyUploaded || []);
+  const [aiResult, setAiResult] = useState(location.state?.aiResult || "");
 
-  const handlePrintClick = () => {
-    navigate("/Diagnosis"); // Diagnosis 화면으로 즉시 이동
-  };
+  // DB에서 가져오는 X-ray, 날짜
+  const [diagDates, setDiagDates] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [oldImages, setOldImages] = useState([]);
+  const [selectedOldImage, setSelectedOldImage] = useState(null);
+  const [oldBigPreview, setOldBigPreview] = useState(null);
 
-  const toggleMyPage = () => {
-    setShowMyPage((prevState) => !prevState);
-    setShowPatientJoin(false);
-  };
+  // 페이지네이션(날짜)
+  const [datePage, setDatePage] = useState(1);
+  const datesPerPage = 5;
 
-  const handleSearchChange = () => {
-    const nameQuery = searchInput.trim();
-    const birthQuery = searchInputbirth.trim();
-
-    if (!nameQuery && !birthQuery) {
-      setSearchResults([]);
+  useEffect(()=> {
+    if(!patient){
+      alert("잘못된 접근입니다. 메인으로 이동합니다.");
+      navigate("/main");
       return;
     }
+    // 1) 환자 pIdx로 진단 날짜 목록 조회
+    axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${patient.pIdx}`)
+      .then(res => {
+        const list = res.data;
+        setDiagDates(list);
 
-    const filteredResults = patientList.filter((patient) => {
-      const matchesName = nameQuery === "" || patient.name.includes(nameQuery);
-      const matchesBirth = birthQuery === "" || patient.birth.includes(birthQuery);
-      return matchesName && matchesBirth;
-    });
+        // 가장 최신 날짜를 자동 선택
+        if(list.length>0){
+          setSelectedDate(list[0]);
+        }
+      })
+      .catch(e=> console.error(e));
+  }, [patient, navigate]);
 
-    setSearchResults(filteredResults);
-  };
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-
-    const context = canvas.getContext("2d");
-    context.lineWidth = 3; // 선 두께 설정
-    context.strokeStyle = color;
-    contextRef.current = context;
-  }, []);
-
-  const startDrawing = ({ nativeEvent }) => {
-    const { offsetX, offsetY } = nativeEvent;
-    contextRef.current.beginPath();
-    contextRef.current.moveTo(offsetX, offsetY);
-    isDrawingRef.current = true;
-  };
-
-  const draw = ({ nativeEvent }) => {
-    if (!isDrawingRef.current) return;
-    const { offsetX, offsetY } = nativeEvent;
-    contextRef.current.lineTo(offsetX, offsetY);
-    contextRef.current.stroke();
-  };
-
-  const finishDrawing = () => {
-    isDrawingRef.current = false;
-    contextRef.current.closePath();
-  };
-
-  const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    contextRef.current.clearRect(0, 0, canvas.width, canvas.height);
-  };
-  // 색상 변경 핸들러
-  const handleColorChange = (event) => {
-    const newColor = event.target.value;
-    setColor(newColor);
-    if (contextRef.current) {
-      contextRef.current.strokeStyle = newColor; // 새로운 색상 적용
+  // selectedDate 바뀌면 X-ray 목록 로드
+  useEffect(()=> {
+    if(selectedDate && patient){
+      axios.get(`http://localhost:8090/SmOne/api/xray/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
+        .then(res => {
+          setOldImages(res.data);
+          // BIG_XRAY가 있으면 우선 확대
+          const foundBig = res.data.find(x=> x.bigXray!==null);
+          if(foundBig){
+            setSelectedOldImage(foundBig);
+            setOldBigPreview(`http://localhost:8090/SmOne/images/${foundBig.bigXray}`);
+          } else {
+            // 첫 이미지로 확대
+            if(res.data.length>0){
+              setSelectedOldImage(res.data[0]);
+              setOldBigPreview(`http://localhost:8090/SmOne/images/${res.data[0].imgPath}`);
+            }
+          }
+        })
+        .catch(e=> console.error(e));
     }
-  };
+  }, [selectedDate, patient]);
+
+  // 썸네일 클릭
+  function handleOldThumbClick(item){
+    setSelectedOldImage(item);
+    setOldBigPreview(`http://localhost:8090/SmOne/images/${item.imgPath}`);
+  }
+
+  // 날짜 클릭
+  function handleDateClick(dateStr){
+    setSelectedDate(dateStr);
+  }
+
+  // 뒤로가기 => 메인
+  function handleGoBack(){
+    navigate("/main");
+  }
+  // 출력하기 => /print
+  function handlePrint(){
+    navigate("/print", {
+      state: {
+        patient,
+        aiResult,
+        newlyUploaded
+      }
+    });
+  }
 
   return (
-    <div>
-      <video className="video-background" autoPlay muted loop>
-        <source src="video.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <div className="container">
-        <header className="header">
-          <img
-            src={LogoImage}
-            alt="I Lung View Logo"
-            className="logo"
-            onClick={() => navigate("/Main")}
-            style={{ cursor: "pointer" }}
-          />
-          {/* 색상 선택기 */}
-          <label className="color-picker-label">
-            <input
-              type="color"
-              value={color}
-              onChange={handleColorChange}
-              className="color-picker"
-              title="Choose drawing color"
-            />
-          </label>
-          <button onClick={clearCanvas} className="clear-button">
-            <img src={require("./png/eraser.png")} alt="Eraser Icon" style={{ width: "24px", height: "24px" }} />
-          </button>
+    <div className="result-container">
+      <div className="result-topbar">
+        <h2>진단 결과 페이지</h2>
+        <div>
+          <button onClick={handleGoBack}>뒤로가기</button>
+          <button onClick={handlePrint} style={{ marginLeft:"10px" }}>출력하기</button>
+        </div>
+      </div>
 
-          <button className="print-button" onClick={handlePrintClick}>
-            <img src={require("./png/printerimg.png")} alt="Stethoscope Icon" />
-            출력하기
-          </button>
-        </header>
-        <div className="main">
-          <div className="left-panel">
-            <button className="smart-button" onClick={toggleMyPage}>
-              스마트인재개발원
-            </button>
-            <div className="patient-info-header">
-              <span className="patient-info-title">환자 정보</span>
-            </div>
-            <div className="patient-info-container">
-              <div className="patient-info-row">환자 번호: 001</div>
-              <div className="patient-info-row">환자 성명: 김지수</div>
-              <div className="patient-info-row">생년월일: 000809</div>
-              <div className="patient-info-row">연락처: 010-2188-7111</div>
-              <div className="patient-info-row">주소: 광주광역시 동구 중앙로 196</div>
-            </div>
-            <div className="diagnosis-date-header">
-              <span className="diagnosis-date-title">진단 날짜</span>
-            </div>
-            <div className="diagnosis-date-container">
-              <div className="diagnosis-date-row">2025-01-13</div>
-            </div>
+      {/* 메인 레이아웃 */}
+      <div className="result-main">
+        {/* 왼쪽 패널: 환자 정보 + 진단 날짜 */}
+        <div className="result-left-panel">
+          <div className="result-patient-detail">
+            <h3>환자 정보</h3>
+            {patient ? (
+              <>
+                <p>이름: {patient.pName}</p>
+                <p>생년월일: {patient.birth}</p>
+                <p>연락처: {patient.tel}</p>
+                <p>주소: {patient.pAdd}</p>
+              </>
+            ) : (
+              <p>정보 없음</p>
+            )}
           </div>
-          <div
-            className={`right-panel ${showMyPage || showPatientJoin ? "show-my-page" : ""
-              }`}
-          >
 
-
-            {!showMyPage && !showPatientJoin && (
-              <div className="upload-area">
-                <div className="diagnosis">
-                  <label htmlFor="image-upload" className="upload-box">
-                    {image ? (
-                      <img
-                        src={image}
-                        alt="Uploaded"
-                        className="uploaded-image"
-                      />
-                    ) : (
-                      <span>+</span>
-                    )}
-                  </label>
-                  <div className="canvas-container">
-                    <canvas
-                      ref={canvasRef}
-                      className="drawing-canvas"
-                      onMouseDown={startDrawing}
-                      onMouseMove={draw}
-                      onMouseUp={finishDrawing}
-                      onMouseLeave={finishDrawing}
-                    ></canvas>
-                  </div>
-                </div>
-                <div className="image-panel">
-                  {imagePanel ? (
-                    <div className="canvas-container">
-                      <img
-                        src={imagePanel}
-                        alt="Uploaded to Panel"
-                        className="uploaded-image"
-                      />
-                      <canvas
-                        ref={canvasRef}
-                        className="drawing-canvas"
-                        onMouseDown={startDrawing}
-                        onMouseMove={draw}
-                        onMouseUp={finishDrawing}
-                        onMouseLeave={finishDrawing}
-                      ></canvas>
-                    </div>
-                  ) : (
-                    <span>No Image Uploaded</span>
-                  )}
-                </div>
-
-              </div>
-            )}
-            {!showMyPage && !showPatientJoin && (
-              <div className="diagnosis-info">
-                폐렴 확률 90% 이상 고위험 환자입니다. 빠른 시일내에 병원을 방문하기를 권장합니다.
-              </div>
-            )}
+          <div className="result-date-list">
+            <DateList
+              diagDates={diagDates}
+              currentPage={datePage}
+              setCurrentPage={setDatePage}
+              datesPerPage={datesPerPage}
+              onDateClick={handleDateClick}
+            />
           </div>
         </div>
-        <footer className="footer"></footer>
+
+        {/* 오른쪽 패널: X-ray (왼쪽), 진단 결과 (오른쪽) */}
+        <div className="result-right-panel">
+          <div className="result-xray-area">
+            <div className="big-preview-box">
+              {oldBigPreview ? (
+                <img
+                  src={oldBigPreview}
+                  alt="old-big"
+                  className="big-preview-img"
+                />
+              ) : (
+                <div style={{ color:"#ccc" }}>X-ray가 없습니다.</div>
+              )}
+            </div>
+
+            {/* 썸네일 목록 */}
+            <div className="thumb-list" style={{ marginTop:"10px" }}>
+              {oldImages.map((item)=>(
+                <div
+                  key={item.imgIdx}
+                  className="thumb-item"
+                  onClick={()=> handleOldThumbClick(item)}
+                >
+                  <img
+                    src={`http://localhost:8090/SmOne/images/${item.imgPath}`}
+                    alt="thumb"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="result-diagnosis-area">
+            <h3>AI 진단 결과</h3>
+            <p>{aiResult}</p>
+            <hr style={{ margin:"20px 0" }}/>
+            <h4>이번에 업로드된 파일들</h4>
+            {newlyUploaded && newlyUploaded.length>0 ? (
+              <ul>
+                {newlyUploaded.map((fn, i)=>
+                  <li key={i}>{fn}</li>
+                )}
+              </ul>
+            ) : <p>(없음)</p>}
+          </div>
+        </div>
       </div>
     </div>
   );

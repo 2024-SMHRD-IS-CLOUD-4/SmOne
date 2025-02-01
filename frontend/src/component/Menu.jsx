@@ -12,33 +12,31 @@ import {
 } from "ionicons/icons";
 import patientIcon from "./png/patient.png"; // Patient 아이콘 이미지 import
 
-const Menu = ({ onProfileClick, onPatientClick, onHomeClick }) => {
+const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
 
   const menuItems = [
-    { title: "Home", icon: homeOutline },
-    { title: "My Page", icon: personOutline },
-    { title: "Patient", icon: null, image: patientIcon },
-
-    { title: 'Change PW', icon: lockClosedOutline },
-    { title: "Log Out", icon: logOutOutline },
+    { title: "메인화면", icon: homeOutline },
+    { title: "마이페이지", icon: personOutline },
+    { title: "환자등록", icon: null, image: patientIcon },
+    { title: "로그아웃", icon: logOutOutline },
   ];
 
   const handleClick = (index) => {
     setActiveIndex(index);
-    if (menuItems[index].title === "Home") {
-      onHomeClick(); 
-      navigate("/Main"); 
+    if (menuItems[index].title === "메인화면") {
+      if (onHomeClick) onHomeClick(); // Reset patient selection
+      navigate("/main"); // Navigate back to main screen
     }
-    if (menuItems[index].title === "My Page") {
+    if (menuItems[index].title === "마이페이지") {
       navigate("/mypage"); // MyPage로 이동
     }
-    if (menuItems[index].title === "Patient") {
+    if (menuItems[index].title === "환자등록") {
       navigate("/patients"); // 환자 등록 페이지로 이동
     }
-    if (menuItems[index].title === "Log Out") {
+    if (menuItems[index].title === "로그아웃") {
       handleLogout(); // 로그아웃 실행
     }
   };
@@ -55,6 +53,7 @@ const Menu = ({ onProfileClick, onPatientClick, onHomeClick }) => {
       alert("로그아웃 실패");
     }
   };
+  
   return (
     <>
       {isExpanded && <div className="menu-overlay" onClick={toggleMenu}></div>}

@@ -1,11 +1,11 @@
-// src/component/Signup.jsx
 import React, { useState, useEffect } from "react";
+import { KakaoMapContext } from "../App"; // 🔥 App.js의 Context 가져오기
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Signup.css";
 
 function Signup() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(KakaoMapContext);
 
   // 폼 입력 상태
   const [formData, setFormData] = useState({
@@ -23,13 +23,16 @@ function Signup() {
   const [isDuplicate, setIsDuplicate] = useState(false);
 
   // 기관 검색 모달 상태
-  const [showModal, setShowModal] = useState(false);
   const [places, setPlaces] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   // 입력 변경 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   // 아이디 중복 체크
@@ -156,77 +159,76 @@ function Signup() {
       <h1 className="signup-title">JOIN</h1>
 
       <form className="signup-form" onSubmit={handleSubmit}>
-        
+
         {/* 아이디 + 중복 버튼 */}
         <label>아이디</label>
-        <div className="flex-row">
+        <div className="id-duplicate-group">
           <input
             type="text"
             name="userId"
+            className="userid_join"
             placeholder="아이디"
             value={formData.userId}
             onChange={handleChange}
+            required
           />
-          <button type="button" className="small-btn" onClick={handleDuplicateCheck}>
+          <button type="button"
+            className="duplicate-check-btn0"
+            onClick={handleDuplicateCheck}>
             중복 체크
           </button>
         </div>
 
         {/* 비밀번호 */}
         <label>비밀번호</label>
-        <input
-          type="password"
-          name="userPw"
-          placeholder="비밀번호"
-          value={formData.userPw}
-          onChange={handleChange}
-        />
-
+        <div className="pw-duplicate-group">
+          <input
+            type="password"
+            name="userPw"
+            className="userpw_join"
+            placeholder="비밀번호"
+            value={formData.userPw}
+            onChange={handleChange}
+            required
+          />
+        </div>
         {/* 관리자명 */}
         <label>관리자명</label>
-        <input
-          type="text"
-          name="userName"
-          placeholder="관리자명"
-          value={formData.userName}
-          onChange={handleChange}
-        />
+        <div className="my-duplicate-group">
+          <input
+            type="text"
+            name="userName"
+            className="Join_name"
+            placeholder="관리자명"
+            value={formData.userName}
+            onChange={handleChange}
+            required
+          />
 
-        {/* 직업: 의사 / 관리자 */}
-        <label>직업</label>
-        <div>
+          {/* 직업: 의사 / 관리자 */}
+
           <label>
-            <input
-              type="radio"
-              name="role"
-              value="의사"
-              checked={formData.role === "의사"}
-              onChange={handleChange}
-            />
-            의사
-          </label>
-          <label style={{ marginLeft: 10 }}>
-            <input
-              type="radio"
-              name="role"
-              value="관리자"
-              checked={formData.role === "관리자"}
-              onChange={handleChange}
-            />
-            관리자
+            <select name="role"
+            value={formData.role}
+            className="signup_role"
+            onChange={handleChange}>
+              <option value="의사">의사</option>
+              <option value="관리자">관리자</option>
+            </select>
           </label>
         </div>
-
         {/* 이메일: (이메일 아이디 + @ + 도메인) */}
         <label>이메일</label>
         <div className="flex-row">
           <input
             type="text"
             name="emailId"
+            className="email-local-part"
             placeholder="이메일 아이디"
             value={formData.emailId}
             onChange={handleChange}
             style={{ flex: 1 }}
+            required
           />
           <span style={{ margin: "0 8px", color: "#ccc", fontWeight: "bold" }}>
             @
@@ -234,10 +236,12 @@ function Signup() {
           <input
             type="text"
             name="emailDomain"
+            className="email-domain-part"
             placeholder="도메인"
             value={formData.emailDomain}
             onChange={handleChange}
             style={{ flex: 1 }}
+            required
           />
         </div>
 
@@ -247,24 +251,32 @@ function Signup() {
           <input
             type="text"
             name="centerId"
+            className="join_centerid"
             placeholder="기관명을 입력하세요"
             value={formData.centerId}
             onChange={handleChange}
+            required
           />
-          <button type="button" className="search-btn" onClick={handleSearchCenter}>
-            검색
+          <button type="button"
+          className="search-btn1"
+          onClick={handleSearchCenter}
+          >
+            검 색
           </button>
         </div>
 
         {/* 주소 */}
-        <label>주소</label>
-        <input
-          type="text"
-          name="address"
-          placeholder="주소"
-          value={formData.address}
-          readOnly
-        />
+        <div className="input-group">
+          <label></label>
+          <input
+            type="text"
+            name="address"
+            className="join_address"
+            placeholder="주소"
+            value={formData.address}
+            readOnly
+          />
+          </div>
 
         {/* 제출 버튼 */}
         <button type="submit" className="submit-btn">
@@ -276,7 +288,7 @@ function Signup() {
       {showModal && (
         <div className="search-modal">
           <div className="modal-header">
-            <h2>지도 및 검색 결과</h2>
+            <h2>검색 결과</h2>
             <button className="close-btn" onClick={closeModal}>닫기</button>
           </div>
           <div className="modal-body">
