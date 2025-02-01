@@ -50,22 +50,9 @@
 }
 
 /* 기관명 인풋 폭 */
-.centername_input {
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 40px;
-  width: 428px;
-}
-
-.centeradmin_name {
-  flex: 1 1;
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 35px;
+.long-input {
+  flex: 1;             /* 남은 공간 차지 */
+  height: 44px;        /* 일관된 높이 */
 }
 
 /* 직업 선택박스 */
@@ -128,10 +115,4 @@
 }
 .result-box button:hover {
   background-color: #666;
-}
-
-.pass-button0{
-  height: 30px;
-  width: 65px;
-  background-color: white;
 }

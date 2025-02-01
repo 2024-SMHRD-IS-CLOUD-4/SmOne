@@ -8,7 +8,6 @@
 }
 
 body {
-    display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -21,7 +20,6 @@ body {
     left: 0; /* 화면 왼쪽에 고정 */
     height: 550px;
     width: 70px;
-
     border-left: 10px rgba(0, 0, 0, 0.8);
     overflow-x: hidden;
     transition: width 0.5s;
@@ -51,12 +49,13 @@ body {
     width: 100%;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
+    transition: background-color 0.3s ease; /* 부드러운 색상 전환 효과 */
 }
 
-.navigation ul li.active {
-    background: #4187f6;
-}
 
+.navigation ul li:hover {
+    background: #555555; /* 기존보다 조금 더 밝은 회색 */
+}
 .navigation ul li a {
     position: relative;
     display: block;
@@ -89,9 +88,9 @@ body {
 .navigation ul li a .icon {
     position: relative;
     display: block;
-    min-width: 60px;
-    height: 60px;
-    line-height: 70px;
+    min-width: 63px;
+    height: 80px;
+    line-height: 78px;
     text-align: center;
     top: 7px;
 }
@@ -106,9 +105,10 @@ body {
     position: relative;
     display: block;
     padding-left: 10px;
-    height: 60px;
-    line-height: 60px;
+    height: 68px;
+    line-height: 78px;
     white-space: nowrap;
+    font-size: 30px;
 }
 /* 메뉴 오버레이 */
 .menu-overlay {

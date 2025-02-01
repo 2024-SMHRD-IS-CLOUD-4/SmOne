@@ -44,7 +44,7 @@ const IdentityCheck = () => {
   // 인증번호 확인
   const handleVerifyCode = async () => {
     try {
-      const response = await fetch("http://localhost:8090/SmOne/api/users/password/verify-code", {
+      const response = await fetch(`${process.env.REACT_APP_DB_URL}/users/password/verify-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -84,14 +84,13 @@ const IdentityCheck = () => {
       </video>
       <div className="pass-container">
         <div className="pass-box">
-          <h1>IDENTITY CHECK</h1>
+          <h1>본인확인</h1>
           <form>
             <label htmlFor="userId">아이디</label>
             <input
               type="text"
               id="userId"
               name="userId"
-              className="identity_id"
               placeholder="아이디 입력"
               value={formData.userId}
               onChange={handleChange}
@@ -103,7 +102,6 @@ const IdentityCheck = () => {
                 type="text"
                 id="emailLocalPart"
                 name="emailLocalPart"
-                className="identity_email1"
                 placeholder="이메일 아이디"
                 value={formData.emailLocalPart}
                 onChange={handleChange}
@@ -113,7 +111,6 @@ const IdentityCheck = () => {
                 type="text"
                 id="emailDomainPart"
                 name="emailDomainPart"
-                className="identity_email2"
                 placeholder="직접입력"
                 value={formData.emailDomainPart}
                 onChange={handleChange}
@@ -129,7 +126,6 @@ const IdentityCheck = () => {
               type="text"
               id="verificationCode"
               name="verificationCode"
-              className="identity_code"
               placeholder="인증번호 입력"
               value={formData.verificationCode}
               onChange={handleChange}

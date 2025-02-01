@@ -55,7 +55,7 @@
   text-align: center;
   padding: 10px;
 }
-.Patient-container {
+.Patientedi-container {
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
@@ -99,7 +99,7 @@
 
 /* 버튼 */
 .submit-button {
-  background-color: #4187f6;
+  background-color: #333;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -123,9 +123,10 @@
 
 .patient-title1 {
   align-items: center;
-  font-size: 50px;
+  font-size: 30px;
   margin-bottom: 20px;
   text-align: center;
+  color: white;
 }
 
 .name-and-gender-group {
@@ -194,19 +195,19 @@
 }
 
 .postcode-search-button {
-  background-color: #48699f;
+  background-color: #333;
   color: white;
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
   width: 155px;
-  height: 50px;
+  height: 41px;
   cursor: pointer;
   text-align: center;
 }
 
 .postcode-search-button:hover {
-  background-color: #005fa3;
+  background-color: #555555;
 }
 
 .submit-button {

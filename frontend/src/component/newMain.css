@@ -9,60 +9,32 @@
   display: flex;
   flex-direction: column;
 }
-/* 로고 버튼 스타일 */
-.logo-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  position: absolute;
- 
-  top: 10px;
-}
-
-.logo-image {
-  width: 160px; /* 너비 50px */
-  height: 85px; /* 높이 50px */
-  margin-left: 125px;
-  margin-top: 20px;
-}
-/* 검색 버튼 스타일 */
-.search-button {
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  background: #333;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px; /* 버튼 크기 조정 */
-  height: 43px;
-  transition: background 0.3s ease-in-out; /* 부드러운 효과 추가 */
-}
-
-.search-button:hover {
-  background: #555;
-}
-
-/* 돋보기 아이콘 크기 */
-.search-icon {
-  width: 20px;
-  height: 20px;
-}
 
 /* 상단 바 */
 .top-bar {
   position: relative;
   width: 100%;
   height: 80px;
+  background-color: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 40px;
   box-sizing: border-box;
-  margin-top: 10px;
 }
-
+.hamburger-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hamburger-btn .bar {
+  width: 25px;
+  height: 3px;
+  background: #fff;
+}
 .search-form {
   display: flex;
   align-items: center;
@@ -88,11 +60,7 @@
 .search-form button:hover {
   background: #555;
 }
-/* 진단하기 버튼 내부 아이콘 스타일 */
 .diagnose-top-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px; /* 아이콘과 텍스트 간격 */
   padding: 14px 20px;
   border: none;
   border-radius: 6px;
@@ -101,24 +69,14 @@
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s ease-in-out; /* 부드러운 색상 전환 */
 }
-
 .diagnose-top-btn:hover {
   background: #555;
 }
-
 .diagnose-top-btn:disabled {
   background: #777;
   cursor: not-allowed;
 }
-
-/* 아이콘 크기 조정 */
-.stethoscope-icon {
-  width: 20px;
-  height: 20px;
-}
-
 
 /* 사이드 메뉴 */
 .side-menu {
@@ -157,20 +115,15 @@
   display: flex;
   height: calc(100vh - 80px);
   overflow: hidden;
-  margin-left: 70px; /* 기존 70px에서 20px 추가 */
 }
 
 /* 왼쪽 패널 */
 .left-panel {
   width: 350px;
   overflow-y: auto;
-  background: rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.2);
+  background-color: rgba(255,255,255,0.1);
   padding: 10px;
   color: #fff;
-  height: 802px;
-  border-radius: 8px;
-  margin-top: 20px;
 }
 .panel-block {
   background: rgba(0,0,0,0.6);
@@ -187,6 +140,7 @@
   margin-bottom: 5px;
   padding: 8px;
   cursor: pointer;
+  background: rgba(255,255,255,0.1);
   border-radius: 6px;
   color: #fff;
   transition: background 0.2s;
@@ -197,43 +151,14 @@
 .pagination {
   margin-top: 10px;
   display: flex;
-  justify-content: center; /* 가운데 정렬 */
-  border-radius: 6px; /* 둥글게 */
-  overflow: hidden; /* 내부 버튼이 넘치지 않도록 */
+  gap: 5px;
 }
-
 .pagination button {
-  padding: 8px 12px;
-  border: none; /* 기존 테두리 제거 */
-  background: #fff; /* 버튼 기본 배경 */
+  padding: 6px 10px;
+  border: 1px solid #999;
+  background: #fff;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  transition: background 0.2s;
-}
-
-.pagination button:hover {
-  background: #bbb; /* 호버 시 색상 변경 */
-}
-
-.pagination button:disabled {
-  background: #eee; /* 비활성화 버튼 색상 */
-}
-
-/* 첫 번째 버튼 (왼쪽 끝) */
-.pagination button:first-child {
-  border-radius: 6px 0 0 6px;
-}
-
-/* 마지막 버튼 (오른쪽 끝) */
-.pagination button:last-child {
-  border-radius: 0 6px 6px 0;
-}
-
-/* 현재 페이지 버튼 강조 */
-.pagination button.active {
-  background: #333;
-  color: white;
+  border-radius: 4px;
 }
 .patient-detail {
   margin-top: 10px;
@@ -243,7 +168,6 @@
   padding: 10px;
   color: #fff;
 }
-/* 수정 및 삭제 버튼 스타일 */
 .btn {
   padding: 8px 12px;
   border: none;
@@ -252,13 +176,7 @@
   color: #fff;
   cursor: pointer;
   margin-right: 5px;
-  transition: background 0.3s ease-in-out; /* 부드러운 색상 전환 */
 }
-
-.btn:hover {
-  background-color: #666;
-}
-
 .patient-reg-btn {
   margin-top: 10px;
   padding: 8px 12px;
@@ -310,16 +228,7 @@
   padding: 20px;
   box-sizing: border-box;
   width: 650px;
-  height: 670px;
-
-  /* 요소 내부의 컨텐츠를 가운데 정렬 */
-  display: flex;
-  flex-direction: column; /* 세로 정렬 */
-  justify-content: center; /* 수직 중앙 정렬 */
-  align-items: center; /* 수평 중앙 정렬 */
-  text-align: center; /* 텍스트 중앙 정렬 */
 }
-
 .new-patient-info {
   color: #bbb;
   font-size: 14px;
@@ -341,7 +250,4 @@
   z-index: 2;
   min-height: 80px;
   font-weight: bold;
-}
-.patient-detail p {
-  margin: 6px 0; /* 위아래 4px 간격 추가 */
 }

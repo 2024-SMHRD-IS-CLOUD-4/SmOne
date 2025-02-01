@@ -1,365 +1,316 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./MyPage.css";
+import "./Mypage.css";
 
-function MyPage() {
-    const navigate = useNavigate();
-    const [userData, setUserData] = useState({
-        userId: "", // 세션에서 가져올 사용자 ID
-        userName: "",
-        role: "",
-        emailLocal: "",
-        emailDomain: "",
-        centerId: "",
-        address: "",
+function Mypage() {
+  const navigate = useNavigate();
+
+  // 이메일을 아이디/도메인으로 분리 예시
+  const [userData, setUserData] = useState({
+    userId: "",
+    userName: "",
+    role: "",
+    emailLocal: "",
+    emailDomain: "",
+    centerId: "",  // 검색어(기관명)로도 사용
+    address: ""
+  });
+
+  const [places, setPlaces] = useState([]); 
+  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+
+  useEffect(() => {
+    const userId = sessionStorage.getItem("userId");
+    if (!userId) {
+      alert("로그인이 필요합니다.");
+      navigate("/");
+      return;
+    }
+    setUserData(prev => ({ ...prev, userId }));
+  }, [navigate]);
+
+  const handleChange = e => {
+    setUserData({ ...userData, [e.target.name]: e.target.value });
+  };
+
+  // 입력값 검증 (간단 예시)
+  const validateInputs = () => {
+    const { userName, role, emailLocal, emailDomain, centerId, address } = userData;
+    if(!userName.trim() || !role.trim() || !emailLocal.trim() || !emailDomain.trim() || !centerId.trim() || !address.trim()){
+      alert("모든 필드를 입력해주세요.");
+      return false;
+    }
+    const fullEmail = `${emailLocal}@${emailDomain}`;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailRegex.test(fullEmail)){
+      alert("유효한 이메일 아이디/도메인을 입력하세요.");
+      return false;
+    }
+    return true;
+  };
+
+  // 정보 수정
+  const handleUpdate = async () => {
+    if(!validateInputs()) return;
+
+    const fullEmail = `${userData.emailLocal}@${userData.emailDomain}`;
+    const sendData = {
+      ...userData,
+      email: fullEmail  // 최종 email만 합쳐서 백엔드 전달
+    };
+    try {
+      await axios.put(`${process.env.REACT_APP_DB_URL}/users/update`, sendData, {
+        headers: { "Content-Type": "application/json" }
+      });
+      alert("정보가 수정되었습니다.");
+      navigate("/main");
+    } catch(err){
+      console.error(err);
+      alert("정보 수정에 실패했습니다.");
+    }
+  };
+
+  // 비밀번호 변경 페이지로 이동
+  const handlePasswordChangePage = () => {
+    navigate("/findpw");
+  };
+
+  // 회원 탈퇴
+  const handleDelete = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/delete`, {
+        userId: userData.userId,
+        password: deletePassword
+      });
+      if(response.status===200){
+        alert("회원 탈퇴 성공!");
+        sessionStorage.clear();
+        navigate("/");
+      }
+    } catch(err){
+      console.error(err);
+      if (err.response?.status === 401) {
+        alert("비밀번호가 일치하지 않습니다.");
+      } else {
+        alert("회원 탈퇴에 실패했습니다.");
+      }
+    }
+  };
+
+  // 기관명 검색
+  const handleSearchCenter = () => {
+    if(!userData.centerId.trim()){
+      alert("기관명을 입력하세요!");
+      return;
+    }
+    const ps = new window.kakao.maps.services.Places();
+    ps.keywordSearch(userData.centerId, (data, status)=>{
+      if(status === window.kakao.maps.services.Status.OK){
+        setPlaces(data);
+        setShowModal(true);
+      } else {
+        alert("검색 결과가 없습니다.");
+      }
     });
+  };
 
-    
-    const [places, setPlaces] = useState([]); // 카카오 API 검색 결과
-    const [showModal, setShowModal] = useState(false); // 주소 검색 모달
-    const [showDeleteModal, setShowDeleteModal] = useState(false); // 탈퇴 모달
-    const [deletePassword, setDeletePassword] = useState(""); // 탈퇴 모달의 비밀번호
-
-    // 카카오 맵 스크립트를 동적으로 로드
-    useEffect(() => {
-        const loadKakaoMaps = () => {
-            const script = document.createElement("script");
-            script.async = true;
-            script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_API_KEY}&libraries=services`;
-            document.head.appendChild(script);
-
-            script.onload = () => {
-                window.kakao.maps.load(() => {
-                    console.log("Kakao Maps ready.");
-                });
-
-            };
-        };
-
-        loadKakaoMaps();
-    }, []);
-
-    // 세션에서 사용자 ID 가져오기
-    useEffect(() => {
-        const userId = sessionStorage.getItem("userId");
-        setUserData((prev) => ({ ...prev, userId })); // 사용자 ID만 설정
-    }, [navigate]);
-
-    // 입력 핸들러
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setUserData({ ...userData, [name]: value });
-    };
-
-    // 입력 데이터 검증 함수
-    const validateInputs = () => {
-        const { userName, role, email, centerId, address } = userData;
-
-        // 필수 입력값이 비어 있는지 확인
-        if (!userName.trim() || !role.trim() || !email.trim() || !centerId.trim() || !address.trim()) {
-            alert("모든 필드를 입력해주세요.");
-            return false;
-        }
-
-        // 이메일 형식 검증
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            alert("유효한 이메일을 입력해주세요.");
-            return false;
-        }
-
-        return true; // 모든 검증 통과
-    };
-
-    // 정보 수정
-    const handleUpdate = async () => {
-        if (!validateInputs()) {
-            return; // 입력 검증 실패 시 수정 중단
-        }
-
-        try {
-            await axios.put(`${process.env.REACT_APP_DB_URL}/users/update`, userData, {
-                headers: { "Content-Type": "application/json" },
-            });
-            alert("정보가 수정되었습니다.");
-            navigate("/main");
-        } catch (error) {
-            console.error("정보 수정 실패:", error);
-            alert("정보 수정에 실패했습니다.");
-        }
-    };
-
-    // 비밀번호 변경 페이지 이동
-    const handlePasswordChangePage = () => {
-        navigate("/findpw");
-    };
-
-    // 회원 탈퇴
-    const handleDelete = async () => {
-        try {
-            const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/delete`, {
-                userId: userData.userId,
-                password: deletePassword,
-            });
-
-            if (response.status === 200) {
-                alert("회원 탈퇴 성공!");
-                sessionStorage.clear();
-                navigate("/");
-            }
-        } catch (error) {
-            console.error("회원 탈퇴 실패:", error);
-            if (error.response?.status === 401) {
-                alert("비밀번호가 일치하지 않습니다.");
-            } else {
-                alert("회원 탈퇴에 실패했습니다.");
-            }
-        }
-    };
-
-    // 기관명 검색 (카카오 지도 API)
-    const handleSearchCenter = () => {
-        if (!userData.centerId.trim()) {
-            alert("기관명을 입력해주세요.");
-            return;
-        }
-
-        const ps = new window.kakao.maps.services.Places();
-        ps.keywordSearch(userData.centerId, (data, status) => {
-            if (status === window.kakao.maps.services.Status.OK) {
-                setPlaces(data);
-                setShowModal(true);
-            } else {
-                alert("검색 결과가 없습니다.");
-            }
+  // 모달 뜨면 지도 초기화
+  useEffect(()=>{
+    if(showModal){
+      const mapContainer = document.getElementById("map");
+      const mapOption = {
+        center: new window.kakao.maps.LatLng(37.5665, 126.978),
+        level: 3
+      };
+      const map = new window.kakao.maps.Map(mapContainer, mapOption);
+      if(places.length>0){
+        const bounds = new window.kakao.maps.LatLngBounds();
+        places.forEach(p=>{
+          const markerPosition = new window.kakao.maps.LatLng(p.y, p.x);
+          bounds.extend(markerPosition);
+          new window.kakao.maps.Marker({ map, position: markerPosition });
         });
-    };
+        map.setBounds(bounds);
+      }
+    }
+  },[showModal, places]);
 
-    // 지도 모달 초기화
-    useEffect(() => {
-        if (showModal) {
-            const mapContainer = document.getElementById("map"); // 지도를 표시할 div
-            const mapOption = {
-                center: new window.kakao.maps.LatLng(37.5665, 126.978), // 지도의 초기 좌표
-                level: 3, // 지도의 확대 레벨
-            };
-            const map = new window.kakao.maps.Map(mapContainer, mapOption);
+  const closeModal = () => {
+    setShowModal(false);
+    setPlaces([]);
+  };
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setDeletePassword("");
+  };
 
-            // 검색 결과가 있을 경우 첫 번째 결과로 지도 중심 이동
-            if (places.length > 0) {
-                const bounds = new window.kakao.maps.LatLngBounds();
-                places.forEach((place) => {
-                    const markerPosition = new window.kakao.maps.LatLng(place.y, place.x);
-                    bounds.extend(markerPosition);
+  return (
+    <div className="mypage-container">
+       {/* 🔙 뒤로가기 버튼 추가 */}
+       <button className="back-btn" onClick={() => navigate(-1)}>X</button>
+      <h2 className="mypage-title">마이페이지</h2>
+      
+      <form className="mypage-form">
+        <label>* 사용자 ID</label>
+        <div className="userid-box">{userData.userId}</div>
 
-                    // 마커 생성
-                    new window.kakao.maps.Marker({
-                        map,
-                        position: markerPosition,
-                    });
-                });
-                map.setBounds(bounds);
-            }
-        }
-    }, [showModal, places]);
+        <label>관리자명</label>
+        <input
+          type="text"
+          name="userName"
+          value={userData.userName}
+          placeholder="관리자명을 입력하세요"
+          onChange={handleChange}
+        />
 
-    const closeModal = () => {
-        setShowModal(false);
-        setPlaces([]);
-    };
-
-    // 탈퇴 모달 닫기
-    const closeDeleteModal = () => {
-        setShowDeleteModal(false);
-        setDeletePassword("");
-    };
-
-    return (
-        <div>
-            <div className="right-panel00">
-                <h1>MY PAGE</h1>
-                <form>
-                    <div>
-                        <label>* 사용자 ID</label>
-                        <div>{userData.userId}</div>
-                    </div>
-
-                    <div className="name-role-group">
-                        <div>
-                            <label></label>
-                            <input
-                                type="text"
-                                name="userName"
-                                className="Mypage_name"
-                                value={userData.userName}
-                                placeholder="관리자명을 입력하세요"
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <label></label>
-                        <div className="Mypage_role">
-                            <select
-                                name="role"
-                                value={userData.role}
-                                onChange={handleChange}
-                                className="role_select00"
-                            >
-                                <option value="의사">의사</option>
-                                <option value="관리자">관리자</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label></label>
-                        <div className="MP_email_input_group">
-                            <input
-                                type="email"
-                                name="email"
-                                className="emailLocal"
-                                placeholder="이메일을 입력하세요"
-                                value={userData.email}
-                                onChange={(e) => console.log("이메일 아이디:", e.target.value)}
-                            />
-                            <span className="Mypage_span">@</span>
-                            <input
-                                type="text"
-                                name="emailDomainPart"
-                                className="emailDomain"
-                                placeholder="직접 입력"
-                                onChange={(e) => console.log("이메일 도메인:", e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label></label>
-                        <input
-                            type="text"
-                            name="centerId"
-                            className="Mypage_center"
-                            value={userData.centerId}
-                            placeholder="기관명을 입력하세요"
-                            onChange={handleChange}
-                        />
-                        <button type="button" onClick={handleSearchCenter} className="Mypage_button">
-                            검색
-                        </button>
-                    </div>
-
-                    <div>
-                        <label></label>
-                        <input
-                            type="text"
-                            name="address"
-                            className="Mypage_address"
-                            value={userData.address}
-                            placeholder="주소를 입력하세요"
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div style={{ display: "flex", justifyContent: "center", gap: "41px",marginTop: "40px" }}>
-                        <button type="button" onClick={handleUpdate}
-                            className="Mp_btn1">
-                            정보 수정
-                        </button>
-                        <button type="button" onClick={handlePasswordChangePage}
-                            className="Mp_btn2">
-                            비밀번호 변경
-                        </button>
-                        <button type="button" onClick={() => setShowDeleteModal(true)}
-                            className="Mp_btn3">
-                            탈퇴하기
-                        </button>
-
-                    </div>
-                </form>
-            </div>
-
-            {/* 탈퇴 모달 */}
-            {showDeleteModal && (
-                <div style={{
-                    position: "fixed",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    background: "white",
-                    padding: "20px",
-                    borderRadius: "10px",
-                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                    zIndex: 1000,
-                }}>
-                    <h2>회원 탈퇴</h2>
-                    <p>비밀번호를 입력하고 회원 탈퇴를 진행하세요.</p>
-                    <input
-                        type="password"
-                        placeholder="비밀번호 입력"
-                        value={deletePassword}
-                        onChange={(e) => setDeletePassword(e.target.value)}
-                        style={{ width: "100%", padding: "5px" }}
-                    />
-                    <div style={{ marginTop: "10px", textAlign: "right" }}>
-                        <button onClick={handleDelete} style={{ marginRight: "10px" }}>탈퇴하기</button>
-                        <button onClick={closeDeleteModal}>취소</button>
-                    </div>
-                </div>
-            )}
-
-            {/* 지도 모달 */}
-            {showModal && (
-                <div style={{
-                    position: "fixed",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    background: "white",
-                    padding: "20px",
-                    borderRadius: "10px",
-                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                    zIndex: 1000,
-                    width: "80%",
-                    height: "80%",
-                }}>
-                    <h2>지도 및 검색 결과</h2>
-                    <button onClick={closeModal} style={{ float: "right", marginBottom: "10px" }}>
-                        닫기
-                    </button>
-                    <div style={{ display: "flex", gap: "10px", height: "100%" }}>
-                        {/* 지도 영역 */}
-                        <div id="map" style={{ width: "60%", height: "100%" }}></div>
-
-                        {/* 검색 결과 목록 */}
-                        <div style={{
-                            width: "40%",
-                            height: "100%",
-                            overflowY: "scroll",
-                            border: "1px solid #ddd",
-                            padding: "10px",
-                        }}>
-                            <ul>
-                                {places.map((place, index) => (
-                                    <li
-                                        key={index}
-                                        style={{ cursor: "pointer", marginBottom: "10px" }}
-                                        onClick={() => {
-                                            setUserData({ ...userData, address: place.address_name });
-                                            alert(`선택된 주소: ${place.address_name}`);
-                                            closeModal();
-                                        }}
-                                    >
-                                        <strong>{place.place_name}</strong>
-                                        <p>{place.address_name}</p>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            )}
+        <label>사용자 직업</label>
+        <div className="flex-row" style={{ gap:"20px" }}>
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="의사"
+              checked={userData.role==="의사"}
+              onChange={handleChange}
+            />
+            의사
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="관리자"
+              checked={userData.role==="관리자"}
+              onChange={handleChange}
+            />
+            관리자
+          </label>
         </div>
-    );
+
+        <label>이메일</label>
+        <div className="flex-row" style={{ gap:"5px" }}>
+          <input
+            type="text"
+            name="emailLocal"
+            value={userData.emailLocal}
+            placeholder="이메일 아이디"
+            onChange={handleChange}
+            style={{ width:"150px" }}
+          />
+          <span>@</span>
+          <input
+            type="text"
+            name="emailDomain"
+            value={userData.emailDomain}
+            placeholder="도메인"
+            onChange={handleChange}
+            style={{ width:"150px" }}
+          />
+        </div>
+
+        <label>기관명</label>
+        <div className="flex-row">
+          <input
+            type="text"
+            name="centerId"
+            value={userData.centerId}
+            placeholder="기관명을 입력하세요"
+            onChange={handleChange}
+          />
+          <button type="button" className="search-btn" onClick={handleSearchCenter}>
+            검색
+          </button>
+        </div>
+
+        <label>기관 주소</label>
+        <input
+          type="text"
+          name="address"
+          value={userData.address}
+          placeholder="주소를 입력하세요"
+          onChange={handleChange}
+        />
+
+        <div className="mypage-btn-row">
+          <button type="button" className="action-btn" onClick={handleUpdate}>
+            정보 수정
+          </button>
+          <button type="button" className="action-btn" onClick={handlePasswordChangePage}>
+            비밀번호 변경
+          </button>
+          <button type="button" className="action-btn" onClick={()=> setShowDeleteModal(true)}>
+            탈퇴하기
+          </button>
+        </div>
+      </form>
+
+      {/* 탈퇴 모달 */}
+      {showDeleteModal && (
+        <div className="search-modal">
+          <div className="modal-header">
+            <h2>회원 탈퇴</h2>
+            <button className="close-btn" onClick={closeDeleteModal}>닫기</button>
+          </div>
+          <div className="modal-body" style={{ flexDirection:"column", padding:"20px" }}>
+            <p>비밀번호를 입력해주세요</p>
+            <input
+              type="password"
+              placeholder="비밀번호"
+              value={deletePassword}
+              onChange={e=> setDeletePassword(e.target.value)}
+              style={{ width:"100%", marginBottom:"10px" }}
+            />
+            <div style={{ textAlign:"right" }}>
+              <button className="small-btn" onClick={handleDelete} style={{ marginRight:"10px" }}>
+                탈퇴하기
+              </button>
+              <button className="small-btn" onClick={closeDeleteModal}>
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 지도/검색 모달 */}
+      {showModal && (
+        <div className="search-modal">
+          <div className="modal-header">
+            <h2>지도 및 검색 결과</h2>
+            <button className="close-btn" onClick={closeModal}>닫기</button>
+          </div>
+          <div className="modal-body">
+            <div className="map-area" id="map"></div>
+            <div className="list-area">
+              <ul>
+                {places.map((place, i)=> (
+                  <li
+                    key={i}
+                    onClick={()=>{
+                      // ▼ place_name => centerId / address_name => address
+                      setUserData(prev => ({
+                        ...prev,
+                        centerId: place.place_name,    // 클릭 시 기관명에 결과명 반영
+                        address: place.address_name    // 주소 필드도 세팅
+                      }));
+                      alert(`선택된 주소: ${place.address_name}`);
+                      closeModal();
+                    }}
+                  >
+                    <strong>{place.place_name}</strong>
+                    <p>{place.address_name}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
-export default MyPage;
+export default Mypage;
