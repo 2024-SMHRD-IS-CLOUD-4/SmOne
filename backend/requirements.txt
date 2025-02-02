@@ -1,0 +1,13 @@
+fastapi>=0.68.0,<0.69.0
+uvicorn>=0.15.0,<0.16.0
+python-multipart
+python-dotenv
+opencv-python
+numpy
+onnxruntime
+boto3
+pymysql
+pydantic
+aiofiles
+python-jose[cryptography]
+passlib[bcrypt]
