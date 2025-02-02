@@ -1,4 +1,15 @@
 /* 전체 컨테이너 */
+
+.app-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+
 .container {
   font-family: Arial, sans-serif;
   display: flex;
@@ -86,7 +97,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 1;
-  width: 400px;
+  /* width: 400px; */
 }
 
 /* 제목 스타일 */
@@ -109,10 +120,10 @@
   font-size: 16px;
 }
 
-.form-wrapper {
+/* .form-wrapper {
   max-width: 500px;
   width: 100%;
-}
+} */
 
 .title {
   align-items: center;
@@ -171,7 +182,7 @@
 }
 
 .patient-name {
-  width: 335px;
+  width: 288px;
   /* 이름 입력 칸 넓이 */
   height: 20px;
   padding: 10px;
@@ -200,7 +211,7 @@
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
-  width: 155px;
+  width: 110px;
   height: 41px;
   cursor: pointer;
   text-align: center;
@@ -211,7 +222,7 @@
 }
 
 .submit-button {
-  width: 100%;
+  width: 450px;
   padding: 15px;
   background-color: #1b1c1d;
   color: #fff;
@@ -227,6 +238,7 @@
 
 .address-group {
   margin-bottom: 15px;
+  margin-top: 15px;
 }
 
 .address-group label {
@@ -239,6 +251,7 @@
   align-items: center;
   gap: 20px;
   margin-bottom: 10px;
+  width: 452px;
 }
 
 .postcode-field {
@@ -253,7 +266,7 @@
 }
 
 .address-field {
-  width: 95%;
+  width: 430px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -272,7 +285,7 @@
 }
 
 .phone-number-box {
-  width: 134px;
+  width: 117px;
   height: 20px;
   padding: 10px;
   border: 1px solid #ccc;
@@ -294,7 +307,7 @@
 }
 
 .resident-number-box {
-  width: 230px;
+  width: 195px;
   /* 필드 너비 */
   height: 20px;
   padding: 10px;

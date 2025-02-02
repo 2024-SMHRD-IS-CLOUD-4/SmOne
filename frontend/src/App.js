@@ -12,6 +12,7 @@ import PatientEdit from "./component/PatientEdit";
 import Result from "./component/Result";
 import PrintPage from "./component/PrintPage";
 
+
 import './App.css';
 
 export const KakaoMapContext = createContext(null); // Context 생성

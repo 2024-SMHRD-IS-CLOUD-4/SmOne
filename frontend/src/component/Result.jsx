@@ -21,7 +21,7 @@ function Result() {
   const [diagDates, setDiagDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [oldImages, setOldImages] = useState([]);
-  const [setSelectedOldImage] = useState(null);
+  const [selectedOldImage, setSelectedOldImage] = useState(null);
   const [oldBigPreview, setOldBigPreview] = useState(null);
 
   // 페이지네이션(날짜)

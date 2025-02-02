@@ -1,0 +1,265 @@
+/* 반투명 박스(폼) */
+.mypage-container {
+  width: 450px;
+  margin: 190px auto 0 auto;
+  margin-bottom: 100px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  padding: 30px;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 2.0);
+  text-align: center;
+  position: relative; /* 🔹 내부 요소 절대 위치 지정 가능하도록 설정 */
+}
+
+.flex-container {
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
+  gap: 20px; /* 간격 조절 */
+}
+
+.input-group {
+  flex: 1; /* 동일한 비율로 너비 설정 */
+}
+
+.role-group {
+  flex: 1; /* 동일한 비율로 너비 설정 */
+}
+
+
+/* 🔙 마이페이지 컨테이너 내부 왼쪽 상단 버튼 */
+.back-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 10px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.back-btn:hover {
+  background-color: #666;
+}
+
+
+.mypage-title {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+/* 폼: 왼쪽 정렬 */
+.mypage-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: left;
+}
+
+.mypage-form label {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* .mypage-form input {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+} */
+.Mp_Uname{
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  width: 290px;
+  margin-top: 15px;
+}
+.Mp_add {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.Mp_centerId {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  width: 388px;
+}
+
+
+.Mp_email1,
+.Mp_email2 {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  width: 212px;
+}
+
+/* 사용자 ID 영역 */
+.userid-box {
+  background: #999;
+  color: #000;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* 플렉스 줄 */
+.flex-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* 버튼 정렬 */
+.mypage-btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+/* 공통 버튼 */
+.action-btn,
+.small-btn,
+.search-btn {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #333;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.action-btn:hover,
+.small-btn:hover,
+.search-btn:hover {
+  background-color: #555;
+}
+
+/* 모달 공통 */
+.search-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* width: 360px;
+  height: 250px; */
+  background-color: #fff;
+  z-index: 9999;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-body1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* 수평 중앙 정렬 */
+  justify-content: center; /* 수직 중앙 정렬 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  padding: 20px;
+  width: 250px;
+  margin-bottom: 10px;
+}
+
+.M_pw {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.modal-header {
+  position: relative;
+  flex: 0 0 auto;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  background: #f5f5f5;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #d33;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background: #f66;
+}
+
+.modal-body {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  background: #fff;
+}
+
+/* 지도 */
+.map-area {
+  flex: 1;
+  background: #f1f1f1;
+}
+
+/* 목록 */
+.list-area {
+  width: 300px;
+  padding: 10px;
+  overflow-y: auto;
+  border-left: 1px solid #ccc;
+}
+
+.list-area ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list-area li {
+  margin-bottom: 10px;
+  cursor: pointer;
+  color: #333;
+}
+
+.list-area li:hover {
+  background: #f7f7f7;
+}
+
+.list-area strong {
+  font-weight: bold;
+  color: #333;
+  display: block;
+}
+
+.list-area p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}

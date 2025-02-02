@@ -21,14 +21,14 @@ function Main() {
   const [birthSearch, setBirthSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const newFileInputRef = useRef(null);
+  // const newFileInputRef = useRef(null);
   const patientsPerPage = 5;
 
   // 선택된 환자
   const [selectedPatient, setSelectedPatient] = useState(null);
 
   // 사이드 메뉴 열림 여부
-  const [sideOpen, setSideOpen] = useState(false);
+  // const [sideOpen, setSideOpen] = useState(false);
 
   // 캐시 (pIdx별로 상태 저장)
   const [patientCache, setPatientCache] = useState({});
@@ -55,7 +55,7 @@ function Main() {
 
   // 환자 목록 불러오기
   useEffect(() => {
-    axios.get("http://localhost:8090/SmOne/api/patients")
+    axios.get(`${process.env.REACT_APP_DB_URL}/patients`)
       .then(res => {
         // pIdx 큰 순으로 정렬
         const sorted = [...res.data].sort((a, b) => b.pIdx - a.pIdx);
@@ -147,18 +147,18 @@ function Main() {
     if (data.selectedDate) {
       try {
         const x = await axios.get(
-          `http://localhost:8090/SmOne/api/xray/byDate?pIdx=${pIdx}&date=${data.selectedDate}`
+          `${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${pIdx}&date=${data.selectedDate}`
         );
         setOldImages(x.data);
         const foundBig = x.data.find(m => m.bigXray != null);
         if (foundBig) {
           setSelectedOldImage(foundBig);
-          setOldBigPreview(`http://localhost:8090/SmOne/images/${foundBig.bigXray}`);
+          setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${foundBig.bigXray}`);
         } else if (data.selectedOldImage) {
           const found = x.data.find(m => m.imgIdx === data.selectedOldImage.imgIdx);
           if (found) {
             setSelectedOldImage(found);
-            setOldBigPreview(`http://localhost:8090/SmOne/images/${found.imgPath}`);
+            setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${found.imgPath}`);
           } else {
             setSelectedOldImage(null);
             setOldBigPreview(null);
@@ -180,7 +180,7 @@ function Main() {
 
     let loadedDates = [];
     try {
-      const r = await axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${pt.pIdx}`);
+      const r = await axios.get(`${process.env.REACT_APP_DB_URL}/xray/dates?pIdx=${pt.pIdx}`);
       loadedDates = r.data;
     } catch (e) {
       console.error(e);
@@ -205,13 +205,13 @@ function Main() {
         setSelectedDate(newest);
         try {
           const x = await axios.get(
-            `http://localhost:8090/SmOne/api/xray/byDate?pIdx=${pt.pIdx}&date=${newest}`
+            `${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${pt.pIdx}&date=${newest}`
           );
           setOldImages(x.data);
           const foundBig = x.data.find(m => m.bigXray != null);
           if (foundBig) {
             setSelectedOldImage(foundBig);
-            setOldBigPreview(`http://localhost:8090/SmOne/images/${foundBig.bigXray}`);
+            setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${foundBig.bigXray}`);
           }
         } catch (e) {
           console.error(e);
@@ -225,7 +225,7 @@ function Main() {
     if (!thePatient) return;
     try {
       const r = await axios.get(
-        `http://localhost:8090/SmOne/api/xray/byDate?pIdx=${thePatient.pIdx}&date=${dateStr}`
+        `${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${thePatient.pIdx}&date=${dateStr}`
       );
       setOldImages(r.data);
       setSelectedDate(dateStr);
@@ -233,13 +233,13 @@ function Main() {
       const foundBig = r.data.find(m => m.bigXray != null);
       if (foundBig) {
         setSelectedOldImage(foundBig);
-        setOldBigPreview(`http://localhost:8090/SmOne/images/${foundBig.bigXray}`);
+        setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${foundBig.bigXray}`);
       } else {
         if (selectedOldImage) {
           const found = r.data.find(m => m.imgIdx === selectedOldImage.imgIdx);
           if (found) {
             setSelectedOldImage(found);
-            setOldBigPreview(`http://localhost:8090/SmOne/images/${found.imgPath}`);
+            setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${found.imgPath}`);
           } else {
             setSelectedOldImage(null);
             setOldBigPreview(null);
@@ -253,22 +253,22 @@ function Main() {
     }
   }
 
-  // 로그아웃
-  async function handleLogout() {
-    const ok = window.confirm("정말 로그아웃하시겠습니까?");
-    if (!ok) return;
-    try {
-      await axios.post(
-        "http://localhost:8090/SmOne/api/users/logout",
-        {},
-        { withCredentials: true }
-      );
-      navigate("/");
-    } catch (e) {
-      console.error(e);
-      window.alert("로그아웃 실패");
-    }
-  }
+  // // 로그아웃
+  // async function handleLogout() {
+  //   const ok = window.confirm("정말 로그아웃하시겠습니까?");
+  //   if (!ok) return;
+  //   try {
+  //     await axios.post(
+  //       `${process.env.REACT_APP_DB_URL}/users/logout`,
+  //       {},
+  //       { withCredentials: true }
+  //     );
+  //     navigate("/");
+  //   } catch (e) {
+  //     console.error(e);
+  //     window.alert("로그아웃 실패");
+  //   }
+  // }
 
   // 신규 사진 등록(파일 선택)
   function handleNewPhotoRegister() {
@@ -338,7 +338,7 @@ function Main() {
         formData.append("bigFilename", bigFilename);
 
         await axios.post(
-          "http://localhost:8090/SmOne/api/xray/diagnose",
+          `${process.env.REACT_APP_DB_URL}/xray/diagnose`,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -373,8 +373,8 @@ function Main() {
     const ok = window.confirm(`정말 [${thePatient.pName}] 환자를 삭제?`);
     if (!ok) return;
     try {
-      await axios.delete(`http://localhost:8090/SmOne/api/patients/${thePatient.pIdx}`);
-      const newList = await axios.get("http://localhost:8090/SmOne/api/patients");
+      await axios.delete(`${process.env.REACT_APP_DB_URL}patients/${thePatient.pIdx}`);
+      const newList = await axios.get(`${process.env.REACT_APP_DB_URL}/patients`);
       const sorted = [...(await newList).data].sort((a, b) => b.pIdx - a.pIdx);
       setPatients(sorted);
       setFiltered(sorted);

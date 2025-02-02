@@ -1,15 +1,19 @@
 /* 반투명 박스(폼) */
 .mypage-container {
   width: 450px;
-  margin: 190px auto 0 auto;
-  margin-bottom: 100px;
+  height: 570px;
+  /* margin: 190px auto 0 auto;
+  margin-bottom: 100px; */
+  top: 50%; /* 화면 높이의 50% */
+  left: 50%; /* 화면 너비의 50% */
+  transform: translate(-50%, -50%); /* 중앙으로 이동 */
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 8px;
   padding: 30px;
   color: #fff;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 2.0);
   text-align: center;
-  position: relative; /* 🔹 내부 요소 절대 위치 지정 가능하도록 설정 */
+  position: absolute; /* 🔹 내부 요소 절대 위치 지정 가능하도록 설정 */
 }
 
 .flex-container {
@@ -48,7 +52,10 @@
 
 .mypage-title {
   font-size: 32px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  /* margin-top: 20px; */
+  text-align: center;
+  color: white;
 }
 
 /* 폼: 왼쪽 정렬 */
@@ -80,6 +87,7 @@
   font-size: 14px;
   box-sizing: border-box;
   width: 290px;
+  height: 44px;
   margin-top: 15px;
 }
 .Mp_add {
@@ -88,6 +96,7 @@
   border-radius: 4px;
   font-size: 14px;
   box-sizing: border-box;
+  height: 44px;
 }
 
 .Mp_centerId {
@@ -97,6 +106,7 @@
   font-size: 14px;
   box-sizing: border-box;
   width: 388px;
+  height: 44px;
 }
 
 
@@ -108,6 +118,7 @@
   font-size: 14px;
   box-sizing: border-box;
   width: 212px;
+  height: 44px;
 }
 
 /* 사용자 ID 영역 */
@@ -117,6 +128,7 @@
   padding: 10px;
   border-radius: 4px;
   font-size: 14px;
+  height: 24px;
 }
 
 /* 플렉스 줄 */
@@ -131,6 +143,7 @@
   display: flex;
   justify-content: center;
   gap: 40px;
+  margin-top: 15px;
 }
 
 /* 공통 버튼 */

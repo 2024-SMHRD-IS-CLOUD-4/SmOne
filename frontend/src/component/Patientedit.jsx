@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import "./PatientEdit.css";
+import Menu from "./Menu"; // Menu 추가
 
 function PatientEdit() {
     
@@ -163,6 +164,8 @@ function PatientEdit() {
         };
 
   return (
+    <>
+      <Menu />  {/* ✅ 네비게이션 메뉴 추가 */}
     <div className='Patient-container'>
       <div className="form-wrapper">
         <h1  className="patient-title1">환자 수정</h1>
@@ -313,6 +316,7 @@ function PatientEdit() {
       </form>
         </div>
     </div>
+      </>
   );
 }
 

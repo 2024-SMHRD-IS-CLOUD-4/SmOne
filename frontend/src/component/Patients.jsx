@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Patients.css";
+import Menu from "./Menu"; // Menu 추가
 
 function Patients() {
   const navigate = useNavigate();
@@ -77,8 +78,8 @@ function Patients() {
 
   return (
     <form onSubmit={handleSubmit}>
+      <Menu />  {/* ✅ 네비게이션 메뉴 추가 */}
       <div className="Patient-container">
-         {/* 🔙 뒤로가기 버튼 추가 */}
        <button className="back-btn" onClick={() => navigate(-1)}>X</button>
         <div className="form-wrapper">
           <h1 className="patient-title">환자 등록</h1>

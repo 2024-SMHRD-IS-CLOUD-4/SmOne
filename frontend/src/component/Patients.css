@@ -3,12 +3,13 @@
   display: flex;
   flex-direction: column;
   justify-content: center; /* Center vertically */
-  align-items: center; /* Center horizontally */
+  /* align-items: center; Center horizontally */
   background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 2.0);
   border-radius: 10px;
   padding: 20px;
-  height: 650px;
-  width: 520px;
+  height: 615px;
+  width: 500px;
   position: absolute; /* Ensures proper centering */
   top: 50%;
   left: 50%;
@@ -32,10 +33,10 @@
   background-color: #666;
 }
 
-  .form-wrapper {
+  /* .form-wrapper {
     max-width: 500px;
     width: 100%;
-  }
+  } */
   
   .title {
     align-items: center;
@@ -44,9 +45,10 @@
     text-align: center;
   }
   .patient-title {
-    align-items: center;
-    font-size: 30px;
-    margin-bottom: 20px;
+    /* align-items: center; */
+    font-size: 32px;
+    margin-bottom: 30px;
+    /* margin-top: 20px; */
     text-align: center;
     color: white;
   }
@@ -222,7 +224,8 @@
 .resident-number-group label,
 .phone-number-group label,
 .address-group label {
-  display: block;
+  font-weight: bold;
+  font-size: 14px;
   margin-bottom: 5px;
-  color: #ffffff;
+  display: block;
 }
