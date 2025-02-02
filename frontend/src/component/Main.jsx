@@ -1,5 +1,3 @@
-// src/component/Main.jsx
-
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -20,15 +18,15 @@ function Main() {
   const [nameSearch, setNameSearch] = useState("");
   const [birthSearch, setBirthSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-
-  // const newFileInputRef = useRef(null);
+  const searchRef = useRef(null);
+  const newFileInputRef = useRef(null);
   const patientsPerPage = 5;
 
   // 선택된 환자
   const [selectedPatient, setSelectedPatient] = useState(null);
 
   // 사이드 메뉴 열림 여부
-  // const [sideOpen, setSideOpen] = useState(false);
+  const [sideOpen, setSideOpen] = useState(false);
 
   // 캐시 (pIdx별로 상태 저장)
   const [patientCache, setPatientCache] = useState({});
@@ -52,6 +50,12 @@ function Main() {
   const [datePage, setDatePage] = useState(1);
   const datesPerPage = 5;
 
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+
+  const toggleSearchBar = () => {
+    setIsSearchVisible(!isSearchVisible);
+  };
+
 
   // 환자 목록 불러오기
   useEffect(() => {
@@ -64,11 +68,27 @@ function Main() {
       })
       .catch(err => console.error(err));
   }, []);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setIsSearchVisible(false); // 외부 클릭 시 검색창 닫기
+      }
+    }
 
+    if (isSearchVisible) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSearchVisible]);
+  
   // 검색
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const f = patients.filter((p) => {
+      console.log("검색 실행:", nameSearch, birthSearch);
       const nameOk = nameSearch ? p.pName.includes(nameSearch) : true;
       const birthOk = birthSearch ? p.birth.startsWith(birthSearch) : true;
       return nameOk && birthOk;
@@ -253,22 +273,22 @@ function Main() {
     }
   }
 
-  // // 로그아웃
-  // async function handleLogout() {
-  //   const ok = window.confirm("정말 로그아웃하시겠습니까?");
-  //   if (!ok) return;
-  //   try {
-  //     await axios.post(
-  //       `${process.env.REACT_APP_DB_URL}/users/logout`,
-  //       {},
-  //       { withCredentials: true }
-  //     );
-  //     navigate("/");
-  //   } catch (e) {
-  //     console.error(e);
-  //     window.alert("로그아웃 실패");
-  //   }
-  // }
+  // 로그아웃
+  async function handleLogout() {
+    const ok = window.confirm("정말 로그아웃하시겠습니까?");
+    if (!ok) return;
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_DB_URL}/users/logout`,
+        {},
+        { withCredentials: true }
+      );
+      navigate("/");
+    } catch (e) {
+      console.error(e);
+      window.alert("로그아웃 실패");
+    }
+  }
 
   // 신규 사진 등록(파일 선택)
   function handleNewPhotoRegister() {
@@ -404,27 +424,33 @@ function Main() {
     <div className="main-container">
       <Menu /> {/* Menu.jsx를 왼쪽에 배치 */}
       {/* 상단 바 */}
-      <div className="top-bar">
-        <img src={teamLogo} alt="Team Logo" className="logo-image" onClick={handleLogoClick} style={{ cursor: "pointer" }} />
-
-        <form className="search-form" onSubmit={handleSearchSubmit}>
-          <input
-            type="text"
-            placeholder="이름을 입력하세요"
-            value={nameSearch}
-            onChange={(e) => setNameSearch(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="생년월일 6자리를 입력하세요"
-            value={birthSearch}
-            onChange={(e) => setBirthSearch(e.target.value)}
-          />
-          <button type="submit" className="search-button">
+      <div className="top-bar" ref={searchRef}>
+        {/* 돋보기 버튼 */}
+        {!isSearchVisible && (
+          <button className="search-toggle-button" onClick={toggleSearchBar}>
             <img src={magnifyingGlassIcon} alt="검색" className="search-icon" />
           </button>
-
-        </form>
+        )}
+        {/* 검색 바 (isSearchVisible이 true일 때만 표시) */}
+        {isSearchVisible && (
+          <form className="search-form" onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              placeholder="이름을 입력하세요"
+              value={nameSearch}
+              onChange={(e) => setNameSearch(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="생년월일 6자리를 입력하세요"
+              value={birthSearch}
+              onChange={(e) => setBirthSearch(e.target.value)}
+            />
+            <button type="submit" className="search-button">
+              <img src={magnifyingGlassIcon} alt="검색" className="search-icon" />
+            </button>
+          </form>
+        )}
 
         {/* 진단하기 버튼 */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
@@ -446,7 +472,7 @@ function Main() {
         <div className="left-panel">
 
           <ul className="patient-list panel-block">
-          <h2 style={{ marginTop: 5, marginLeft: 10 }}>환자 정보</h2>
+            <h2 style={{ marginTop: 5, marginLeft: 10 }}>환자 정보</h2>
             {currentPatients.length > 0 ? (
               currentPatients.map((pt, idx) => (
                 <li key={pt.pIdx || idx} onClick={() => handlePatientClick(pt)}>
@@ -456,36 +482,39 @@ function Main() {
             ) : (
               <li>등록된 환자 정보가 없습니다.</li>
             )}
+
+            {/* Pagination을 patient-list 안으로 이동 */}
+            <li className="pagination-container">
+              <div className="pagination">
+                <button onClick={goFirst} disabled={currentPage === 1}>{"<<"}</button>
+                <button onClick={goPrev} disabled={currentPage === 1}>{"<"}</button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
+                  <button
+                    key={num}
+                    onClick={() => handlePageChange(num)}
+                    className={currentPage === num ? "active" : ""}
+                  >
+                    {num}
+                  </button>
+                ))}
+                <button onClick={goNext} disabled={currentPage === totalPages}>{">"}</button>
+                <button onClick={goLast} disabled={currentPage === totalPages}>{">>"}</button>
+              </div>
+            </li>
           </ul>
 
-          <div className="pagination">
-            <button onClick={goFirst} disabled={currentPage === 1}>{"<<"}</button>
-            <button onClick={goPrev} disabled={currentPage === 1}>{"<"}</button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
-              <button
-                key={num}
-                onClick={() => handlePageChange(num)}
-                className={currentPage === num ? "active" : ""}
-              >
-                {num}
-              </button>
-
-            ))}
-            <button onClick={goNext} disabled={currentPage === totalPages}>{">"}</button>
-            <button onClick={goLast} disabled={currentPage === totalPages}>{">>"}</button>
-          </div>
 
           {selectedPatient && (
             <div className="patient-detail">
               <h2 style={{ marginTop: 0 }}>환자 상세 정보</h2>
-              <p>환자 번호: {selectedPatient.pIdx}</p>
-              <p>환자 이름: {selectedPatient.pName}</p>
-              <p>생년월일: {selectedPatient.birth}</p>
-              <p>연락처: {selectedPatient.tel}</p>
-              <p>주소: {selectedPatient.pAdd}</p>
+              <p>환자 번호 : {selectedPatient.pIdx}</p>
+              <p>환자 이름 : {selectedPatient.pName}</p>
+              <p>생년월일 : {selectedPatient.birth}</p>
+              <p>연락처 : {selectedPatient.tel}</p>
+              <p>주소 : {selectedPatient.pAdd}</p>
 
-              <button className="btn" onClick={() => handleEditPatient(selectedPatient)}  style={{ fontWeight: "bold" }} >수정</button>
-              <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}  style={{ fontWeight: "bold" }} >삭제</button>
+              <button className="btn" onClick={() => handleEditPatient(selectedPatient)} style={{ fontWeight: "bold" }} >수정</button>
+              <button className="btn" onClick={() => handleDeletePatient(selectedPatient)} style={{ fontWeight: "bold" }} >삭제</button>
             </div>
           )}
 

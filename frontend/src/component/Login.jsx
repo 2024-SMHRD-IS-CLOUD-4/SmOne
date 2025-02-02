@@ -51,7 +51,7 @@ const Login = () => {
 
   return (
     <div className="login-page">
-      <img src={teamLogo} alt="Team Logo" className="team-logo" />
+      <img src={teamLogo} alt="Team Logo" className="login-team-logo" />
       <form className="login-form" onSubmit={handleSubmit}>
         <label>아이디</label>
         <input
