@@ -8,25 +8,24 @@ class Upsampler(nn.Module):
     def __init__(self):
         super().__init__()
         
-    def get_max_shape(self, x: list[torch.tensor]):
-        max_h, max_w = 0, 0
-        for tensor in x:
-            h, w = tensor.shape[-2:]
-            max_h = max(max_h, h)
-            max_w = max(max_w, w)
-        return max_h, max_w
-    
-    def forward(self, x: list[torch.tensor]) ->torch.tensor:
-        max_h, max_w = self.get_max_shape(x)
+    def forward(self, x: list[torch.tensor]) -> torch.tensor:
+        # Get shapes of all tensors
+        shapes = torch.stack([torch.tensor([t.shape[-2], t.shape[-1]]) for t in x])
+        
+        # Get max dimensions
+        max_shape = torch.max(shapes, dim=0).values
+        max_h, max_w = int(max_shape[0]), int(max_shape[1])
         
         outputs = []
         for tensor in x:
-            h, w = tensor.shape[-2:]
-            if h < max_h or w < max_w:
-                tensor = nn.functional.interpolate(tensor, size=(max_h, max_w), mode='bilinear')
+            curr_h, curr_w = tensor.shape[-2:]
+            if curr_h != max_h or curr_w != max_w:
+                tensor = nn.functional.interpolate(tensor, size=(max_h, max_w), mode='bilinear', align_corners=False)
             outputs.append(tensor)
         
         return torch.cat(outputs, dim=1)
+
+
         
 
 class Model(nn.Module):
@@ -48,26 +47,51 @@ class Model(nn.Module):
                                         Conv2dNormActivation(128, 4,
                                                              kernel_size=1,
                                                              norm_layer=None,
-                                                             activation_layer=None))
-
-
+                                                             activation_layer=None),
+                                        torch.nn.AdaptiveAvgPool2d((1, 1)))
     
     def forward(self, x:torch.tensor):
-        input_shape = x.shape[-2:]
         x = self.extractor(x)
         x = self.upsampler(x)
         x = self.predictor(x)
-        
-        x = nn.functional.interpolate(x, size=input_shape, mode='bilinear')
-        return x
-        
+        x = x.view(-1, 4)
+        return {'logits': x,
+                'probs': torch.sigmoid(x)}
+    
+    def prediction(self, x:torch.tensor):
+        return self(x)['probs']
+    
+def convert_to_onnx(model, save_path='model.onnx', input_shape=(1, 1, 384, 384)):
+    model.eval()
+    
+    # Create dummy input
+    dummy_input = torch.randn(input_shape)
+    
+    torch.onnx.export(model,                      
+        dummy_input,               
+        save_path,                 
+        export_params=True,        
+        opset_version=17,          
+        do_constant_folding=True,  
+        input_names=['input'],     
+        output_names=['output'],   
+        dynamic_axes={             
+            'input': {0: 'batch_size'},
+            'output': {0: 'batch_size'}
+        }
+    )
+    
+    print(f"Model has been converted to ONNX and saved at {save_path}")
+
+
+
         
 if __name__ == '__main__':
     model = Model()
     x = torch.randn((1, 1, 384, 384))
     output = model(x)
-    print(output.shape)
-
-
-
     
+    for key, val in output.items():
+        print(key, val.shape)
+
+    convert_to_onnx(model, save_path='model.onnx')
