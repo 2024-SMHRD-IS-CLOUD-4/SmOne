@@ -54,7 +54,7 @@
 .top-bar {
   position: relative;
   width: 100%;
-  height: 80px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -67,13 +67,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-left: 31px;
 }
 .search-form input {
   padding: 10px 14px;
   border: none;
   border-radius: 6px;
-  width: 220px;
-  font-size: 16px;
+  width: 200px;
+  font-size: 14px;
 }
 .search-form button {
   padding: 10px 16px;
@@ -169,7 +170,7 @@
   border: 1px solid rgba(255,255,255,0.2);
   padding: 10px;
   color: #fff;
-  height: 802px;
+  height: 841px;
   border-radius: 8px;
   margin-top: 20px;
 }
@@ -180,45 +181,87 @@
   padding: 10px;
   margin-bottom: 10px;
 }
+/* 환자 정보 리스트 스타일 */
 .patient-list {
   list-style: none;
-  margin: 0; padding: 0;
+  margin: 0;
+  padding: 0;
+  min-height: 280px; /* 최소 높이 설정 */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative; /* pagination을 하단에 고정하기 위해 상대 위치 설정 */
+  padding-bottom: 50px; 
 }
+
+/* 개별 환자 리스트 항목 */
 .patient-list li {
-  margin-bottom: 5px;
+  height: 30px; /* 높이 고정 */
+  display: flex;
+  align-items: center; /* 텍스트 수직 중앙 정렬 */
   padding: 8px;
   cursor: pointer;
   border-radius: 6px;
   color: #fff;
   transition: background 0.2s;
 }
+
+/* hover 효과 적용 */
 .patient-list li:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.3);
 }
-.pagination {
-  margin-top: 10px;
+
+/* 페이지네이션을 포함하는 li 요소에 hover 효과 제거 */
+.patient-list li.pagination-container {
+  background: transparent;
+  pointer-events: none; /* hover 효과 차단 */
+}
+/* 페이지네이션을 항상 리스트 하단에 고정 */
+.pagination-container {
+  position: absolute;
+  bottom: 10px; /* 하단 여백 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
   display: flex;
-  justify-content: center; /* 가운데 정렬 */
-  border-radius: 6px; /* 둥글게 */
-  overflow: hidden; /* 내부 버튼이 넘치지 않도록 */
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  border-radius: 8px;
+}
+/* pagination-container 내부의 버튼은 hover 효과 없이 클릭 가능하도록 유지 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .pagination button {
   padding: 8px 12px;
-  border: none; /* 기존 테두리 제거 */
-  background: #fff; /* 버튼 기본 배경 */
+  border: none;
+  background: #fff;
   cursor: pointer;
   font-size: 14px;
   font-weight: bold;
   transition: background 0.2s;
+  pointer-events: auto; /* 클릭 가능하도록 유지 */
 }
 
+/* pagination 버튼 hover 효과 유지 (단, 배경과 무관) */
 .pagination button:hover {
-  background: #bbb; /* 호버 시 색상 변경 */
+  background: #bbb;
 }
 
+/* 비활성화된 버튼 스타일 */
 .pagination button:disabled {
-  background: #eee; /* 비활성화 버튼 색상 */
+  background: #eee;
+}
+
+/* 현재 페이지 버튼 강조 */
+.pagination button.active {
+  background: #333;
+  color: white;
 }
 
 /* 첫 번째 버튼 (왼쪽 끝) */
@@ -311,7 +354,7 @@
   padding: 20px;
   box-sizing: border-box;
   width: 650px;
-  height: 670px;
+  height: 730px;
 
   /* 요소 내부의 컨텐츠를 가운데 정렬 */
   display: flex;
@@ -344,5 +387,31 @@
   font-weight: bold;
 }
 .patient-detail p {
-  margin: 6px 0; /* 위아래 4px 간격 추가 */
+  margin: 10px 0; /* 위아래 4px 간격 추가 */
+}
+/* 돋보기 버튼 (초기 상태) */
+.search-toggle-button {
+  padding: 5px;
+  border: none;
+  border-radius: 6px;
+  background: #333; /* 배경색 변경 */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; /* 너비 변경 */
+  height: 40px; /* 높이 변경 */
+  transition: background 0.3s ease-in-out;
+  margin-left: 30px;
+}
+
+/* 돋보기 아이콘 크기 조정 */
+.search-toggle-button .search-icon {
+  width: 20x; /* 아이콘 크기 조정 */
+  height: 20px;
+}
+
+/* 버튼 호버 효과 */
+.search-toggle-button:hover {
+  background: #444;
 }

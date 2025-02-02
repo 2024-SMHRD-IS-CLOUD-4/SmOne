@@ -1,16 +1,31 @@
 /* 반투명 박스(폼) */
 .mypage-container {
   width: 450px;
-  margin: 100px auto 0 auto;
+  margin: 190px auto 0 auto;
   margin-bottom: 100px;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 8px;
   padding: 30px;
   color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 2.0);
   text-align: center;
   position: relative; /* 🔹 내부 요소 절대 위치 지정 가능하도록 설정 */
 }
+
+.flex-container {
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
+  gap: 20px; /* 간격 조절 */
+}
+
+.input-group {
+  flex: 1; /* 동일한 비율로 너비 설정 */
+}
+
+.role-group {
+  flex: 1; /* 동일한 비율로 너비 설정 */
+}
+
 
 /* 🔙 마이페이지 컨테이너 내부 왼쪽 상단 버튼 */
 .back-btn {
@@ -51,12 +66,48 @@
   display: block;
 }
 
-.mypage-form input {
+/* .mypage-form input {
   padding: 10px;
   border: none;
   border-radius: 4px;
   font-size: 14px;
   box-sizing: border-box;
+} */
+.Mp_Uname{
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  width: 290px;
+  margin-top: 15px;
+}
+.Mp_add {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.Mp_centerId {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  width: 388px;
+}
+
+
+.Mp_email1,
+.Mp_email2 {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  width: 212px;
 }
 
 /* 사용자 ID 영역 */
@@ -79,7 +130,7 @@
 .mypage-btn-row {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 40px;
 }
 
 /* 공통 버튼 */
@@ -107,8 +158,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 360px;
-  height: 250px;
+  /* width: 360px;
+  height: 250px; */
   background-color: #fff;
   z-index: 9999;
   border-radius: 10px;

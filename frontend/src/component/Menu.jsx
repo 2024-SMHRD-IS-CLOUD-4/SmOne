@@ -6,11 +6,12 @@ import { useNavigate } from "react-router-dom";
 import {
   homeOutline,
   personOutline,
-  settingsOutline,
-  lockClosedOutline,
+  // settingsOutline,
+  // lockClosedOutline,
   logOutOutline,
 } from "ionicons/icons";
 import patientIcon from "./png/patient.png"; // Patient 아이콘 이미지 import
+import teamLogo from "./png/teamlogo.png"; // 팀 로고 추가
 
 const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -27,7 +28,6 @@ const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
   const handleClick = (event, index) => {
     event.preventDefault(); // URL에 # 추가 방지
     setActiveIndex(index);
-
     if (menuItems[index].title === "메인화면") {
       if (onHomeClick) onHomeClick();
       navigate("/main");
@@ -42,13 +42,13 @@ const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
       handleLogout();
     }
   };
+
   const toggleMenu = () => {
     setIsExpanded(!isExpanded);
   };
   const handleLogout = async () => {
     try {
       await axios.post(`${process.env.REACT_APP_DB_URL}/users/logout`, {}, { withCredentials: true });
-      alert("로그아웃 성공!");
       navigate("/");
     } catch (e) {
       console.error(e);
@@ -64,6 +64,11 @@ const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
       >
+        {/* 팀 로고 추가 */}
+        <div className={`team-logo-container ${isExpanded ? "expanded" : ""}`}>
+          <img src={teamLogo} alt="Team Logo" className="team-logo" />
+        </div>
+
         <ul>
           {menuItems.map((item, index) => (
             <li

@@ -1,5 +1,3 @@
-// src/component/Main.jsx
-
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -9,7 +7,6 @@ import Menu from "./Menu";
 import DateList from "./Xray/DateList";
 import FirstVisitUI from "./Xray/FirstVisitUI";
 import SecondVisitUI from "./Xray/SecondVisitUI";
-import teamLogo from "./png/teamlogo.png";
 import stethoscopeIcon from "./png/stethoscope.png";
 import magnifyingGlassIcon from "./png/magnifying-glass.png";
 
@@ -20,15 +17,12 @@ function Main() {
   const [nameSearch, setNameSearch] = useState("");
   const [birthSearch, setBirthSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-
+  const searchRef = useRef(null);
   const newFileInputRef = useRef(null);
   const patientsPerPage = 5;
 
   // 선택된 환자
   const [selectedPatient, setSelectedPatient] = useState(null);
-
-  // 사이드 메뉴 열림 여부
-  const [sideOpen, setSideOpen] = useState(false);
 
   // 캐시 (pIdx별로 상태 저장)
   const [patientCache, setPatientCache] = useState({});
@@ -52,10 +46,16 @@ function Main() {
   const [datePage, setDatePage] = useState(1);
   const datesPerPage = 5;
 
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+
+  const toggleSearchBar = () => {
+    setIsSearchVisible(!isSearchVisible);
+  };
+
 
   // 환자 목록 불러오기
   useEffect(() => {
-    axios.get("http://localhost:8090/SmOne/api/patients")
+    axios.get(`${process.env.REACT_APP_DB_URL}/patients`)
       .then(res => {
         // pIdx 큰 순으로 정렬
         const sorted = [...res.data].sort((a, b) => b.pIdx - a.pIdx);
@@ -64,11 +64,27 @@ function Main() {
       })
       .catch(err => console.error(err));
   }, []);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setIsSearchVisible(false); // 외부 클릭 시 검색창 닫기
+      }
+    }
+
+    if (isSearchVisible) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSearchVisible]);
 
   // 검색
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const f = patients.filter((p) => {
+      console.log("검색 실행:", nameSearch, birthSearch);
       const nameOk = nameSearch ? p.pName.includes(nameSearch) : true;
       const birthOk = birthSearch ? p.birth.startsWith(birthSearch) : true;
       return nameOk && birthOk;
@@ -147,18 +163,18 @@ function Main() {
     if (data.selectedDate) {
       try {
         const x = await axios.get(
-          `http://localhost:8090/SmOne/api/xray/byDate?pIdx=${pIdx}&date=${data.selectedDate}`
+          `${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${pIdx}&date=${data.selectedDate}`
         );
         setOldImages(x.data);
         const foundBig = x.data.find(m => m.bigXray != null);
         if (foundBig) {
           setSelectedOldImage(foundBig);
-          setOldBigPreview(`http://localhost:8090/SmOne/images/${foundBig.bigXray}`);
+          setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${foundBig.bigXray}`);
         } else if (data.selectedOldImage) {
           const found = x.data.find(m => m.imgIdx === data.selectedOldImage.imgIdx);
           if (found) {
             setSelectedOldImage(found);
-            setOldBigPreview(`http://localhost:8090/SmOne/images/${found.imgPath}`);
+            setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${found.imgPath}`);
           } else {
             setSelectedOldImage(null);
             setOldBigPreview(null);
@@ -180,7 +196,7 @@ function Main() {
 
     let loadedDates = [];
     try {
-      const r = await axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${pt.pIdx}`);
+      const r = await axios.get(`${process.env.REACT_APP_DB_URL}/xray/dates?pIdx=${pt.pIdx}`);
       loadedDates = r.data;
     } catch (e) {
       console.error(e);
@@ -205,13 +221,13 @@ function Main() {
         setSelectedDate(newest);
         try {
           const x = await axios.get(
-            `http://localhost:8090/SmOne/api/xray/byDate?pIdx=${pt.pIdx}&date=${newest}`
+            `${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${pt.pIdx}&date=${newest}`
           );
           setOldImages(x.data);
           const foundBig = x.data.find(m => m.bigXray != null);
           if (foundBig) {
             setSelectedOldImage(foundBig);
-            setOldBigPreview(`http://localhost:8090/SmOne/images/${foundBig.bigXray}`);
+            setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${foundBig.bigXray}`);
           }
         } catch (e) {
           console.error(e);
@@ -225,7 +241,7 @@ function Main() {
     if (!thePatient) return;
     try {
       const r = await axios.get(
-        `http://localhost:8090/SmOne/api/xray/byDate?pIdx=${thePatient.pIdx}&date=${dateStr}`
+        `${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${thePatient.pIdx}&date=${dateStr}`
       );
       setOldImages(r.data);
       setSelectedDate(dateStr);
@@ -233,13 +249,13 @@ function Main() {
       const foundBig = r.data.find(m => m.bigXray != null);
       if (foundBig) {
         setSelectedOldImage(foundBig);
-        setOldBigPreview(`http://localhost:8090/SmOne/images/${foundBig.bigXray}`);
+        setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${foundBig.bigXray}`);
       } else {
         if (selectedOldImage) {
           const found = r.data.find(m => m.imgIdx === selectedOldImage.imgIdx);
           if (found) {
             setSelectedOldImage(found);
-            setOldBigPreview(`http://localhost:8090/SmOne/images/${found.imgPath}`);
+            setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${found.imgPath}`);
           } else {
             setSelectedOldImage(null);
             setOldBigPreview(null);
@@ -259,7 +275,7 @@ function Main() {
     if (!ok) return;
     try {
       await axios.post(
-        "http://localhost:8090/SmOne/api/users/logout",
+        `${process.env.REACT_APP_DB_URL}/users/logout`,
         {},
         { withCredentials: true }
       );
@@ -338,7 +354,7 @@ function Main() {
         formData.append("bigFilename", bigFilename);
 
         await axios.post(
-          "http://localhost:8090/SmOne/api/xray/diagnose",
+          `${process.env.REACT_APP_DB_URL}/xray/diagnose`,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -373,8 +389,8 @@ function Main() {
     const ok = window.confirm(`정말 [${thePatient.pName}] 환자를 삭제?`);
     if (!ok) return;
     try {
-      await axios.delete(`http://localhost:8090/SmOne/api/patients/${thePatient.pIdx}`);
-      const newList = await axios.get("http://localhost:8090/SmOne/api/patients");
+      await axios.delete(`${process.env.REACT_APP_DB_URL}patients/${thePatient.pIdx}`);
+      const newList = await axios.get(`${process.env.REACT_APP_DB_URL}/patients`);
       const sorted = [...(await newList).data].sort((a, b) => b.pIdx - a.pIdx);
       setPatients(sorted);
       setFiltered(sorted);
@@ -404,27 +420,33 @@ function Main() {
     <div className="main-container">
       <Menu /> {/* Menu.jsx를 왼쪽에 배치 */}
       {/* 상단 바 */}
-      <div className="top-bar">
-        <img src={teamLogo} alt="Team Logo" className="logo-image" onClick={handleLogoClick} style={{ cursor: "pointer" }} />
-
-        <form className="search-form" onSubmit={handleSearchSubmit}>
-          <input
-            type="text"
-            placeholder="이름을 입력하세요"
-            value={nameSearch}
-            onChange={(e) => setNameSearch(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="생년월일 6자리를 입력하세요"
-            value={birthSearch}
-            onChange={(e) => setBirthSearch(e.target.value)}
-          />
-          <button type="submit" className="search-button">
+      <div className="top-bar" ref={searchRef}>
+        {/* 돋보기 버튼 */}
+        {!isSearchVisible && (
+          <button className="search-toggle-button" onClick={toggleSearchBar}>
             <img src={magnifyingGlassIcon} alt="검색" className="search-icon" />
           </button>
-
-        </form>
+        )}
+        {/* 검색 바 (isSearchVisible이 true일 때만 표시) */}
+        {isSearchVisible && (
+          <form className="search-form" onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              placeholder="이름을 입력하세요"
+              value={nameSearch}
+              onChange={(e) => setNameSearch(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="생년월일 6자리를 입력하세요"
+              value={birthSearch}
+              onChange={(e) => setBirthSearch(e.target.value)}
+            />
+            <button type="submit" className="search-button">
+              <img src={magnifyingGlassIcon} alt="검색" className="search-icon" />
+            </button>
+          </form>
+        )}
 
         {/* 진단하기 버튼 */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
@@ -446,7 +468,7 @@ function Main() {
         <div className="left-panel">
 
           <ul className="patient-list panel-block">
-          <h2 style={{ marginTop: 5, marginLeft: 10 }}>환자 정보</h2>
+            <h2 style={{ marginTop: 5, marginLeft: 10 }}>환자 정보</h2>
             {currentPatients.length > 0 ? (
               currentPatients.map((pt, idx) => (
                 <li key={pt.pIdx || idx} onClick={() => handlePatientClick(pt)}>
@@ -456,36 +478,39 @@ function Main() {
             ) : (
               <li>등록된 환자 정보가 없습니다.</li>
             )}
+
+            {/* 페이지네이션을 patient-list 내부 하단에 고정 */}
+            <li className="pagination-container">
+              <div className="pagination">
+                <button onClick={goFirst} disabled={currentPage === 1}>{"<<"}</button>
+                <button onClick={goPrev} disabled={currentPage === 1}>{"<"}</button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
+                  <button
+                    key={num}
+                    onClick={() => handlePageChange(num)}
+                    className={currentPage === num ? "active" : ""}
+                  >
+                    {num}
+                  </button>
+                ))}
+                <button onClick={goNext} disabled={currentPage === totalPages}>{">"}</button>
+                <button onClick={goLast} disabled={currentPage === totalPages}>{">>"}</button>
+              </div>
+            </li>
           </ul>
 
-          <div className="pagination">
-            <button onClick={goFirst} disabled={currentPage === 1}>{"<<"}</button>
-            <button onClick={goPrev} disabled={currentPage === 1}>{"<"}</button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
-              <button
-                key={num}
-                onClick={() => handlePageChange(num)}
-                className={currentPage === num ? "active" : ""}
-              >
-                {num}
-              </button>
-
-            ))}
-            <button onClick={goNext} disabled={currentPage === totalPages}>{">"}</button>
-            <button onClick={goLast} disabled={currentPage === totalPages}>{">>"}</button>
-          </div>
 
           {selectedPatient && (
             <div className="patient-detail">
               <h2 style={{ marginTop: 0 }}>환자 상세 정보</h2>
-              <p>환자 번호: {selectedPatient.pIdx}</p>
-              <p>환자 이름: {selectedPatient.pName}</p>
-              <p>생년월일: {selectedPatient.birth}</p>
-              <p>연락처: {selectedPatient.tel}</p>
-              <p>주소: {selectedPatient.pAdd}</p>
+              <p>환자 번호 : {selectedPatient.pIdx}</p>
+              <p>환자 이름 : {selectedPatient.pName}</p>
+              <p>생년월일 : {selectedPatient.birth}</p>
+              <p>연락처 : {selectedPatient.tel}</p>
+              <p>주소 : {selectedPatient.pAdd}</p>
 
-              <button className="btn" onClick={() => handleEditPatient(selectedPatient)}  style={{ fontWeight: "bold" }} >수정</button>
-              <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}  style={{ fontWeight: "bold" }} >삭제</button>
+              <button className="btn" onClick={() => handleEditPatient(selectedPatient)} style={{ fontWeight: "bold" }} >수정</button>
+              <button className="btn" onClick={() => handleDeletePatient(selectedPatient)} style={{ fontWeight: "bold" }} >삭제</button>
             </div>
           )}
 

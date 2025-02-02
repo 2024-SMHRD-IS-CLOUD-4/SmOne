@@ -7,8 +7,8 @@ function FirstVisitUI({
   handleNewPhotoRegister,
   handleRemoveNewImage
 }) {
-  const previewBoxWidth = 550;
-  const previewBoxHeight = 480;
+  const previewBoxWidth = 570;
+  const previewBoxHeight = 520;
 
   const [baseScale, setBaseScale] = useState(1);
   const [zoom, setZoom] = useState(1);

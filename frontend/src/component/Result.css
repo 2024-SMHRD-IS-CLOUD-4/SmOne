@@ -7,7 +7,25 @@
     display: flex;
     flex-direction: column;
   }
-  
+  /* 로고 버튼 스타일 */
+/* 로고 버튼 스타일 */
+.team-logo-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  margin-top: 10px;
+  margin-left: 45px;
+}
+
+.team-logo-img {
+  width: 100px; /* 로고 크기 조정 */
+  height: auto;
+}
+
   .result-topbar {
     height: 60px;
     color: #fff;
@@ -21,13 +39,14 @@
   .result-main {
     flex: 1;
     display: flex;
-    background: rgba(0,0,0,0.1);
+    margin-left: 50px;
   }
   
   /* 왼쪽 패널 */
   .result-left-panel {
     width: 380px;
     background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.2);
     padding: 20px;
     overflow-y: auto;
     box-sizing: border-box;
@@ -67,7 +86,9 @@
   /* 오른쪽 패널 내부의 왼쪽= X-ray, 오른쪽= 진단결과 */
   .result-xray-area {
     flex: 2;
-    border: 1px dashed #999;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
     padding: 10px;
   }
   .big-preview-box {
@@ -105,6 +126,7 @@
   .result-diagnosis-area {
     flex: 0.8;
     background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.2);
     padding: 10px;
     border-radius: 6px;
     color: #fff;

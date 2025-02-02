@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import "./Changepw.css";
 
 const Changepw = () => {
     const [formData, setFormData] = useState({
@@ -45,7 +46,7 @@ const Changepw = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8090/SmOne/api/users/password/change', {
+            const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/password/change`, {
                 userId,
                 newPassword,
             });
@@ -61,50 +62,56 @@ const Changepw = () => {
     };
 
     return (
-        <div>
-            <h2>비밀번호 변경</h2>
+        <div className="changepw-container">
+            <h1 className="changepw-title">비밀번호 변경</h1>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label>아이디</label>
+
+                <div class='changepw-form'>
+                    <label className='cp-id'>아이디</label>
                     <input
                         type="text"
                         name="userId"
                         placeholder="아이디를 입력하세요"
+                        className="changepw-id"
                         value={formData.userId}
                         onChange={handleChange}
                         required
                     />
-                </div>
-                <div>
-                    <label>새 비밀번호</label>
-                    <input
-                        type="password"
-                        name="newPassword"
-                        placeholder="새 비밀번호를 입력하세요"
-                        value={formData.newPassword}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>새 비밀번호 확인</label>
-                    <input
-                        type="password"
-                        name="confirmNewPassword"
-                        placeholder="새 비밀번호를 다시 입력하세요"
-                        value={formData.confirmNewPassword}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <p>{passwordMatchMessage}</p> {/* 비밀번호 일치 여부 메시지 출력 */}
-                </div>
-                <button type="submit" disabled={passwordMatchMessage !== '비밀번호가 일치합니다.'}>
-                    변경 완료
-                </button>
+                        <label className='cp-pw1'>새 비밀번호</label>
+                        <div>
+                            <input
+                                type="password"
+                                name="newPassword"
+                                placeholder="새 비밀번호를 입력하세요"
+                                className="changepw-pw1"
+                                value={formData.newPassword}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <label className='cp-pw2'>새 비밀번호 확인</label>
+                            <input
+                                type="password"
+                                name="confirmNewPassword"
+                                placeholder="새 비밀번호를 다시 입력하세요"
+                                className="changepw-pw2"
+                                value={formData.confirmNewPassword}
+                                onChange={handleChange}
+                                required
+                            />
+                    <div>
+                        <p>{passwordMatchMessage}</p> {/* 비밀번호 일치 여부 메시지 출력 */}
+                    </div>
+                    <button type="submit"
+                        className="changepw_btn"
+                        disabled={passwordMatchMessage !== '비밀번호가 일치합니다.'
+                        }>
+                        변경 완료
+                    </button>
+                </div >
             </form>
         </div>
+
     );
 };
 
