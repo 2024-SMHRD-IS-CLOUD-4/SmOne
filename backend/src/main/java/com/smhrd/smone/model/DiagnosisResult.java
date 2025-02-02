@@ -30,7 +30,7 @@ public class DiagnosisResult {
 	
 	// 외사 (사용자) ID
 	@Column(name="DOCTOR_ID", length=100)
-	private String dotcorId;
+	private String doctorId;
 	
 	@Column(name="HOS_IDX")
 	private Integer hosIdx;

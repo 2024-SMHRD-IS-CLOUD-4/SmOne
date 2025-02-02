@@ -1,5 +1,7 @@
 package com.smhrd.smone.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,7 +33,7 @@ public class HospitalInfo {
 
     @Column(name="REGION", length=100)
     private String region;
-	
+    
     @Column(name="LAT")
     private Double lat; // 병원 위도
     

@@ -49,9 +49,11 @@ public class Patients {
     @Column(name = "CREATED_AT", updatable = false)
     private Timestamp createdAt; 
     
+    @JsonProperty("pLat")
     @Column(name="P_LAT")
     private Double pLat;
-
+    
+    @JsonProperty("pLng")
     @Column(name="P_LNG")
     private Double pLng;
 }
