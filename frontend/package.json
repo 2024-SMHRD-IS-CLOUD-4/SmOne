@@ -9,13 +9,16 @@
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
+    "cssnano": "5.1.15",
     "ionicons": "^7.4.0",
+    "postcss": "8.4.12",
     "react": "^19.0.0",
     "react-daum-postcode": "^3.2.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.1",
     "react-scripts": "5.0.1",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^4.2.4",
+    "webpack": "^5.97.1"
   },
   "scripts": {
     "start": "react-scripts start",
