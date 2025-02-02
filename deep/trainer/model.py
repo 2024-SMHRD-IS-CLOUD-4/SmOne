@@ -50,13 +50,12 @@ class Model(nn.Module):
                                                              activation_layer=None),
                                         torch.nn.AdaptiveAvgPool2d((1, 1)))
     
-    def forward(self, x:torch.tensor):
+    def forward(self, x:torch.tensor) -> list[torch.tensor]:
         x = self.extractor(x)
         x = self.upsampler(x)
         x = self.predictor(x)
         x = x.view(-1, 4)
-        return {'logits': x,
-                'probs': torch.sigmoid(x)}
+        return x, torch.sigmoid(x) # return logits and probabilities
     
     def prediction(self, x:torch.tensor):
         return self(x)['probs']
@@ -74,15 +73,15 @@ def convert_to_onnx(model, save_path='model.onnx', input_shape=(1, 1, 384, 384))
         opset_version=17,          
         do_constant_folding=True,  
         input_names=['input'],     
-        output_names=['output'],   
+        output_names=['logits', 'probs'],   # 출력 이름 수정
         dynamic_axes={             
             'input': {0: 'batch_size'},
-            'output': {0: 'batch_size'}
+            'logits': {0: 'batch_size'},    # logits에 대한 dynamic axes 추가
+            'probs': {0: 'batch_size'}      # probs에 대한 dynamic axes 추가
         }
     )
     
     print(f"Model has been converted to ONNX and saved at {save_path}")
-
 
 
         
@@ -91,7 +90,6 @@ if __name__ == '__main__':
     x = torch.randn((1, 1, 384, 384))
     output = model(x)
     
-    for key, val in output.items():
-        print(key, val.shape)
-
-    convert_to_onnx(model, save_path='model.onnx')
+    for output_tensor in output:
+        print(output_tensor.shape)
+    convert_to_onnx(model, save_path='../model.onnx')
