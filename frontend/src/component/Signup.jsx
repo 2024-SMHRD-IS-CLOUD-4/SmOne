@@ -156,7 +156,7 @@ function Signup() {
 
   return (
     <div className="signup-container">
-      <h1 className="signup-title">JOIN</h1>
+      <h1 className="signup-title">회원가입</h1>
 
       <form className="signup-form" onSubmit={handleSubmit}>
 
@@ -237,7 +237,7 @@ function Signup() {
             type="text"
             name="emailDomain"
             className="email-domain-part"
-            placeholder="도메인"
+            placeholder="(예 : gmail.com)"
             value={formData.emailDomain}
             onChange={handleChange}
             style={{ flex: 1 }}

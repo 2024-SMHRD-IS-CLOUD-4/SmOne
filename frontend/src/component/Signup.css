@@ -29,13 +29,6 @@
     font-size: 14px;
     margin-bottom: 5px;
   }
-  .signup-form input {
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    box-sizing: border-box;
-  } */
 
 .flex-row {
   display: flex;
@@ -190,6 +183,7 @@ margin-top: 20px;
   box-sizing: border-box;
   background-color: #fff;
   margin-top: 5px;
+  text-align: center;
 }
 
 .my-duplicate-group {
@@ -211,7 +205,7 @@ margin-top: 20px;
   border-radius: 4px;
   font-size: 14px;
   box-sizing: border-box;
-  width: 345px;
+  width: 398px;
   height: 44px;
 }
 

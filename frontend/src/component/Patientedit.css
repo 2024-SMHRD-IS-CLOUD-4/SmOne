@@ -1,5 +1,4 @@
-/* 전체 컨테이너 */
-
+/* 전체 컨테이너
 .app-container {
   position: relative;
   width: 100%;
@@ -8,8 +7,7 @@
   padding: 0;
   overflow: hidden;
 }
-
-
+ */
 .container {
   font-family: Arial, sans-serif;
   display: flex;
@@ -17,6 +15,25 @@
   height: 100vh;
   width: 100%;
 }
+
+.back-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 10px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.back-btn:hover {
+  background-color: #666;
+}
+
+
 .video-background {
   position: fixed; /* 화면에 고정 */
   top: 0;
@@ -93,10 +110,11 @@
 /* 폼 래퍼 */
 .form-wrapper {
   /* background: rgba(255, 255, 255, 0.8); */
-  padding: 20px;
+  /* padding: 10px; */
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 1;
+  margin-left: 10px;
   /* width: 400px; */
 }
 
@@ -134,10 +152,11 @@
 
 .patient-title1 {
   align-items: center;
-  font-size: 30px;
-  margin-bottom: 20px;
+  font-size: 32px;
+  margin-bottom: 28px;
   text-align: center;
   color: white;
+  margin-top: 10px;
 }
 
 .name-and-gender-group {
@@ -184,7 +203,7 @@
 .patient-name {
   width: 288px;
   /* 이름 입력 칸 넓이 */
-  height: 20px;
+  height: 24px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -229,15 +248,15 @@
   border: none;
   cursor: pointer;
   border-radius: 4px;
-  margin-top: 20px;
+  margin-top: 0px;
 }
 
 .submit-button:hover {
   background-color: #555555;
 }
 
-.address-group {
-  margin-bottom: 15px;
+.address-group1 {
+  margin-bottom: 12px;
   margin-top: 15px;
 }
 
@@ -256,6 +275,7 @@
 
 .postcode-field {
   width: 300px;
+  height: 24px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -267,6 +287,7 @@
 
 .address-field {
   width: 430px;
+  height: 24px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -286,7 +307,7 @@
 
 .phone-number-box {
   width: 117px;
-  height: 20px;
+  height: 24px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -309,7 +330,7 @@
 .resident-number-box {
   width: 195px;
   /* 필드 너비 */
-  height: 20px;
+  height: 24px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;

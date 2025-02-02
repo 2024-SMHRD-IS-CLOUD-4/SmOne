@@ -158,7 +158,7 @@ function Mypage() {
     <>
       <Menu /> {/* Menu 추가 */}
     <div className="mypage-container">
-      <button className="back-btn" onClick={() => navigate(-1)}>X</button>
+    <button className="back-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
       <h2 className="mypage-title">마이페이지</h2>
 
       <form className="mypage-form">
