@@ -19,16 +19,16 @@ public class PatientsService {
 	private PatientsRepository patientsRepository;
 
 	// 환자 등록
-	public void registerPatient(Patients patient) {
-		patientsRepository.save(patient);
-	}
+    public void registerPatient(Patients patient) {
+        patientsRepository.save(patient);
+    }
 
-	// 전체 환자 목록 조회
+    // 전체 환자 목록 조회
     public List<Patients> getAllPatients() {
         return patientsRepository.findAll();
     }
 
-    // 검색 및 페이지네이션
+    // 검색 + 페이지네이션
     public Page<Patients> searchPatients(String name, String birth, PageRequest pageRequest) {
         if (name != null && birth != null) {
             return patientsRepository.findBypNameContainingAndBirthStartingWith(name, birth, pageRequest);
@@ -39,9 +39,9 @@ public class PatientsService {
         }
         return patientsRepository.findAll(pageRequest);
     }
-    
+
     // 환자 정보 수정
-    public Patients updatePatient(Integer pIdx, Patients newData) {
+    public void updatePatient(Integer pIdx, Patients newData) {
         Patients existing = patientsRepository.findById(pIdx.longValue())
             .orElseThrow(() -> new NoSuchElementException("해당 환자를 찾을 수 없습니다."));
 
@@ -52,17 +52,17 @@ public class PatientsService {
         existing.setTel(newData.getTel());
         existing.setPAdd(newData.getPAdd());
 
-        return patientsRepository.save(existing);
+        // [중요] pLat, pLng까지 반영 => 주소 변경 시 좌표도 수정
+        existing.setPLat(newData.getPLat());
+        existing.setPLng(newData.getPLng());
+
+        patientsRepository.save(existing);
     }
 
     // 환자 정보 삭제
     public void deletePatient(Integer pIdx) {
-    	// DB에서 해당 환자 조회
         Patients existing = patientsRepository.findById(pIdx.longValue())
             .orElseThrow(() -> new NoSuchElementException("해당 환자를 찾을 수 없습니다."));
-        
-        // 삭제
         patientsRepository.delete(existing);
     }
-
-    }
+}

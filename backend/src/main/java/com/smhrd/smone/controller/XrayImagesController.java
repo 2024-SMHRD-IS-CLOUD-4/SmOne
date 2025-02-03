@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -75,4 +77,18 @@ public class XrayImagesController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-}
+	
+	// X-ray 결과 업데이트 => RESULT, PROCESSED_AT
+	 @PutMapping("/updateResult")
+	    public ResponseEntity<?> updateXrayResult(@RequestBody XrayImages req) {
+	        try {
+	            // req.imgIdx, req.result 필요
+	            xrayService.updateXrayResult(req.getImgIdx(), req.getResult());
+	            return ResponseEntity.ok("X-ray result updated");
+	        } catch(Exception e) {
+	            e.printStackTrace();
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                    .body("업데이트 실패: " + e.getMessage());
+	        }
+	    }
+	}
