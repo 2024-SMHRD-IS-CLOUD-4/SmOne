@@ -209,7 +209,7 @@ function SecondVisitUI({
           gap: "8px",
           flexWrap: "wrap",
           maxWidth: "550px",
-          marginBottom: "20px"
+          marginBottom: "35px"
         }}>
           {oldImages.length === 0 && <p>(none)</p>}
           {oldImages.map((item, i) => (

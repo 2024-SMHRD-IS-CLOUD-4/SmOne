@@ -4,7 +4,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import DateList from "./Xray/DateList";
-import Menu from "./Menu"; // Menu 추가
 import "./Result.css";
 
 function Result() {
@@ -291,7 +290,6 @@ function Result() {
   return (
     <div className="result-container">
       {/* 상단 바 */}
-  <Menu />
       <div className="result-topbar">
         <h2>진단 결과 페이지</h2>
         <div>
