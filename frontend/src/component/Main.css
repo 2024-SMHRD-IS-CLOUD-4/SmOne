@@ -216,6 +216,7 @@
   background: transparent;
   pointer-events: none; /* hover 효과 차단 */
 }
+
 /* 페이지네이션을 항상 리스트 하단에 고정 */
 .pagination-container {
   position: absolute;

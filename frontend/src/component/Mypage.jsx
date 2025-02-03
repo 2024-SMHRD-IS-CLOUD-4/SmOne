@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { KakaoMapContext } from "../App";
 import axios from "axios";
 import "./Mypage.css";
+import Menu from "./Menu"; // Menu.jsx 추가
 
 function Mypage() {
   const navigate = useNavigate();
@@ -154,9 +155,10 @@ function Mypage() {
   };
 
   return (
+    <>
+      <Menu /> {/* Menu 추가 */}
     <div className="mypage-container">
-      {/* 🔙 뒤로가기 버튼 추가 */}
-      <button className="back-btn" onClick={() => navigate(-1)}>X</button>
+    <button className="back-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
       <h2 className="mypage-title">마이페이지</h2>
 
       <form className="mypage-form">
@@ -324,6 +326,7 @@ function Mypage() {
         </div>
       )}
     </div>
+      </>
   );
 }
 

@@ -237,7 +237,7 @@ function Signup() {
             type="text"
             name="emailDomain"
             className="email-domain-part"
-            placeholder="도메인"
+            placeholder="(예 : gmail.com)"
             value={formData.emailDomain}
             onChange={handleChange}
             style={{ flex: 1 }}

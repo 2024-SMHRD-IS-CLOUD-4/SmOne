@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.AllArgsConstructor;
 
@@ -46,4 +48,12 @@ public class Patients {
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
     private Timestamp createdAt; 
+    
+    @JsonProperty("pLat")
+    @Column(name="P_LAT")
+    private Double pLat;
+    
+    @JsonProperty("pLng")
+    @Column(name="P_LNG")
+    private Double pLng;
 }

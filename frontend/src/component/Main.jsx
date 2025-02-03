@@ -79,7 +79,7 @@ function Main() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSearchVisible]);
-
+  
   // 검색
   const handleSearchSubmit = (e) => {
     e.preventDefault();
