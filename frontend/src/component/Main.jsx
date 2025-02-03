@@ -7,7 +7,6 @@ import Menu from "./Menu";
 import DateList from "./Xray/DateList";
 import FirstVisitUI from "./Xray/FirstVisitUI";
 import SecondVisitUI from "./Xray/SecondVisitUI";
-import teamLogo from "./png/teamlogo.png";
 import stethoscopeIcon from "./png/stethoscope.png";
 import magnifyingGlassIcon from "./png/magnifying-glass.png";
 
@@ -22,11 +21,10 @@ function Main() {
   const newFileInputRef = useRef(null);
   const patientsPerPage = 5;
 
+  const userId = sessionStorage.getItem("userId")
+
   // 선택된 환자
   const [selectedPatient, setSelectedPatient] = useState(null);
-
-  // 사이드 메뉴 열림 여부
-  const [sideOpen, setSideOpen] = useState(false);
 
   // 캐시 (pIdx별로 상태 저장)
   const [patientCache, setPatientCache] = useState({});
@@ -53,8 +51,13 @@ function Main() {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const toggleSearchBar = () => {
+    if (isSearchVisible) {
+      setNameSearch("");
+      setBirthSearch("");
+    }
     setIsSearchVisible(!isSearchVisible);
   };
+
 
 
   // 환자 목록 불러오기
@@ -82,8 +85,8 @@ function Main() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isSearchVisible]);
-  
+  },);
+
   // 검색
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -103,12 +106,42 @@ function Main() {
   const indexOfFirst = indexOfLast - patientsPerPage;
   const currentPatients = filtered.slice(indexOfFirst, indexOfLast);
 
-  const goFirst = () => setCurrentPage(1);
-  const goLast = () => setCurrentPage(totalPages);
-  const goPrev = () => setCurrentPage(p => Math.max(p - 1, 1));
-  const goNext = () => setCurrentPage(p => Math.min(p + 1, totalPages));
-  const handlePageChange = (p) => setCurrentPage(p);
+  const goFirst = () => {
+    setCurrentPage(1);
+    setPageGroup(1);
+  };
 
+  const goLast = () => {
+    setCurrentPage(totalPages);
+    setPageGroup(totalGroups);
+  };
+
+  const goPrev = () => {
+    setCurrentPage((prev) => {
+      const prevPage = Math.max(prev - 1, 1);
+      if (prevPage === 5 || prevPage === 10) {
+        setPageGroup((prevGroup) => Math.max(prevGroup - 1, 1));
+      }
+      return prevPage;
+    });
+  };
+
+  const goNext = () => {
+    setCurrentPage((prev) => {
+      const nextPage = Math.min(prev + 1, totalPages);
+      if (nextPage === 6 || nextPage === 11) {
+        setPageGroup((prevGroup) => prevGroup + 1);
+      }
+      return nextPage;
+    });
+  };
+  const handlePageChange = (p) => setCurrentPage(p);
+  // 페이지네이션에서 현재 보여줄 첫 번째 페이지와 마지막 페이지 계산
+  const [pageGroup, setPageGroup] = useState(1);
+  const pagesPerGroup = 5;
+  const totalGroups = Math.ceil(totalPages / pagesPerGroup);
+  const startPage = (pageGroup - 1) * pagesPerGroup + 1;
+  const endPage = Math.min(startPage + pagesPerGroup - 1, totalPages);
   // 캐시 저장
   function storeCurrentPatientStateToCache(pIdx) {
     if (!pIdx) return;
@@ -385,26 +418,30 @@ function Main() {
     }
   }
 
-  // 환자 수정/삭제
-  function handleEditPatient(thePatient) {
+  // Edit / Delete
+  const handleEditPatient = (thePatient) => {
     navigate(`/patients/edit/${thePatient.pIdx}`);
-  }
-  async function handleDeletePatient(thePatient) {
-    const ok = window.confirm(`정말 [${thePatient.pName}] 환자를 삭제?`);
-    if (!ok) return;
+  };
+
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeletePatient = async (thePatient) => {
+    if (isDeleting) return; // ✅ 중복 실행 방지
+    setIsDeleting(true);
+
+    const c = window.confirm(`[${thePatient.pName}] 환자를 삭제하시겠습니까?`);
+    if (!c) return;
     try {
-      await axios.delete(`${process.env.REACT_APP_DB_URL}patients/${thePatient.pIdx}`);
-      const newList = await axios.get(`${process.env.REACT_APP_DB_URL}/patients`);
-      const sorted = [...(await newList).data].sort((a, b) => b.pIdx - a.pIdx);
-      setPatients(sorted);
-      setFiltered(sorted);
+      await axios.delete(`${process.env.REACT_APP_DB_URL}/patients/${thePatient.pIdx}`);
+      alert("삭제되었습니다.");
+      setPatients(prev => prev.filter(p => p.pIdx !== thePatient.pIdx));
+      setFiltered(prev => prev.filter(p => p.pIdx !== thePatient.pIdx));
       setSelectedPatient(null);
-      window.alert(`환자 [${thePatient.pName}] 삭제 완료`);
-    } catch (e) {
-      console.error(e);
-      window.alert("삭제 중 오류 발생");
+    } catch (err) {
+      console.error("삭제 실패:", err);
+      alert("삭제 중 오류가 발생했습니다.");
     }
-  }
+  };
 
   // earliestDate / latestDate
   let earliestDate = null;
@@ -425,12 +462,14 @@ function Main() {
       <Menu /> {/* Menu.jsx를 왼쪽에 배치 */}
       {/* 상단 바 */}
       <div className="top-bar" ref={searchRef}>
-        {/* 돋보기 버튼 */}
+        {/* 돋보기 버튼 및 검색하기 텍스트 */}
         {!isSearchVisible && (
           <button className="search-toggle-button" onClick={toggleSearchBar}>
             <img src={magnifyingGlassIcon} alt="검색" className="search-icon" />
+            <span className="search-text">환자 검색</span>
           </button>
         )}
+
         {/* 검색 바 (isSearchVisible이 true일 때만 표시) */}
         {isSearchVisible && (
           <form className="search-form" onSubmit={handleSearchSubmit}>
@@ -451,7 +490,9 @@ function Main() {
             </button>
           </form>
         )}
-
+        <div style={{ marginLeft: "20px", color: "#fff", fontWeight: "bold" }}>
+          {userId}님 환영합니다.
+        </div>
         {/* 진단하기 버튼 */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
           <button className="diagnose-top-btn" onClick={handleDiagnose} disabled={newImages.length > 0 && !selectedNewImage}>
@@ -471,52 +512,95 @@ function Main() {
         {/* 왼쪽 패널: 환자 목록, 검색결과 */}
         <div className="left-panel">
 
-          <ul className="patient-list panel-block">
-            <h2 style={{ marginTop: 5, marginLeft: 10 }}>환자 정보</h2>
+          <div className="patient-list-container">
+            <h2 style={{ marginTop: 5, marginLeft: 10, marginBottom: 5 }}>환자 리스트</h2>
             {currentPatients.length > 0 ? (
-              currentPatients.map((pt, idx) => (
-                <li key={pt.pIdx || idx} onClick={() => handlePatientClick(pt)}>
-                  {pt.pName} - {pt.birth.slice(0, 6)}-****** ({pt.tel})
-                </li>
-              ))
-            ) : (
-              <li>등록된 환자 정보가 없습니다.</li>
-            )}
+              <>
+                <table className="patient-table">
+                  <thead>
+                    <tr><th>이름</th><th>생년월일</th><th>전화번호</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentPatients.map((pt, idx) => (
+                      <React.Fragment key={pt.pIdx || idx}>
+                        <tr onClick={() => handlePatientClick(pt)}>
+                          <td>{pt.pName}</td>
+                          <td>{pt.birth.slice(0, 6)}-*******</td>
+                          <td>{pt.tel}</td>
+                        </tr>
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
 
-            {/* Pagination을 patient-list 안으로 이동 */}
-            <li className="pagination-container">
-              <div className="pagination">
-                <button onClick={goFirst} disabled={currentPage === 1}>{"<<"}</button>
-                <button onClick={goPrev} disabled={currentPage === 1}>{"<"}</button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
-                  <button
-                    key={num}
-                    onClick={() => handlePageChange(num)}
-                    className={currentPage === num ? "active" : ""}
-                  >
-                    {num}
-                  </button>
-                ))}
-                <button onClick={goNext} disabled={currentPage === totalPages}>{">"}</button>
-                <button onClick={goLast} disabled={currentPage === totalPages}>{">>"}</button>
-              </div>
-            </li>
-          </ul>
+                {/* 페이지네이션 */}
+                <div className="pagination-container">
+                  {/* 환자 정보 페이지네이션 */}
+                  <div className="patient-pagination">
+                    <button onClick={goFirst} disabled={pageGroup === 1}>{"<<"}</button>
+                    <button onClick={goPrev} disabled={currentPage === 1}>{"<"}</button>
+
+                    {Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i).map(num => (
+                      <button
+                        key={num}
+                        onClick={() => handlePageChange(num)}
+                        className={currentPage === num ? "active" : ""}
+                      >
+                        {num}
+                      </button>
+                    ))}
+
+                    <button onClick={goNext} disabled={currentPage === totalPages}>{">"}</button>
+                    <button onClick={goLast} disabled={pageGroup === totalGroups}>{">>"}</button>
+                  </div>
+
+                </div>
+              </>
+            ) : (
+              <p>등록된 환자 정보가 없습니다.</p>
+            )}
+          </div>
 
 
           {selectedPatient && (
             <div className="patient-detail">
-              <h2 style={{ marginTop: 0 }}>환자 상세 정보</h2>
-              <p>환자 번호 : {selectedPatient.pIdx}</p>
-              <p>환자 이름 : {selectedPatient.pName}</p>
-              <p>생년월일 : {selectedPatient.birth}</p>
-              <p>연락처 : {selectedPatient.tel}</p>
-              <p>주소 : {selectedPatient.pAdd}</p>
+              <h2 style={{ marginLeft: 10 }}>환자 상세 정보</h2>
+              <table className="patient-detail-table">
+                <tbody>
+                  <tr>
+                    <th>환자 번호</th>
+                    <td>{selectedPatient.pIdx}</td>
+                  </tr>
+                  <tr>
+                    <th>환자 이름</th>
+                    <td>{selectedPatient.pName}</td>
+                  </tr>
+                  <tr>
+                    <th>생년월일</th>
+                    <td>{selectedPatient.birth}</td>
+                  </tr>
+                  <tr>
+                    <th>연락처</th>
+                    <td>{selectedPatient.tel}</td>
+                  </tr>
+                  <tr>
+                    <th>주소</th>
+                    <td>
+                      <div className="patient-address">{selectedPatient.pAdd}</div>
+                    </td>
+                  </tr>
 
-              <button className="btn" onClick={() => handleEditPatient(selectedPatient)} style={{ fontWeight: "bold" }} >수정</button>
-              <button className="btn" onClick={() => handleDeletePatient(selectedPatient)} style={{ fontWeight: "bold" }} >삭제</button>
+                </tbody>
+              </table>
+
+              <div className="patient-detail-actions">
+                <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>수정</button>
+                <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>삭제</button>
+              </div>
             </div>
           )}
+
 
           {/* 날짜 리스트 */}
           <div className="date-list-container panel-block" style={{ marginTop: "10px" }}>
@@ -612,7 +696,7 @@ function Main() {
         style={{ display: "none" }}
         onChange={handleFileChange}
       />
-    </div>
+    </div >
   );
 }
 

@@ -35,7 +35,7 @@ function SecondVisitUI({
 
   const handleOldThumbClick = (item) => {
     setSelectedOldImage(item);
-    setOldBigPreview(`http://localhost:8090/SmOne/images/${item.imgPath}`);
+    setOldBigPreview(`${process.env.REACT_APP_DB_URL}/images/${item.imgPath}`);
     setOldBaseScale(1);
     setOldZoom(1);
     setOldOffsetX(0);
@@ -50,7 +50,6 @@ function SecondVisitUI({
     setOldBaseScale(Math.min(scaleW, scaleH));
   };
   const handleWheelOld = (e) => {
-    e.preventDefault();
     let delta = e.deltaY < 0 ? 0.1 : -0.1;
     let newZ = oldZoom + delta;
     if (newZ < 0.5) newZ = 0.5;
@@ -124,7 +123,6 @@ function SecondVisitUI({
     setNewBaseScale(Math.min(scaleW, scaleH));
   };
   const handleWheelNew = (e) => {
-    e.preventDefault();
     let delta = e.deltaY < 0 ? 0.1 : -0.1;
     let newZ = newZoom + delta;
     if (newZ < 0.5) newZ = 0.5;
@@ -226,7 +224,7 @@ function SecondVisitUI({
               onClick={() => handleOldThumbClick(item)}
             >
               <img
-                src={`http://localhost:8090/SmOne/images/${item.imgPath}`}
+                src={`${process.env.REACT_APP_DB_URL}/SmOne/images/${item.imgPath}`}
                 alt="old-thumb"
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />

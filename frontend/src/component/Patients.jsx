@@ -6,6 +6,7 @@ import Menu from "./Menu"; // Menu 추가
 
 function Patients() {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     pName: "",
     gender: "",
@@ -48,6 +49,12 @@ function Patients() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 중복 제출 방지
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+
     const updatedFormData = {
       pName: formData.pName,
       gender: formData.gender,
@@ -80,7 +87,7 @@ function Patients() {
     <form onSubmit={handleSubmit}>
       <Menu />  {/* ✅ 네비게이션 메뉴 추가 */}
       <div className="Patient-container">
-      <button className="back-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
+        <button className="back-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
         <div className="form-wrapper">
           <h1 className="patient-title">환자 등록</h1>
 

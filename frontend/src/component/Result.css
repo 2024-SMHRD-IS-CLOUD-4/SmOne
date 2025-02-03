@@ -1,105 +1,149 @@
 /* src/component/Result.css */
 .result-container {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .result-topbar {
-    height: 60px;
-    background: rgba(0,0,0,0.5);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    box-sizing: border-box;
-  }
-  
-  .result-main {
-    flex: 1;
-    display: flex;
-    background: rgba(0,0,0,0.1);
-  }
-  
-  /* 왼쪽 패널 */
-  .result-left-panel {
-    width: 300px;
-    background: rgba(255,255,255,0.1);
-    padding: 20px;
-    overflow-y: auto;
-    box-sizing: border-box;
-  }
-  .result-patient-detail {
-    background: rgba(0,0,0,0.5);
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    color: #fff;
-  }
-  .result-date-list {
-    background: rgba(0,0,0,0.5);
-    padding: 10px;
-    border-radius: 6px;
-    color: #fff;
-  }
-  
-  /* 오른쪽 패널 */
-  .result-right-panel {
-    flex: 1;
-    display: flex; 
-    gap: 20px;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  
-  /* 오른쪽 패널 내부의 왼쪽= X-ray, 오른쪽= 진단결과 */
-  .result-xray-area {
-    flex: 2;
-    border: 1px dashed #999;
-    padding: 10px;
-  }
-  .big-preview-box {
-    width: 100%;
-    height: 400px;
-    border: 2px dashed #aaa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-  .big-preview-img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-  .thumb-list {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-  }
-  .thumb-item {
-    width: 80px;
-    height: 80px;
-    border: 2px dashed #666;
-    cursor: pointer;
-  }
-  .thumb-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .result-diagnosis-area {
-    flex: 1;
-    background: rgba(0,0,0,0.5);
-    padding: 10px;
-    border-radius: 6px;
-    color: #fff;
-    overflow-y: auto;
-  }
-  
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+/* 로고 버튼 스타일 */
+/* 로고 버튼 스타일 */
+.team-logo-button {
+background: none;
+border: none;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 5px;
+margin-top: 10px;
+margin-left: 45px;
+}
+
+.team-logo-img {
+width: 100px; /* 로고 크기 조정 */
+height: auto;
+}
+
+.result-topbar {
+  height: 60px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.result-main {
+  flex: 1;
+  display: flex;
+  margin-left: 50px;
+}
+
+/* 왼쪽 패널 */
+.result-left-panel {
+  width: 350px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 10px;
+  color: #fff;
+  height: 807px;
+  border-radius: 8px;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+.result-patient-detail {
+  background: rgba(0,0,0,0.5);
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  color: #fff;
+}
+.result-patient-detail p {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.result-date-list {
+  background: rgba(0,0,0,0.5);
+  padding: 10px;
+  border-radius: 6px;
+  color: #fff;
+}
+
+/* 오른쪽 패널 */
+.result-right-panel {
+  flex: 1;
+  display: flex; 
+  gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-right: 58px;
+}
+
+/* 오른쪽 패널 내부의 왼쪽= X-ray, 오른쪽= 진단결과 */
+.result-xray-area {
+  flex: 2 1;
+  width: 96%;
+  height: 829px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 10px;
+  box-sizing: border-box;
+  color: #fff;
+}
+.big-preview-box {
+  width: 100%;
+  height: 600px;
+  border: 2px dashed #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.big-preview-img {
+  width: 650px;
+  height: 600px;
+  object-fit: contain;
+}
+.thumb-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.thumb-item {
+  width: 80px;
+  height: 80px;
+  border: 2px dashed #666;
+  cursor: pointer;
+}
+.thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.result-diagnosis-area {
+  flex: 0.8 1;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 10px;
+  border-radius: 6px;
+  color: #fff;
+  overflow-y: auto;
+  height: 807px;
+}
+
+.result-btn1, .result-btn2 {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #333;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}

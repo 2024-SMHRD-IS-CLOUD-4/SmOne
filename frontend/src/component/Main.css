@@ -1,4 +1,6 @@
-/* src/component/Main.css */
+html, body {
+  overflow: hidden;
+}
 
 /* 전체 레이아웃 */
 .main-container {
@@ -94,7 +96,7 @@
   display: flex;
   align-items: center;
   gap: 8px; /* 아이콘과 텍스트 간격 */
-  padding: 14px 20px;
+  padding: 10px 15px;
   border: none;
   border-radius: 6px;
   background: #333;
@@ -177,7 +179,7 @@
 .panel-block {
   background: rgba(0,0,0,0.6);
   border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 10px;
   margin-bottom: 10px;
 }
@@ -186,15 +188,19 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  min-height: 250px;
+  min-height: 280px; /* 최소 높이 설정 */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  position: relative; /* pagination을 하단에 고정하기 위해 상대 위치 설정 */
+  padding-bottom: 50px; 
 }
 
-/* 환자 목록 항목에만 hover 효과 적용 */
+/* 개별 환자 리스트 항목 */
 .patient-list li {
-  flex-grow: 1;
+  height: 30px; /* 높이 고정 */
+  display: flex;
+  align-items: center; /* 텍스트 수직 중앙 정렬 */
   padding: 8px;
   cursor: pointer;
   border-radius: 6px;
@@ -213,15 +219,25 @@
   pointer-events: none; /* hover 효과 차단 */
 }
 
-/* pagination-container 내부의 버튼은 hover 효과 없이 클릭 가능하도록 유지 */
-.pagination {
+/* 페이지네이션 컨테이너 스타일 */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* 페이지네이션 버튼 공통 스타일 */
+/* 환자 정보 페이지네이션 */
+.patient-pagination {
   display: flex;
   justify-content: center;
   border-radius: 6px;
   overflow: hidden;
 }
 
-.pagination button {
+.patient-pagination button {
   padding: 8px 12px;
   border: none;
   background: #fff;
@@ -229,48 +245,32 @@
   font-size: 14px;
   font-weight: bold;
   transition: background 0.2s;
-  pointer-events: auto; /* 클릭 가능하도록 유지 */
 }
 
-/* pagination 버튼 hover 효과 유지 (단, 배경과 무관) */
-.pagination button:hover {
+.patient-pagination button:hover {
   background: #bbb;
 }
 
-/* 비활성화된 버튼 스타일 */
-.pagination button:disabled {
+.patient-pagination button:disabled {
   background: #eee;
 }
 
-/* 현재 페이지 버튼 강조 */
-.pagination button.active {
-  background: #333;
-  color: white;
-}
-
 /* 첫 번째 버튼 (왼쪽 끝) */
-.pagination button:first-child {
+.patient-pagination button:first-child {
   border-radius: 6px 0 0 6px;
 }
 
 /* 마지막 버튼 (오른쪽 끝) */
-.pagination button:last-child {
+.patient-pagination button:last-child {
   border-radius: 0 6px 6px 0;
 }
 
 /* 현재 페이지 버튼 강조 */
-.pagination button.active {
+.patient-pagination button.active {
   background: #333;
   color: white;
 }
-.patient-detail {
-  margin-top: 10px;
-  background: rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 8px;
-  padding: 10px;
-  color: #fff;
-}
+
 /* 수정 및 삭제 버튼 스타일 */
 .btn {
   padding: 8px 12px;
@@ -338,7 +338,23 @@
   padding: 20px;
   box-sizing: border-box;
   width: 650px;
-  height: 670px;
+  height: 730px;
+  margin-top: 14px;
+  /* 요소 내부의 컨텐츠를 가운데 정렬 */
+  display: flex;
+  flex-direction: column; /* 세로 정렬 */
+  justify-content: center; /* 수직 중앙 정렬 */
+  align-items: center; /* 수평 중앙 정렬 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+}
+.xray-subpanel2 {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  padding: 20px;
+  box-sizing: border-box;
+  width: 650px;
+  height: 730px;
 
   /* 요소 내부의 컨텐츠를 가운데 정렬 */
   display: flex;
@@ -349,8 +365,7 @@
 }
 
 .new-patient-info {
-  color: #bbb;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 /* 패널 내부 하단 고정용 박스 */
@@ -375,18 +390,20 @@
 }
 /* 돋보기 버튼 (초기 상태) */
 .search-toggle-button {
-  padding: 5px;
-  border: none;
-  border-radius: 6px;
-  background: #333; /* 배경색 변경 */
-  cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 40px; /* 너비 변경 */
-  height: 40px; /* 높이 변경 */
+  gap: 10px; /* 아이콘과 텍스트 간격 */
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #333;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  width: auto;
   transition: background 0.3s ease-in-out;
   margin-left: 30px;
+  margin-top: 10px;
 }
 
 /* 돋보기 아이콘 크기 조정 */
@@ -394,8 +411,133 @@
   width: 20x; /* 아이콘 크기 조정 */
   height: 20px;
 }
-
+.search-text {
+  font-size: 14px;
+  color: white;
+}
 /* 버튼 호버 효과 */
 .search-toggle-button:hover {
   background: #444;
+}
+.patient-table {
+  width: 100%;
+  border-collapse: separate; /* 기본적으로 border-radius가 적용되지 않는 문제 해결 */
+  border-spacing: 0; /* border-collapse: separate를 사용할 때 간격 제거 */
+  border-radius: 6px; /* 전체 테이블에 border-radius 적용 */
+  overflow: hidden; /* border-radius가 적용된 부분을 넘치는 요소 숨김 */
+}
+.patient-table td,
+.patient-table th {
+  background-color: rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 10px;
+  text-align: center;
+  color: #fff;
+  white-space: nowrap;  /* 텍스트 줄바꿈 방지 */
+  overflow: hidden;      /* 넘칠 경우 숨김 */
+  text-overflow: ellipsis; /* 길면 ...으로 표시 */
+  max-width: 120px;  /* 컬럼 크기 제한 (필요 시 조정 가능) */
+}
+
+.patient-table th {
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 10px;
+  text-align: center;
+  color: #fff;
+}
+.patient-table td{
+  background-color: rgba(0,0,0,0.6);
+}
+.patient-table tr {
+  cursor: pointer;
+}
+
+.patient-table tr:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+/* 테이블 헤더 (첫 번째 행) - 좌우 모서리 둥글게 */
+.patient-table thead tr:first-child th:first-child {
+  border-top-left-radius: 6px;
+}
+.patient-table thead tr:first-child th:last-child {
+  border-top-right-radius: 6px;
+}
+
+/* 테이블 마지막 행 - 좌우 하단 모서리 둥글게 */
+.patient-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 6px;
+}
+.patient-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 6px;
+}
+/* 환자 상세 정보 테이블 스타일 */
+.patient-detail-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 10px;
+  
+}
+
+.patient-detail-table th, .patient-detail-table td {
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;  
+}
+.patient-detail-table th {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* 테이블 헤더, 테두리 둥글게 */
+.patient-detail-table thead tr:first-child th:first-child {
+  border-top-left-radius: 6px;
+}
+.patient-detail-table thead tr:first-child th:last-child {
+  border-top-right-radius: 6px;
+}
+.patient-detail-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 6px;
+}
+.patient-detail-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 6px;
+}
+.patient-detail {
+  display: flex;
+  flex-direction: column;
+  position: relative; /* 버튼을 오른쪽에 배치하기 위해 relative 추가 */
+  margin-top: 5px;
+}
+.patient-detail-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+}
+
+.patient-detail-actions .btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+  margin-left: 5px;
+  transition: background 0.3s ease-in-out;
+}
+
+.patient-detail-actions .btn:hover {
+  background-color: #666;
+}
+.patient-address {
+  display: block;  /* 블록 요소로 변경하여 너비 지정 가능 */
+  max-width: 250px; /* 최대 너비 설정 (필요에 따라 조정) */
+  word-break: break-word;  /* 긴 단어도 줄바꿈 */
+  white-space: normal;  /* 줄바꿈 허용 */
+  line-height: 1.4; /* 줄 간격 조정 */
 }
