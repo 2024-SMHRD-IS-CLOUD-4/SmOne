@@ -7,7 +7,6 @@ import Menu from "./Menu";
 import DateList from "./Xray/DateList";
 import FirstVisitUI from "./Xray/FirstVisitUI";
 import SecondVisitUI from "./Xray/SecondVisitUI";
-import teamLogo from "./png/teamlogo.png";
 import stethoscopeIcon from "./png/stethoscope.png";
 import magnifyingGlassIcon from "./png/magnifying-glass.png";
 
@@ -24,9 +23,6 @@ function Main() {
 
   // 선택된 환자
   const [selectedPatient, setSelectedPatient] = useState(null);
-
-  // 사이드 메뉴 열림 여부
-  const [sideOpen, setSideOpen] = useState(false);
 
   // 캐시 (pIdx별로 상태 저장)
   const [patientCache, setPatientCache] = useState({});
@@ -483,7 +479,7 @@ function Main() {
               <li>등록된 환자 정보가 없습니다.</li>
             )}
 
-            {/* Pagination을 patient-list 안으로 이동 */}
+            {/* 페이지네이션을 patient-list 내부 하단에 고정 */}
             <li className="pagination-container">
               <div className="pagination">
                 <button onClick={goFirst} disabled={currentPage === 1}>{"<<"}</button>

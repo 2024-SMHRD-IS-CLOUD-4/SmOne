@@ -186,15 +186,19 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  min-height: 250px;
+  min-height: 280px; /* 최소 높이 설정 */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  position: relative; /* pagination을 하단에 고정하기 위해 상대 위치 설정 */
+  padding-bottom: 50px; 
 }
 
-/* 환자 목록 항목에만 hover 효과 적용 */
+/* 개별 환자 리스트 항목 */
 .patient-list li {
-  flex-grow: 1;
+  height: 30px; /* 높이 고정 */
+  display: flex;
+  align-items: center; /* 텍스트 수직 중앙 정렬 */
   padding: 8px;
   cursor: pointer;
   border-radius: 6px;
@@ -213,6 +217,19 @@
   pointer-events: none; /* hover 효과 차단 */
 }
 
+/* 페이지네이션을 항상 리스트 하단에 고정 */
+.pagination-container {
+  position: absolute;
+  bottom: 10px; /* 하단 여백 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  border-radius: 8px;
+}
 /* pagination-container 내부의 버튼은 hover 효과 없이 클릭 가능하도록 유지 */
 .pagination {
   display: flex;
@@ -338,7 +355,7 @@
   padding: 20px;
   box-sizing: border-box;
   width: 650px;
-  height: 670px;
+  height: 730px;
 
   /* 요소 내부의 컨텐츠를 가운데 정렬 */
   display: flex;

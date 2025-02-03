@@ -1,19 +1,21 @@
-/* 전체 컨테이너
-.app-container {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
- */
-.container {
+.Patient-container {
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100%;
+  justify-content: center;
+  /* Center vertically */
+  /* align-items: center; Center horizontally */
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 2.0);
+  border-radius: 10px;
+  padding: 20px;
+  height: 590px;
+  width: 472px;
+  position: absolute;
+  /* Ensures proper centering */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .back-btn {
@@ -35,18 +37,25 @@
 
 
 .video-background {
-  position: fixed; /* 화면에 고정 */
+  position: fixed;
+  /* 화면에 고정 */
   top: 0;
   left: 0;
-  width: 100%; /* 화면 너비를 채움 */
-  height: 100%; /* 화면 높이를 채움 */
-  object-fit: cover; /* 화면 크기에 맞게 비율 유지하며 채움 */
-  z-index: -1; /* 콘텐츠 뒤로 배치 */
+  width: 100%;
+  /* 화면 너비를 채움 */
+  height: 100%;
+  /* 화면 높이를 채움 */
+  object-fit: cover;
+  /* 화면 크기에 맞게 비율 유지하며 채움 */
+  z-index: -1;
+  /* 콘텐츠 뒤로 배치 */
 }
+
 /* 헤더 */
 .header {
   display: flex;
-  justify-content: space-between; /* 좌우로 분리 */
+  justify-content: space-between;
+  /* 좌우로 분리 */
   align-items: center;
   padding: 10px 20px;
   color: white;
@@ -62,10 +71,13 @@
 
 .logo-container {
   display: flex;
-  align-items: center; /* 로고와 버튼 세로 중앙 정렬 */
-  gap: 10px; /* 로고와 스마트 버튼 간격 */
-  
+  align-items: center;
+  /* 로고와 버튼 세로 중앙 정렬 */
+  gap: 10px;
+  /* 로고와 스마트 버튼 간격 */
+
 }
+
 /* 스마트인재개발원 버튼 */
 .smart-button {
   background: transparent;
@@ -75,14 +87,17 @@
   border-radius: 5px;
   font-size: 20px;
   cursor: pointer;
-  align-self: center; /* Center the button horizontally */
+  align-self: center;
+  /* Center the button horizontally */
 }
+
 .no-results {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.7);
   text-align: center;
   padding: 10px;
 }
+
 .Patientedi-container {
   font-family: Arial, sans-serif;
   display: flex;
@@ -128,14 +143,14 @@
 
 /* 버튼 */
 .submit-button {
-  background-color: #333;
-  color: white;
-  padding: 10px 20px;
+  width: 450px;
+  padding: 15px;
+  background-color: #1b1c1d;
+  color: #fff;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
-  width: 100%;
-  font-size: 16px;
+  border-radius: 4px;
+  margin-top: 20px;
 }
 
 /* .form-wrapper {
@@ -156,7 +171,7 @@
   margin-bottom: 28px;
   text-align: center;
   color: white;
-  margin-top: 10px;
+  margin-top: 3px;
 }
 
 .name-and-gender-group {
@@ -178,7 +193,7 @@
 .gender-group {
   display: flex;
   flex-direction: column;
-  /* 라벨과 버튼 세로 배치 */
+  margin-top: -5px;
 }
 
 .radio-group {
@@ -257,7 +272,7 @@
 
 .address-group1 {
   margin-bottom: 12px;
-  margin-top: 15px;
+  margin-top: 13px;
 }
 
 .address-group label {
@@ -271,6 +286,14 @@
   gap: 20px;
   margin-bottom: 10px;
   width: 452px;
+}
+
+.Edit_add {
+  text-align: left;
+  font-size: 14px;
+  color: #ffffff;
+  margin-bottom: 5px !important;
+  font-weight: bold;
 }
 
 .postcode-field {
@@ -302,7 +325,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  /* 필드와 대시(-) 간격 */
+  margin-bottom: 10px;
 }
 
 .phone-number-box {
