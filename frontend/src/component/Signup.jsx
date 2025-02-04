@@ -123,41 +123,30 @@ function Signup() {
       alert("기관명을 입력해주세요.");
       return;
     }
-    
-    if (window.kakao && window.kakao.maps) {
-      const ps = new window.kakao.maps.services.Places();
-      ps.keywordSearch(formData.centerId, (data, status) => {
-        if (status === window.kakao.maps.services.Status.OK) {
-          setPlaces(data);
-          setShowModal(true);
-        } else {
-          alert("검색 결과가 없습니다.");
-        }
-      });
-    } else {
-      console.error("카카오 지도 API가 로드되지 않았습니다.");
-    }
+    const ps = new window.kakao.maps.services.Places();
+    ps.keywordSearch(formData.centerId, (data, status) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        setPlaces(data);
+        setShowModal(true);
+      } else {
+        alert("검색 결과가 없습니다.");
+      }
+    });
   };
 
+  // 모달 열릴 때 지도 생성
   useEffect(() => {
     if (showModal) {
-      const mapContainer = document.getElementById("map");
-      const mapOption = {
-        center: new window.kakao.maps.LatLng(37.5665, 126.978),
-        level: 3
-      };
-      const map = new window.kakao.maps.Map(mapContainer, mapOption);
-      if (places.length > 0) {
-        const bounds = new window.kakao.maps.LatLngBounds();
-        places.forEach(p => {
-          const markerPosition = new window.kakao.maps.LatLng(p.y, p.x);
-          bounds.extend(markerPosition);
-          new window.kakao.maps.Marker({ map, position: markerPosition });
-        });
-        map.setBounds(bounds);
+      const container = document.getElementById("map");
+      if (container) {
+        const options = {
+          center: new window.kakao.maps.LatLng(37.5665, 126.978),
+          level: 3
+        };
+        new window.kakao.maps.Map(container, options);
       }
     }
-  }, [showModal, places]);
+  }, [showModal]);
 
   // 모달 닫기
   const closeModal = () => {
@@ -167,6 +156,8 @@ function Signup() {
 
   return (
     <div className="signup-container">
+      {/* X 버튼을 컨테이너 안쪽 상단 오른쪽에 배치 */}
+      <button className="signup-close-btn" onClick={() => navigate("/")}>X</button>
       <h1 className="signup-title">회원가입</h1>
 
       <form className="signup-form" onSubmit={handleSubmit}>
@@ -297,7 +288,7 @@ function Signup() {
 
       {/* 모달 */}
       {showModal && (
-        <div className="search-modal00">
+        <div className="search-modal">
           <div className="modal-header">
             <h2>검색 결과</h2>
             <button className="close-btn" onClick={closeModal}>닫기</button>
@@ -306,9 +297,9 @@ function Signup() {
             <div id="map" className="map-area"></div>
             <div className="list-area">
               <ul>
-                {places.map((place, i) => (
+                {places.map((place, index) => (
                   <li
-                    key={i}
+                    key={index}
                     onClick={() => {
                       // 장소 클릭 시 => 기관명, 주소 업데이트
                       setFormData({

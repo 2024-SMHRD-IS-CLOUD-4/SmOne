@@ -8,7 +8,7 @@ function FirstVisitUI({
   handleRemoveNewImage
 }) {
   const previewBoxWidth = 570;
-  const previewBoxHeight = 520;
+  const previewBoxHeight = 530;
 
   const [baseScale, setBaseScale] = useState(1);
   const [zoom, setZoom] = useState(1);
@@ -39,7 +39,6 @@ function FirstVisitUI({
   };
 
   const handleWheel = (e) => {
-    e.preventDefault();
     const delta = e.deltaY < 0 ? 0.1 : -0.1;
     let newZ = zoom + delta;
     if (newZ < 0.5) newZ = 0.5;
@@ -92,8 +91,9 @@ function FirstVisitUI({
           style={{
             width: `${previewBoxWidth}px`,
             height: `${previewBoxHeight}px`,
-            border: "2px dashed #999",
+            border: "1px solid #999",
             marginBottom: "10px",
+            marginTop: "20px",
             overflow: "hidden",
             position: "relative"
           }}
@@ -124,8 +124,7 @@ function FirstVisitUI({
           display: "flex",
           gap: "8px",
           flexWrap: "wrap",
-          maxWidth: "500px",
-          marginBottom: "10px"
+          maxWidth: "500px"
         }}>
           {Array.from({ length: 5 }).map((_, i) => {
             const item = newImages[i];
@@ -153,7 +152,7 @@ function FirstVisitUI({
                     key={`full-${i}`}
                     style={{
                       width: "80px", height: "80px",
-                      border: "2px dashed #999",
+                      border: "1px solid #999",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center"
@@ -170,7 +169,7 @@ function FirstVisitUI({
                   style={{
                     position: "relative",
                     width: "80px", height: "80px",
-                    border: "2px dashed #999",
+                    border: "1px solid #999",
                     cursor: "pointer"
                   }}
                   onClick={() => handleThumbClick(item)}
@@ -208,20 +207,21 @@ function FirstVisitUI({
         <button
           onClick={handleNewPhotoRegister}
           style={{
-            width: "120px",  // 버튼 너비
-            height: "30px", // 버튼 높이
-            padding: "4px", // 내부 패딩 조정
+            width: "120px",
+            height: "30px",
+            padding: "4px",
             border: "none",
             borderRadius: "6px",
-            background: "#333", // 버튼 색상 변경
+            background: "#333",
             color: "white",
-            fontSize: "12px", // 크기에 맞게 글자 크기 조정
+            fontSize: "12px",
             fontWeight: "bold",
             cursor: "pointer",
             transition: "background 0.3s ease-in-out, transform 0.2s",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            marginTop: "10px" // ⬅️ 추가된 부분
           }}
           onMouseEnter={(e) => (e.target.style.background = "#555")}
           onMouseLeave={(e) => (e.target.style.background = "#333")}

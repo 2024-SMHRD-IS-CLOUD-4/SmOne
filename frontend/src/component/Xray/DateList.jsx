@@ -20,7 +20,6 @@ function DateList({
 
   return (
     <div>
-      <h2 style={{ marginTop: 0 }}>진단 날짜</h2>
       {diagDates.length === 0 ? (
         <p>등록된 진단 날짜가 없습니다.</p>
       ) : (
@@ -29,11 +28,7 @@ function DateList({
             {currentDates.map((d, i) => (
               <li
                 key={i}
-                style={{
-                  marginBottom: "5px",
-                  padding: "5px",
-                  cursor: "pointer"
-                }}
+                className="date-item"
                 onClick={() => onDateClick(d)}
               >
                 {d}

@@ -47,7 +47,7 @@ body {
 
 /* 메뉴 확장 시 (hover 또는 expanded) */
 .navigation.expanded ul {
-    top: -100px; /* 확장될 때도 유지 */
+    top: -50px; /* 확장될 때도 유지 */
 }
 
 .navigation ul li {
@@ -158,3 +158,20 @@ body {
     height: 100px;
     top: -20px;
 }
+/* 환영 메시지 스타일 */
+.welcome-message {
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 50px; /* 로고와 간격 조정 */
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  /* 메뉴 확장 시 환영 메시지 보이기 */
+  .navigation.expanded .welcome-message {
+    opacity: 1;
+  }
+  

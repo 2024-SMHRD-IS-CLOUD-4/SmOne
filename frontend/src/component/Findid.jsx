@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Findid.css"; 
+import "./Findid.css";
 
 const Findid = () => {
   const [formData, setFormData] = useState({
@@ -43,7 +43,7 @@ const Findid = () => {
       role: formData.role,
       email: finalEmail
     };
-    
+
     console.log("전송 데이터:", sendData);
 
     try {
@@ -71,9 +71,12 @@ const Findid = () => {
 
   return (
     <div className={`findid-container ${foundUserId ? "expanded" : ""}`}>
+      {/* X 버튼을 컨테이너 안쪽 상단 오른쪽에 배치 */}
+      <button className="findid-close-btn" onClick={() => navigate("/")}>X</button>
       <h1 className="findid-title">아이디 찾기</h1>
 
       <div className="findid-form">
+
         {/* 기관명/직책 */}
         <label>기관명 / 직책</label>
         <div className="flex-row">
@@ -83,13 +86,13 @@ const Findid = () => {
             placeholder="기관명을 입력하세요"
             value={formData.centerId}
             onChange={handleChange}
-            className="long-input"  
+            className="long-input"
           />
           <select
             name="role"
             value={formData.role}
             onChange={handleChange}
-            className="role-select" 
+            className="role-select"
           >
             <option value="의사">의사</option>
             <option value="관리자">관리자</option>
