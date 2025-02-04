@@ -5,9 +5,6 @@ import axios from "axios";
 import DateList from "./Xray/DateList";
 import "./Result.css";
 
-// 백엔드 서버 주소
-const API_BASE_URL = "http://localhost:8090/SmOne";
-
 function Result() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -54,14 +51,14 @@ function Result() {
     const storedUserId = sessionStorage.getItem("userId");
     if (storedUserId) {
       axios
-        .get(`${API_BASE_URL}/api/users/mypage?userId=${storedUserId}`, { withCredentials:true })
+        .get(`${process.env.REACT_APP_DB_URL}/users/mypage?userId=${storedUserId}`, { withCredentials:true })
         .then(res => setLoginUser(res.data))
         .catch(err => console.error("유저 정보 불러오기 실패:", err));
     }
 
     // C. 환자 X-ray 날짜 목록
     axios
-      .get(`${API_BASE_URL}/api/xray/dates?pIdx=${patient.pIdx}`)
+      .get(`${process.env.REACT_APP_DB_URL}/xray/dates?pIdx=${patient.pIdx}`)
       .then((res) => {
         setDiagDates(res.data);
         // 새 진단 모드 && 아직 날짜 선택안됨 => 최신 날짜
@@ -78,17 +75,17 @@ function Result() {
 
     // (A) X-ray 목록
     axios
-      .get(`${API_BASE_URL}/api/xray/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
+      .get(`${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
       .then((res) => {
         setXrayList(res.data);
         if (res.data.length > 0) {
           const bigOne = res.data.find((x) => x.bigXray != null);
           if (bigOne) {
             setSelectedXray(bigOne);
-            setBigPreview(`${API_BASE_URL}/images/${bigOne.bigXray}`);
+            setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${bigOne.bigXray}`);
           } else {
             setSelectedXray(res.data[0]);
-            setBigPreview(`${API_BASE_URL}/images/${res.data[0].imgPath}`);
+            setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${res.data[0].imgPath}`);
           }
         } else {
           setSelectedXray(null);
@@ -100,7 +97,7 @@ function Result() {
     // (B) 이전결과 모드 => diagnosis_result + hospital
     if (fromHistory) {
       axios
-        .get(`${API_BASE_URL}/api/diagnosis-result/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
+        .get(`${process.env.REACT_APP_DB_URL}/diagnosis-result/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
         .then((res) => {
           if (res.data && res.data.length > 0) {
             // 첫 번째 진단 결과
@@ -109,7 +106,7 @@ function Result() {
 
             // 병원 상세
             const hosIdx = firstDiag.hosIdx;
-            return axios.get(`${API_BASE_URL}/api/hospitals/${hosIdx}`);
+            return axios.get(`${process.env.REACT_APP_DB_URL}/hospitals/${hosIdx}`);
           } else {
             throw new Error("No past diagnosis data");
           }
@@ -137,12 +134,11 @@ function Result() {
       console.log("좌표없음 => 병원 안내불가");
       return;
     }
-
-    let url = `${API_BASE_URL}/api/hospitals/near?lat=${latNum}&lng=${lngNum}&limit=5`;
+    let url = `${process.env.REACT_APP_DB_URL}/hospitals/near?lat=${latNum}&lng=${lngNum}&limit=5`;
     if (aiResult === "결핵") {
-      url = `${API_BASE_URL}/api/hospitals/near/disease?lat=${latNum}&lng=${lngNum}&disease=결핵&limit=5`;
+      url = `${process.env.REACT_APP_DB_URL}/hospitals/near/disease?lat=${latNum}&lng=${lngNum}&disease=결핵&limit=5`;
     } else if (aiResult === "폐렴") {
-      url = `${API_BASE_URL}/api/hospitals/near/disease?lat=${latNum}&lng=${lngNum}&disease=폐렴&limit=5`;
+      url = `${process.env.REACT_APP_DB_URL}/hospitals/near/disease?lat=${latNum}&lng=${lngNum}&disease=폐렴&limit=5`;
     }
 
     axios
@@ -227,9 +223,9 @@ function Result() {
   function handleThumbClick(x) {
     setSelectedXray(x);
     if (x.bigXray) {
-      setBigPreview(`${API_BASE_URL}/images/${x.bigXray}`);
+      setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${x.bigXray}`);
     } else {
-      setBigPreview(`${API_BASE_URL}/images/${x.imgPath}`);
+      setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${x.imgPath}`);
     }
   }
 
@@ -261,7 +257,7 @@ function Result() {
       }
       // XRAY 업데이트
       for (const img of matched) {
-        await axios.put(`${API_BASE_URL}/api/xray/updateResult`, {
+        await axios.put(`${process.env.REACT_APP_DB_URL}/xray/updateResult`, {
           imgIdx: img.imgIdx,
           result: aiResult,
         });
@@ -275,7 +271,7 @@ function Result() {
           doctorId: userId,
           hosIdx: selectedHospital,
         };
-        await axios.post(`${API_BASE_URL}/api/diagnosis-result`, body, {
+        await axios.post(`${process.env.REACT_APP_DB_URL}/diagnosis-result`, body, {
           headers: { "Content-Type": "application/json" },
         });
       }
@@ -338,7 +334,7 @@ function Result() {
   }, [mapRef, patient]);
   
   axios
-  .get(`${API_BASE_URL}/api/xray/dates?pIdx=${patient.pIdx}`, {
+  .get(`${process.env.REACT_APP_DB_URL}/xray/dates?pIdx=${patient.pIdx}`, {
     withCredentials: false, // ✅ 서드파티 쿠키 사용 방지
   })
   .then((res) => {
@@ -410,7 +406,7 @@ function Result() {
                 className="thumb-item"
                 onClick={() => handleThumbClick(x)}
               >
-                <img src={`${API_BASE_URL}/images/${x.imgPath}`} alt="thumb" />
+                <img src={`${process.env.REACT_APP_DB_URL2}/images/${x.imgPath}`} alt="thumb" />
               </div>
             ))}
           </div>

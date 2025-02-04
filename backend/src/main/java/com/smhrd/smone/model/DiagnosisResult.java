@@ -1,16 +1,18 @@
 package com.smhrd.smone.model;
 
-import java.security.Timestamp;
+
+import java.sql.Timestamp;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name="DIAGNOSIS_RESULT")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -36,10 +38,11 @@ public class DiagnosisResult {
 	private Integer hosIdx;
 	
 	@CreationTimestamp
-	@Column(name="DIANOSED_AT", updatable = false)
+	@Column(name="DIAGNOSED_AT", updatable = false)
 	private Timestamp diagnosedAt;
 	
 	// 환자 - 외래키
+	@JsonProperty("pIdx")
 	@Column(name="P_IDX")
 	private Integer pIdx;
 }

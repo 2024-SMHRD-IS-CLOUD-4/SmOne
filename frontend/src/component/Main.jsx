@@ -182,7 +182,7 @@ function Main() {
       const bigFilename = selectedNewImage.file.name;
       formData.append("bigFilename", bigFilename);
 
-      await axios.post("http://localhost:8090/SmOne/api/xray/diagnose", formData, {
+      await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
