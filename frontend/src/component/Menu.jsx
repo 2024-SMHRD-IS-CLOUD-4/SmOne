@@ -17,6 +17,8 @@ const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
+  const userId = sessionStorage.getItem("userId"); // 사용자 아이디 가져오기
+
 
   const menuItems = [
     { title: "메인화면", icon: homeOutline },
@@ -68,6 +70,12 @@ const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
         <div className={`team-logo-container ${isExpanded ? "expanded" : ""}`}>
           <img src={teamLogo} alt="Team Logo" className="team-logo" />
         </div>
+        {/* 사용자 환영 메시지 - 메뉴 확장 시에만 표시 */}
+        {isExpanded && (
+          <div className="welcome-message">
+            {userId}님 환영합니다.
+          </div>
+        )}
 
         <ul>
           {menuItems.map((item, index) => (

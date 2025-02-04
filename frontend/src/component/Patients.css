@@ -82,7 +82,7 @@
   display: flex;
   gap: 10px;
   /* 성별 버튼 간격 */
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 .radio {
@@ -139,9 +139,9 @@
 }
 
 .submit-button {
-  width: 450px;
+  width: 100%;
   padding: 15px;
-  background-color: #1b1c1d;
+  background-color: #333;
   color: #fff;
   border: none;
   cursor: pointer;
@@ -167,7 +167,6 @@
   align-items: center;
   gap: 20px;
   margin-bottom: 10px;
-  width: 452px;
 }
 
 .postcode-field {

@@ -164,11 +164,12 @@ function PatientEdit() {
   };
 
   return (
+    <>
       <form onSubmit={handleSubmit}>
-        <Menu />
+        <Menu />  {/* ✅ 네비게이션 메뉴 추가 */}
         <div className='Patient-container'>
           <button className="back-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
-          <div className="form-wrapper" style={{ height: "561"}}>
+          <div className="form-wrapper">
             <h1 className="patient-title1">환자 수정</h1>
             <div className="name-and-gender-group">
               <div className="name-group">
@@ -272,7 +273,7 @@ function PatientEdit() {
             </div>
 
             <div className="address-group1">
-              <label className='Edit_add'>우편번호</label>
+              <label>우편번호</label>
               <div className="postcode-wrapper">
                 <input
                   type="text"
@@ -310,12 +311,13 @@ function PatientEdit() {
               />
             </div>
 
-            <button type="submit" className="submit-button">
+            <button type="submit" className="submit-button" style={{ marginTop: "10px" }}>
               환자 수정
             </button>
           </div>
         </div>
       </form>
+    </>
   );
 }
 

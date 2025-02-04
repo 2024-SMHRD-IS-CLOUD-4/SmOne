@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-// import { KakaoMapContext } from "../App";
+import { KakaoMapContext } from "../App";
 import axios from "axios";
 import "./Mypage.css";
 import Menu from "./Menu"; // Menu.jsx 추가
 
 function Mypage() {
   const navigate = useNavigate();
+  const kakaoMaps = useContext(KakaoMapContext); // ✅ Context에서 API 가져오기
   // 이메일을 아이디/도메인으로 분리 예시
   const [userData, setUserData] = useState({
     userId: "",
@@ -107,12 +108,11 @@ function Mypage() {
       alert("기관명을 입력하세요!");
       return;
     }
-  
-    // ✅ kakaoMaps → window.kakao로 수정
-    if (window.kakao && window.kakao.maps) {
-      const ps = new window.kakao.maps.services.Places();
+
+    if (kakaoMaps) { // ✅ undefined 방지
+      const ps = new kakaoMaps.services.Places();
       ps.keywordSearch(userData.centerId, (data, status) => {
-        if (status === window.kakao.maps.services.Status.OK) {
+        if (status === kakaoMaps.services.Status.OK) {
           setPlaces(data);
           setShowModal(true);
         } else {
@@ -123,7 +123,6 @@ function Mypage() {
       console.error("카카오 지도 API가 로드되지 않았습니다.");
     }
   };
-  
 
   // 모달 뜨면 지도 초기화
   useEffect(() => {
@@ -266,13 +265,13 @@ function Mypage() {
 
       {/* 탈퇴 모달 */}
       {showDeleteModal && (
-        <div className="search-modal1">
+        <div className="search-modal">
           <div className="modal-header">
             <h2>회원 탈퇴</h2>
             <button className="close-btn" onClick={closeDeleteModal}>닫기</button>
           </div>
-          <div className="modal-body1" style={{ flexDirection: "column", padding: "20px" }}>
-            <p style={{ color: "black", marginBottom: "10px"}}>비밀번호를 입력해주세요</p>
+          <div className="modal-body" style={{ flexDirection: "column", padding: "20px" }}>
+            <p>비밀번호를 입력해주세요</p>
             <input
               type="password"
               placeholder="비밀번호"
@@ -280,7 +279,7 @@ function Mypage() {
               onChange={e => setDeletePassword(e.target.value)}
               style={{ width: "100%", marginBottom: "10px" }}
             />
-            <div style={{ textAlign: "center" }}>
+            <div style={{ textAlign: "right" }}>
               <button className="small-btn" onClick={handleDelete} style={{ marginRight: "10px" }}>
                 탈퇴하기
               </button>

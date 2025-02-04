@@ -159,6 +159,74 @@ function Main() {
       }
     }));
   }
+  // [진단하기]
+  async function handleDiagnose() {
+    if (!selectedPatient) {
+      alert("환자를 먼저 선택하세요.");
+      return;
+    }
+    if (newImages.length === 0) {
+      alert("신규 X-ray가 없습니다. (진단 불가)");
+      return;
+    }
+    if (!selectedNewImage) {
+      alert("등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.");
+      return;
+    }
+
+    try {
+      // 1) 업로드
+      const formData = new FormData();
+      formData.append("pIdx", selectedPatient.pIdx);
+      newImages.forEach((obj) => formData.append("files", obj.file));
+      const bigFilename = selectedNewImage.file.name;
+      formData.append("bigFilename", bigFilename);
+
+      await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      // 2) (임시) AI 결과
+      const aiResult = "결핵";
+
+      // 3) 결과 페이지 이동
+      navigate("/result", {
+        state: {
+          patient: selectedPatient,
+          aiResult,
+          newlyUploaded: newImages.map((img) => img.file.name),
+          bigFilename,
+          fromHistory: false,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      alert("업로드 중 오류 발생");
+    }
+  }
+  // ========== "이전 결과 보기" ==========
+  function handleViewOldResult() {
+    if (!selectedPatient) {
+      alert("환자를 먼저 선택하세요.");
+      return;
+    }
+    if (!selectedDate) {
+      alert("진단 날짜를 선택해주세요.");
+      return;
+    }
+
+    // 과거결과 모드
+    navigate("/result", {
+      state: {
+        patient: selectedPatient,
+        aiResult: "(이전결과)",
+        newlyUploaded: [],
+        bigFilename: null,
+        fromHistory: true,
+        selectedDate,
+      },
+    });
+  }
   const handleLogoClick = () => {
     setSelectedPatient(null);
     setOldImages([]);
@@ -366,57 +434,6 @@ function Main() {
     }
   }
 
-  // 진단하기 -> 업로드 후 -> Result 페이지로 이동
-  async function handleDiagnose() {
-    if (!selectedPatient) {
-      alert("환자를 먼저 선택하세요.");
-      return;
-    }
-
-    if (newImages.length > 0) {
-      if (!selectedNewImage) {
-        alert("신규 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.");
-        return;
-      }
-      try {
-        // 1) 업로드
-        const formData = new FormData();
-        formData.append("pIdx", selectedPatient.pIdx);
-
-        newImages.forEach(obj => {
-          formData.append("files", obj.file);
-        });
-
-        const bigFilename = selectedNewImage.file.name;
-        formData.append("bigFilename", bigFilename);
-
-        await axios.post(
-          `${process.env.REACT_APP_DB_URL}/xray/diagnose`,
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
-
-        // 2) (예시) AI 결과
-        const aiResult = "AI 예측 결과: 이상소견 없음 (예시)";
-
-        // 3) 결과 페이지로 이동
-        navigate("/result", {
-          state: {
-            patient: selectedPatient,
-            newlyUploaded: newImages.map(img => img.file.name),
-            bigFilename,
-            aiResult
-          }
-        });
-
-      } catch (err) {
-        console.error(err);
-        alert("업로드 중 오류 발생");
-      }
-    } else {
-      alert("신규 X-ray가 없습니다. (진단 불가)");
-    }
-  }
 
   // Edit / Delete
   const handleEditPatient = (thePatient) => {
@@ -490,17 +507,24 @@ function Main() {
             </button>
           </form>
         )}
-        <div style={{ marginLeft: "20px", color: "#fff", fontWeight: "bold" }}>
-          {userId}님 환영합니다.
-        </div>
-        {/* 진단하기 버튼 */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-          <button className="diagnose-top-btn" onClick={handleDiagnose} disabled={newImages.length > 0 && !selectedNewImage}>
-            <img src={stethoscopeIcon} alt="진단 아이콘" className="stethoscope-icon" />
-            진단하기
-          </button>
-          {(newImages.length > 0 && !selectedNewImage) && (
-            <p style={{ margin: "5px 0 0", color: "yellow", fontSize: "14px" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center"}}>
+          {/* 버튼 영역 */}
+          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
+            {/* 과거 결과 보기 버튼 */}
+            <button className="exdiagnose-btn" onClick={handleViewOldResult}>
+              과거 진단 보기
+            </button>
+
+            {/* 진단하기 버튼 */}
+            <button className="diagnose-top-btn" onClick={handleDiagnose} disabled={newImages.length > 0 && !selectedNewImage}>
+              <img src={stethoscopeIcon} alt="진단 아이콘" className="stethoscope-icon" />
+              진단하기
+            </button>
+          </div>
+
+          {/* 🟡 메시지: 버튼 아래 배치 */}
+          {newImages.length > 0 && !selectedNewImage && (
+            <p style={{ color: "yellow", fontSize: "14px" }}>
               등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.
             </p>
           )}
@@ -565,7 +589,7 @@ function Main() {
 
           {selectedPatient && (
             <div className="patient-detail">
-              <h2 style={{ marginLeft: 10 }}>환자 상세 정보</h2>
+              <h2 style={{ marginLeft: 10 }}>환자 정보</h2>
               <table className="patient-detail-table">
                 <tbody>
                   <tr>
@@ -601,6 +625,12 @@ function Main() {
             </div>
           )}
 
+          {/* 진단 날짜 텍스트를 panel-block 밖으로 이동 */}
+          {selectedPatient && (
+            <div className="diagnosis-date-title">
+              진단 날짜
+            </div>
+          )}
 
           {/* 날짜 리스트 */}
           <div className="date-list-container panel-block" style={{ marginTop: "10px" }}>
