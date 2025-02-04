@@ -56,4 +56,8 @@ public class Patients {
     @JsonProperty("pLng")
     @Column(name="P_LNG")
     private Double pLng;
+    
+    @JsonProperty("centerId")
+    @Column(name = "CENTER_ID", nullable = false, length = 255)
+    private String centerId;
 }
