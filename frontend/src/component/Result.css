@@ -1,135 +1,118 @@
 /* src/component/Result.css */
+
+/* 전체 컨테이너 */
 .result-container {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  /* 로고 버튼 스타일 */
-/* 로고 버튼 스타일 */
-.team-logo-button {
-  background: none;
-  border: none;
-  cursor: pointer;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 상단 바 */
+.result-topbar {
+  height: 60px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* 3열 레이아웃: 
+   왼쪽 250px, 
+   중앙 400px, 
+   오른쪽(병원 안내+지도) 500px 
+*/
+.result-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 250px 400px 500px; 
+  background: rgba(0,0,0,0.1);
+}
+
+/* 왼쪽 패널 */
+.result-left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  background: rgba(255,255,255,0.1);
+  overflow-y: auto;
+}
+.patient-info-box,
+.date-list-box,
+.ai-result-box {
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* 중앙 패널 (X-ray 미리보기) */
+.result-center-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: auto; 
+}
+
+.big-preview-box {
+  flex: none;
+  width: 400px;       /* 중앙 패널 폭에 맞춤 */
+  max-height: 450px;
+  border: 2px dashed #aaa;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px;
+  margin-bottom: 5px;
+  overflow: hidden;
+}
+.big-xray-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* 썸네일 목록 */
+.thumb-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  max-height: 100px;
+  overflow-y: auto;
+}
+.thumb-item {
+  width: 80px;
+  height: 80px;
+  border: 2px dashed #666;
+  cursor: pointer;
+}
+.thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 오른쪽 패널 (병원 안내 + 지도) */
+.result-right-panel {
+  padding: 20px;
+  box-sizing: border-box;
+  background: rgba(255,255,255,0.1);
+  overflow-y: auto;
+  color: #fff;
+}
+
+/* 지도 */
+.hospital-map {
+  width: 100%;
+  height: 350px; 
   margin-top: 10px;
-  margin-left: 45px;
+  border: 2px dashed #333;
 }
-
-.team-logo-img {
-  width: 100px; /* 로고 크기 조정 */
-  height: auto;
-}
-
-  .result-topbar {
-    height: 60px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    box-sizing: border-box;
-  }
-  
-  .result-main {
-    flex: 1;
-    display: flex;
-    margin-left: 50px;
-  }
-  
-  /* 왼쪽 패널 */
-  .result-left-panel {
-    width: 380px;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.2);
-    padding: 20px;
-    overflow-y: auto;
-    box-sizing: border-box;
-    border-radius: 6px;
-    margin-left: 20px;
-    margin-bottom: 18px;
-    margin-top: 18px;
-  }
-  .result-patient-detail {
-    background: rgba(0,0,0,0.5);
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    color: #fff;
-  }
-  .result-patient-detail p {
-    margin-top: 6px;
-    margin-bottom: 6px;
-}
-
-  .result-date-list {
-    background: rgba(0,0,0,0.5);
-    padding: 10px;
-    border-radius: 6px;
-    color: #fff;
-  }
-  
-  /* 오른쪽 패널 */
-  .result-right-panel {
-    flex: 1;
-    display: flex; 
-    gap: 20px;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  
-  /* 오른쪽 패널 내부의 왼쪽= X-ray, 오른쪽= 진단결과 */
-  .result-xray-area {
-    flex: 2;
-    background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 6px;
-    padding: 10px;
-  }
-  .big-preview-box {
-    width: 100%;
-    height: 600px;
-    border: 2px dashed #aaa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-  .big-preview-img {
-    width: 650px;
-    height: 600px;
-    object-fit: contain;
-  }
-  .thumb-list {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-  }
-  .thumb-item {
-    width: 80px;
-    height: 80px;
-    border: 2px dashed #666;
-    cursor: pointer;
-  }
-  .thumb-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .result-diagnosis-area {
-    flex: 0.8;
-    background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.2);
-    padding: 10px;
-    border-radius: 6px;
-    color: #fff;
-    overflow-y: auto;
-  }
-  

@@ -20,8 +20,8 @@ function SecondVisitUI({
   diagnosisResult,
   setDiagnosisResult
 }) {
-  const previewBoxWidth = 550;
-  const previewBoxHeight = 468;
+  const previewBoxWidth = 570;
+  const previewBoxHeight = 570;
 
   // 과거 X-ray
   const [oldBaseScale, setOldBaseScale] = useState(1);
@@ -50,7 +50,6 @@ function SecondVisitUI({
     setOldBaseScale(Math.min(scaleW, scaleH));
   };
   const handleWheelOld = (e) => {
-    e.preventDefault();
     let delta = e.deltaY < 0 ? 0.1 : -0.1;
     let newZ = oldZoom + delta;
     if (newZ < 0.5) newZ = 0.5;
@@ -124,7 +123,6 @@ function SecondVisitUI({
     setNewBaseScale(Math.min(scaleW, scaleH));
   };
   const handleWheelNew = (e) => {
-    e.preventDefault();
     let delta = e.deltaY < 0 ? 0.1 : -0.1;
     let newZ = newZoom + delta;
     if (newZ < 0.5) newZ = 0.5;
@@ -172,14 +170,14 @@ function SecondVisitUI({
   return (
     <div className="xray-flex" style={{ position: "relative" }}>
       {/* 과거 X-ray */}
-      <div className="xray-subpanel">
+      <div className="xray-subpanel2">
         <h4 style={{ marginTop: 0 }}>{oldXrayTitle}</h4>
         <div
           style={{
             width: `${previewBoxWidth}px`,
             height: `${previewBoxHeight}px`,
-            border: "2px dashed #999",
-            marginBottom: "10px",
+            border: "1px solid #999",
+            marginBottom: "15px",
             overflow: "hidden",
             position: "relative"
           }}
@@ -200,9 +198,17 @@ function SecondVisitUI({
               style={oldTransform}
             />
           ) : (
-            <div style={{ color: "#999" }}>
-              과거 이미지를 클릭하면 확대
+            <div style={{
+              color: "#999",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: "100%"
+            }}>
+              신규 이미지를 클릭하면 확대
             </div>
+
           )}
         </div>
 
@@ -220,7 +226,7 @@ function SecondVisitUI({
               style={{
                 position: "relative",
                 width: "80px", height: "80px",
-                border: "2px dashed #999",
+                border: "1px solid #999",
                 cursor: "pointer"
               }}
               onClick={() => handleOldThumbClick(item)}
@@ -236,13 +242,13 @@ function SecondVisitUI({
       </div>
 
       {/* 신규 X-ray */}
-      <div className="xray-subpanel">
+      <div className="xray-subpanel2">
         <h4 style={{ marginTop: 0 }}>신규 X-ray 등록</h4>
         <div
           style={{
             width: `${previewBoxWidth}px`,
             height: `${previewBoxHeight}px`,
-            border: "2px dashed #999",
+            border: "1px solid #999",
             marginBottom: "10px",
             overflow: "hidden",
             position: "relative"
@@ -303,7 +309,7 @@ function SecondVisitUI({
                     key={`full-${i}`}
                     style={{
                       width: "80px", height: "80px",
-                      border: "2px dashed #999",
+                      border: "1px solid #999",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center"
@@ -320,7 +326,7 @@ function SecondVisitUI({
                   style={{
                     position: "relative",
                     width: "80px", height: "80px",
-                    border: "2px dashed #999",
+                    border: "1px solid #999",
                     cursor: "pointer"
                   }}
                   onClick={() => handleNewThumbClick(item)}

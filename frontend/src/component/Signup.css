@@ -307,3 +307,22 @@ margin-top: 20px;
   width: 345px;
   height: 44px;
 }
+/* X 버튼 (닫기 버튼) */
+.signup-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 6px 10px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 100px auto 0 auto;
+  margin-right: 710px;
+}
+
+.close-btn:hover {
+  background-color: #666;
+}
