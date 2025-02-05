@@ -156,6 +156,8 @@ function Signup() {
 
   return (
     <div className="signup-container">
+      {/* X 버튼을 컨테이너 안쪽 상단 오른쪽에 배치 */}
+      <button className="signup-close-btn" onClick={() => navigate("/")}>X</button>
       <h1 className="signup-title">회원가입</h1>
 
       <form className="signup-form" onSubmit={handleSubmit}>

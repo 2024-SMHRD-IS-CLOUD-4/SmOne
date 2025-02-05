@@ -1,15 +1,19 @@
 package com.smhrd.smone.controller;
 
+import com.smhrd.smone.model.Patients;
+import com.smhrd.smone.model.User;
+import com.smhrd.smone.service.KakaoGeocodeService;
+import com.smhrd.smone.service.PatientsService;
+import com.smhrd.smone.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.smhrd.smone.model.Patients;
-import com.smhrd.smone.service.KakaoGeocodeService;
-import com.smhrd.smone.service.PatientsService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -24,13 +28,26 @@ public class PatientsController {
     @Autowired
     private KakaoGeocodeService geoService;
 
- // 환자 등록
-    @PostMapping("/register")
-    public ResponseEntity<?> registerPatient(@RequestBody Patients patient) {
-        try {
-            System.out.println("받은 데이터(등록): " + patient.toString());
+    @Autowired
+    private UserService userService; // 로그인 사용자 정보 조회용
 
-            // (1) 주소 전처리 + 지오코딩
+    // [1] 환자 등록
+    @PostMapping("/register")
+    public ResponseEntity<?> registerPatient(@RequestBody Patients patient, HttpSession session) {
+        try {
+            // (A) 로그인 사용자 체크
+            String userId = (String) session.getAttribute("userId");
+            if (userId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+            }
+            User user = userService.findUserById(userId);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("존재하지 않는 사용자입니다.");
+            }
+
+            System.out.println("받은 데이터(등록): " + patient);
+
+            // (B) 주소 전처리 + 지오코딩
             String fullAddr = patient.getPAdd();
             if (fullAddr != null && !fullAddr.isBlank()) {
                 String baseAddr = refineAddress(fullAddr);
@@ -43,27 +60,41 @@ public class PatientsController {
                 }
             }
 
-            // (2) DB 저장
+            // (C) 본인 센터 ID 세팅
+            String centerId = user.getCenterId();
+            patient.setCenterId(centerId);
+
+            // (D) DB 저장
             patientsService.registerPatient(patient);
 
-            // (3) 문자 응답
             return ResponseEntity.ok("환자 등록이 완료되었습니다.");
 
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("환자 등록 중 오류가 발생했습니다.");
+                                 .body("환자 등록 중 오류가 발생했습니다.");
         }
     }
 
-    // 환자 정보 수정
+    // [2] 환자 수정
     @PutMapping("/update/{pIdx}")
     public ResponseEntity<?> updatePatient(@PathVariable("pIdx") Integer pIdx,
-                                           @RequestBody Patients newData) {
+                                           @RequestBody Patients newData,
+                                           HttpSession session) {
         try {
-            System.out.println("받은 데이터(수정): " + newData.toString());
+            // (A) 로그인 사용자 확인
+            String userId = (String) session.getAttribute("userId");
+            if (userId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+            }
+            User user = userService.findUserById(userId);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("존재하지 않는 사용자입니다.");
+            }
 
-            // (1) 주소 전처리 + 지오코딩
+            System.out.println("받은 데이터(수정): " + newData);
+
+            // (B) 주소 전처리 + 지오코딩
             String fullAddr = newData.getPAdd();
             if (fullAddr != null && !fullAddr.isBlank()) {
                 String baseAddr = refineAddress(fullAddr);
@@ -76,36 +107,65 @@ public class PatientsController {
                 }
             }
 
-            // (2) DB 업데이트
-            patientsService.updatePatient(pIdx, newData);
+            // (C) 본인 센터 ID
+            String centerId = user.getCenterId();
 
-            // (3) 문자 응답
+            // (D) 업데이트
+            patientsService.updatePatient(centerId, pIdx, newData);
+
             return ResponseEntity.ok("환자 정보가 수정되었습니다.");
 
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("환자를 찾을 수 없습니다.");
+                                 .body("환자를 찾을 수 없습니다.");
+        } catch (SecurityException se) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(se.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("환자 정보 수정 중 오류가 발생했습니다.");
+                                 .body("환자 정보 수정 중 오류가 발생했습니다.");
         }
     }
 
-    // [3] 전체 환자 목록
+    // [3] 특정 센터의 전체 환자 목록
     @GetMapping
-    public ResponseEntity<List<Patients>> getAllPatients() {
-        List<Patients> patients = patientsService.getAllPatients();
+    public ResponseEntity<?> getAllPatients(HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("존재하지 않는 사용자입니다.");
+        }
+
+        String centerId = user.getCenterId();
+        List<Patients> patients = patientsService.getPatientsByCenter(centerId);
+
         return ResponseEntity.ok(patients);
     }
 
     // [4] 검색 + 페이지네이션
     @GetMapping("/search")
-    public ResponseEntity<?> searchPatients(@RequestParam(required = false) String name,
-                                            @RequestParam(required = false) String birth,
-                                            @RequestParam(defaultValue = "0") int page,
-                                            @RequestParam(defaultValue = "5") int size) {
-        Page<Patients> patients = patientsService.searchPatients(name, birth, PageRequest.of(page, size));
+    public ResponseEntity<?> searchPatients(
+            HttpSession session,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String birth,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("존재하지 않는 사용자입니다.");
+        }
+
+        String centerId = user.getCenterId();
+        Page<Patients> patients = patientsService.searchPatients(centerId, name, birth, PageRequest.of(page, size));
+
         if (patients.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -114,17 +174,36 @@ public class PatientsController {
 
     // [5] 환자 삭제
     @DeleteMapping("/{pIdx}")
-    public ResponseEntity<?> deletePatient(@PathVariable("pIdx") Integer pIdx) {
+    public ResponseEntity<?> deletePatient(@PathVariable("pIdx") Integer pIdx,
+                                           HttpSession session) {
         try {
-            patientsService.deletePatient(pIdx);
+            String userId = (String) session.getAttribute("userId");
+            if (userId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+            }
+            User user = userService.findUserById(userId);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("존재하지 않는 사용자입니다.");
+            }
+
+            String centerId = user.getCenterId();
+
+            patientsService.deletePatient(centerId, pIdx);
             return ResponseEntity.ok("환자 삭제 성공");
+
         } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                 .body("해당 환자를 찾을 수 없습니다.");
+        } catch (SecurityException se) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(se.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("환자 삭제 중 오류가 발생했습니다.");
+                                 .body("환자 삭제 중 오류가 발생했습니다.");
         }
     }
 
-    // [주소 전처리 메서드]
+    // 주소 전처리
     private String refineAddress(String full) {
         if (full == null) return null;
 
@@ -152,3 +231,4 @@ public class PatientsController {
         return replaced.trim();
     }
 }
+

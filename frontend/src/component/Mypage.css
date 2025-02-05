@@ -37,12 +37,13 @@
   top: 10px;
   right: 10px;
   padding: 6px 10px;
-  background-color: #444;
+  background-color: #333;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  transition: background 0.3s ease-in-out;
 }
 
 .back-btn:hover {
@@ -105,7 +106,7 @@
   border-radius: 4px;
   font-size: 14px;
   box-sizing: border-box;
-  width: 388px;
+  width: 389px;
   height: 44px;
 }
 
@@ -157,12 +158,14 @@
   color: #fff;
   font-size: 14px;
   cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  height: 45px;
 }
 
 .action-btn:hover,
 .small-btn:hover,
 .search-btn:hover {
-  background-color: #555;
+  background-color: #666;
 }
 
 /* 모달 공통 */
@@ -210,22 +213,6 @@
   margin: 0;
   font-size: 20px;
   color: #333;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #d33;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.close-btn:hover {
-  background: #f66;
 }
 
 .modal-body {

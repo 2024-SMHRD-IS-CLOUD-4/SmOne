@@ -307,7 +307,6 @@ function PatientEdit() {
                 placeholder="상세주소"
                 value={formData.detailAddress}
                 onChange={handleChange}
-                required
               />
             </div>
 

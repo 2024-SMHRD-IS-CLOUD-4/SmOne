@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
-    boolean existsByUserId(String userId); // USER_ID 중복 체크 메서드
+   
+	boolean existsByUserId(String userId); // USER_ID 중복 체크 메서드
     User findByUserId(String userId); // ID로 사용자 조회
     
     // 아이디 찾기 쿼리 메소드

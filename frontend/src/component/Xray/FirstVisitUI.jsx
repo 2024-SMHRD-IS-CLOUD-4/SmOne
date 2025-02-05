@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import plusIcon from "./plus-image.png";
 
 function FirstVisitUI({
   newImages, setNewImages,
@@ -8,7 +9,7 @@ function FirstVisitUI({
   handleRemoveNewImage
 }) {
   const previewBoxWidth = 570;
-  const previewBoxHeight = 520;
+  const previewBoxHeight = 530;
 
   const [baseScale, setBaseScale] = useState(1);
   const [zoom, setZoom] = useState(1);
@@ -39,7 +40,6 @@ function FirstVisitUI({
   };
 
   const handleWheel = (e) => {
-    e.preventDefault();
     const delta = e.deltaY < 0 ? 0.1 : -0.1;
     let newZ = zoom + delta;
     if (newZ < 0.5) newZ = 0.5;
@@ -92,7 +92,7 @@ function FirstVisitUI({
           style={{
             width: `${previewBoxWidth}px`,
             height: `${previewBoxHeight}px`,
-            border: "2px dashed #999",
+            border: "1px solid #999",
             marginBottom: "10px",
             overflow: "hidden",
             position: "relative"
@@ -114,8 +114,8 @@ function FirstVisitUI({
               style={previewStyle}
             />
           ) : (
-            <div style={{ color: "#999", textAlign: "center" }}>
-              이미지를 클릭하면 확대
+            <div style={{ marginTop: "250px", color: "#999", textAlign: "center" }}>
+              밑의 아이콘을 클릭하여 사진을 등록해주세요
             </div>
           )}
         </div>
@@ -124,8 +124,7 @@ function FirstVisitUI({
           display: "flex",
           gap: "8px",
           flexWrap: "wrap",
-          maxWidth: "500px",
-          marginBottom: "10px"
+          maxWidth: "500px"
         }}>
           {Array.from({ length: 5 }).map((_, i) => {
             const item = newImages[i];
@@ -140,11 +139,19 @@ function FirstVisitUI({
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      cursor: "pointer"
+                      cursor: "pointer",
+                      marginTop: "10px",
+                      marginBottom: "-15px"
                     }}
                     onClick={handleNewPhotoRegister}
                   >
-                    <span style={{ fontSize: "24px" }}>+</span>
+                    <span style={{ fontSize: "24px" }}>
+                      <img
+                        src={plusIcon}
+                        alt="plus-icon"
+                        style={{ width: "60%", height: "60%" }}
+                      />
+                    </span>
                   </div>
                 );
               } else {
@@ -153,10 +160,11 @@ function FirstVisitUI({
                     key={`full-${i}`}
                     style={{
                       width: "80px", height: "80px",
-                      border: "2px dashed #999",
+                      border: "1px solid #999",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center"
+
                     }}
                   >
                     (full)
@@ -170,8 +178,9 @@ function FirstVisitUI({
                   style={{
                     position: "relative",
                     width: "80px", height: "80px",
-                    border: "2px dashed #999",
-                    cursor: "pointer"
+                    border: "1px solid #999",
+                    cursor: "pointer",
+                    marginTop:"10px"
                   }}
                   onClick={() => handleThumbClick(item)}
                 >
@@ -204,34 +213,6 @@ function FirstVisitUI({
             }
           })}
         </div>
-
-        <button
-          onClick={handleNewPhotoRegister}
-          style={{
-            width: "120px",  // 버튼 너비
-            height: "30px", // 버튼 높이
-            padding: "4px", // 내부 패딩 조정
-            border: "none",
-            borderRadius: "6px",
-            background: "#333", // 버튼 색상 변경
-            color: "white",
-            fontSize: "12px", // 크기에 맞게 글자 크기 조정
-            fontWeight: "bold",
-            cursor: "pointer",
-            transition: "background 0.3s ease-in-out, transform 0.2s",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          onMouseEnter={(e) => (e.target.style.background = "#555")}
-          onMouseLeave={(e) => (e.target.style.background = "#333")}
-          onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
-          onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
-        >
-          사진 등록
-        </button>
-
-
       </div>
     </div>
   );

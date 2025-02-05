@@ -1,138 +1,468 @@
 // src/component/Result.jsx
-
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import DateList from "./Xray/DateList";
 import "./Result.css";
-
-import teamLogo from "./png/teamlogo.png";
-import Menu from "./Menu"; // 추가
-import DateList from "./Xray/DateList"; // 날짜 리스트 재사용
-// (만약 필요없다면 제거 가능)
+import Menu from "./Menu";
 
 function Result() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Main에서 넘어온 데이터
-  const [patient, setPatient] = useState(location.state?.patient || null);
-  const [newlyUploaded, setNewlyUploaded] = useState(location.state?.newlyUploaded || []);
-  const [aiResult, setAiResult] = useState(location.state?.aiResult || "");
+  // 넘어온 state
+  const patient = location.state?.patient || null;
+  const [aiResult, setAiResult] = useState(location.state?.aiResult || "정상");
+  const newlyUploaded = location.state?.newlyUploaded || [];
+  const bigFilename = location.state?.bigFilename || null;
+  const fromHistory = location.state?.fromHistory || false;
+  const preSelectedDate = location.state?.selectedDate || null;
 
-  // DB에서 가져오는 X-ray, 날짜
+  // X-ray 목록
+  const [xrayList, setXrayList] = useState([]);
+  const [selectedXray, setSelectedXray] = useState(null);
+
+  // 큰 이미지 미리보기 + 확대/이동
+  const [bigPreview, setBigPreview] = useState(null);
+  const bigImgRef = useRef(null);
+  const [baseScale, setBaseScale] = useState(1);
+  const [zoom, setZoom] = useState(1);
+  const [offsetX, setOffsetX] = useState(0);
+  const [offsetY, setOffsetY] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
+
+  // 병원 안내(새 진단) or 과거 병원(이전 결과)
+  const [hospitals, setHospitals] = useState([]);
+  const [selectedHospital, setSelectedHospital] = useState(null);
+  const mapRef = useRef(null);
+  const [map, setMap] = useState(null);
+  const markerRefs = useRef({});
+
+  // 날짜 목록
   const [diagDates, setDiagDates] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [oldImages, setOldImages] = useState([]);
-  const [selectedOldImage, setSelectedOldImage] = useState(null);
-  const [oldBigPreview, setOldBigPreview] = useState(null);
-
-  // 페이지네이션(날짜)
+  const [selectedDate, setSelectedDate] = useState(preSelectedDate);
   const [datePage, setDatePage] = useState(1);
   const datesPerPage = 5;
 
+  // 로그인 사용자 정보
+  const [loginUser, setLoginUser] = useState(null);
+
+  // 새 진단 모드에서 "진단 결과 저장 완료" 여부
+  const [hasSaved, setHasSaved] = useState(false);
+
+
+  // ---------------- 1) 마운트 시 유저정보, X-ray 날짜목록 불러오기 ----------------
   useEffect(() => {
+    // A. 환자 유효성 체크
     if (!patient) {
-      alert("잘못된 접근입니다. 메인으로 이동합니다.");
+      alert("잘못된 접근입니다. 메인페이지로 이동");
       navigate("/main");
       return;
     }
-    // 1) 환자 pIdx로 진단 날짜 목록 조회
-    axios.get(`http://localhost:8090/SmOne/api/xray/dates?pIdx=${patient.pIdx}`)
-      .then(res => {
-        const list = res.data;
-        setDiagDates(list);
 
-        // 가장 최신 날짜를 자동 선택
-        if (list.length > 0) {
-          setSelectedDate(list[0]);
+    // B. 로그인 유저 정보 가져오기
+    const storedUserId = sessionStorage.getItem("userId");
+    if (storedUserId) {
+      axios
+        .get(`${process.env.REACT_APP_DB_URL}/users/mypage?userId=${storedUserId}`, { withCredentials: true })
+        .then(res => setLoginUser(res.data))
+        .catch(err => console.error("유저 정보 불러오기 실패:", err));
+    }
+
+    // C. 환자 X-ray 날짜 목록
+    axios
+      .get(`${process.env.REACT_APP_DB_URL}/xray/dates?pIdx=${patient.pIdx}`)
+      .then((res) => {
+        setDiagDates(res.data);
+        if (!fromHistory && !selectedDate && res.data.length > 0) {
+          setSelectedDate(res.data[0]); // 최신 날짜
         }
       })
-      .catch(e => console.error(e));
-  }, [patient, navigate]);
+      .catch(err => console.error(err));
+  }, [patient, navigate, fromHistory, selectedDate]);
 
-  // selectedDate 바뀌면 X-ray 목록 로드
+  // ---------------- 2) 날짜 선택 => X-ray 목록, 과거결과(병원/진단) ----------------
   useEffect(() => {
-    if (selectedDate && patient) {
-      axios.get(`http://localhost:8090/SmOne/api/xray/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
-        .then(res => {
-          setOldImages(res.data);
-          // BIG_XRAY가 있으면 우선 확대
-          const foundBig = res.data.find(x => x.bigXray !== null);
-          if (foundBig) {
-            setSelectedOldImage(foundBig);
-            setOldBigPreview(`http://localhost:8090/SmOne/images/${foundBig.bigXray}`);
+    if (!selectedDate) return;
+
+    // (A) X-ray 목록
+    axios
+      .get(`${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
+      .then((res) => {
+        setXrayList(res.data);
+        if (res.data.length > 0) {
+          const bigOne = res.data.find((x) => x.bigXray != null);
+          if (bigOne) {
+            setSelectedXray(bigOne);
+            setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${bigOne.bigXray}`);
           } else {
-            // 첫 이미지로 확대
-            if (res.data.length > 0) {
-              setSelectedOldImage(res.data[0]);
-              setOldBigPreview(`http://localhost:8090/SmOne/images/${res.data[0].imgPath}`);
-            }
+            setSelectedXray(res.data[0]);
+            setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${res.data[0].imgPath}`);
+          }
+        } else {
+          setXrayList([]);
+          setSelectedXray(null);
+          setBigPreview(null);
+        }
+      })
+      .catch((e) => console.error(e));
+
+    // (B) 이전결과 모드 => diagnosis_result + hospital
+    if (fromHistory) {
+      axios
+        .get(`${process.env.REACT_APP_DB_URL}/diagnosis-result/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
+        .then((res) => {
+          if (res.data && res.data.length > 0) {
+            // 첫 번째 진단 결과
+            const firstDiag = res.data[0];
+            setAiResult(firstDiag.diagnosis);
+
+            // 병원 상세
+            const hosIdx = firstDiag.hosIdx;
+            return axios.get(`${process.env.REACT_APP_DB_URL}/hospitals/${hosIdx}`);
+          } else {
+            throw new Error("No past diagnosis data");
           }
         })
-        .catch(e => console.error(e));
+        .then(hosRes => setSelectedHospital(hosRes.data)) 
+        .catch(err => {
+          console.log("과거 병원 정보 없음 =>", err.message);
+          setSelectedHospital(null);
+        });
+    } else {
+      // 새 진단 => 병원 선택 초기화
+      setSelectedHospital(null);
+      setHasSaved(false);
     }
-  }, [selectedDate, patient]);
+  }, [selectedDate, fromHistory, patient]);
+
+  // ---------------- 3) 병원 안내 (새 진단 모드) ----------------
+  useEffect(() => {
+    if (!patient || fromHistory) return;
+    const latNum = parseFloat(patient.pLat);
+    const lngNum = parseFloat(patient.pLng);
+    if (!latNum || !lngNum) {
+      console.log("좌표없음 => 병원 안내불가");
+      return;
+    }
+    let url = `${process.env.REACT_APP_DB_URL}/hospitals/near?lat=${latNum}&lng=${lngNum}&limit=5`;
+    if (aiResult === "결핵") {
+      url = `${process.env.REACT_APP_DB_URL}/hospitals/near/disease?lat=${latNum}&lng=${lngNum}&disease=결핵&limit=5`;
+    } else if (aiResult === "폐렴") {
+      url = `${process.env.REACT_APP_DB_URL}/hospitals/near/disease?lat=${latNum}&lng=${lngNum}&disease=폐렴&limit=5`;
+    }
+    axios.get(url)
+      .then(res => setHospitals(res.data))
+      .catch(err => console.error(err));
+  }, [patient, fromHistory, aiResult]);
+
+  // ---------------- 4) 지도 생성 ----------------
+  useEffect(() => {
+    if (!mapRef.current) return;
+    if (map) return;
+    const { kakao } = window;
+    if (!kakao) return;
+
+    const latNum = parseFloat(patient?.pLat) || 37.5665;
+    const lngNum = parseFloat(patient?.pLng) || 126.9780;
+    const option = {
+      center: new kakao.maps.LatLng(latNum, lngNum),
+      level: 5,
+    };
+    const createdMap = new kakao.maps.Map(mapRef.current, option);
+    setMap(createdMap);
+  }, [mapRef, map, patient]);
+
+  // ---------------- 5) 병원 마커 표시 ----------------
+  useEffect(() => {
+    if (!map) return;
+
+    // 이전 마커 제거
+    Object.values(markerRefs.current).forEach((obj) => {
+      obj.marker.setMap(null);
+    });
+    markerRefs.current = {};
+
+    const { kakao } = window;
+    if (fromHistory) {
+      if (!selectedHospital) return;
+      createSingleMarker(selectedHospital);
+    } else {
+      hospitals.forEach((h, i) => {
+        if (!h.lat || !h.lng) return;
+        const pos = new kakao.maps.LatLng(h.lat, h.lng);
+        const marker = new kakao.maps.Marker({ map, position: pos });
+        
+        const infoHtml = `
+          <div style="padding:5px; background:#fff; border:1px solid #ccc; color: black">
+            <strong>${i+1}. ${h.hosName}</strong><br/>
+            <span style="font-size:13px;">${h.hosAdd}</span>
+          </div>
+        `;
+        const info = new kakao.maps.InfoWindow({ content: infoHtml });
+        kakao.maps.event.addListener(marker, "click", () => info.open(map, marker));
+        markerRefs.current[h.hosIdx] = { marker, info };
+      });
+    }
+  }, [map, fromHistory, hospitals, selectedHospital]);
+
+  function createSingleMarker(h) {
+    const { kakao } = window;
+    if (!map || !kakao) return;
+    if (!h.lat || !h.lng) return;
+
+    const pos = new kakao.maps.LatLng(h.lat, h.lng);
+    const marker = new kakao.maps.Marker({ map, position: pos });
+    const infoHtml = `
+      <div style="padding:5px; background:#fff; border:1px solid #ccc;">
+        <strong>${h.hosName}</strong><br/>
+        <span style="font-size:13px;">${h.hosAdd}</span>
+      </div>
+    `;
+    const info = new kakao.maps.InfoWindow({ content: infoHtml });
+    kakao.maps.event.addListener(marker, "click", () => info.open(map, marker));
+    markerRefs.current[h.hosIdx] = { marker, info };
+    map.setCenter(pos);
+  }
+
+  // 병원 라디오 선택(새 진단)
+  useEffect(() => {
+    if (!map || fromHistory || !selectedHospital) return;
+    const refObj = markerRefs.current[selectedHospital.hosIdx];
+    if (refObj) {
+      map.setCenter(refObj.marker.getPosition());
+      refObj.info.open(map, refObj.marker);
+    }
+  }, [map, fromHistory, selectedHospital]);
 
   // 썸네일 클릭
-  function handleOldThumbClick(item) {
-    setSelectedOldImage(item);
-    setOldBigPreview(`http://localhost:8090/SmOne/images/${item.imgPath}`);
+  function handleThumbClick(x) {
+    setSelectedXray(x);
+    if (x.bigXray) {
+      setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${x.bigXray}`);
+    } else {
+      setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${x.imgPath}`);
+    }
+    // 썸네일 클릭 시에만 확대/이동 초기화
+    setBaseScale(1);
+    setZoom(1);
+    setOffsetX(0);
+    setOffsetY(0);
   }
 
   // 날짜 클릭
-  function handleDateClick(dateStr) {
-    setSelectedDate(dateStr);
+  function handleDateClick(d) {
+    setSelectedDate(d);
   }
 
-  // 뒤로가기 => 메인
+  // 병원 클릭
+  function handleHospitalClick(h) {
+    setSelectedHospital(h); // 병원 전체 객체
+  }
+
+  // 새 진단 결과 저장
+  async function handleSaveDiagnosis() {
+    if (!selectedHospital) {
+      alert("가까운 병원 중 하나를 선택해주세요!");
+      return;
+    }
+    const userId = sessionStorage.getItem("userId") || "testDoctor";
+    try {
+      // 새로 업로드된 X-ray와 매칭
+      const matched = xrayList.filter(x =>
+        newlyUploaded.some(orig => x.imgPath.includes(orig))
+      );
+      if (matched.length===0) {
+        alert("업로드된 X-ray와 매칭된 이미지가 없습니다.");
+        return;
+      }
+      // XRAY 업데이트
+      for (const img of matched) {
+        await axios.put(`${process.env.REACT_APP_DB_URL}/xray/updateResult`, {
+          imgIdx: img.imgIdx,
+          result: aiResult,
+        });
+      }
+      // diagnosis-result insert
+      for (const img of matched) {
+        const body = {
+          pIdx: patient.pIdx,
+          imgIdx: img.imgIdx,
+          diagnosis: aiResult,
+          doctorId: userId,
+          hosIdx: selectedHospital.hosIdx
+        };
+        await axios.post(`${process.env.REACT_APP_DB_URL}/diagnosis-result`, body, {
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      alert("진단 결과 저장 완료!");
+      setHasSaved(true);
+
+    } catch (err) {
+      console.error(err);
+      alert("저장 중 오류 발생");
+    }
+  }
+
+  // 뒤로가기
   function handleGoBack() {
     navigate("/main");
   }
-  // 출력하기 => /print
+
+  // [★] 출력하기: PrintPage.jsx로 데이터 전달
   function handlePrint() {
+    if (!fromHistory && !hasSaved) {
+      alert("먼저 [진단 결과 저장하기]를 완료해야 출력 가능합니다!");
+      return;
+    }
+    if (!loginUser) {
+      alert("로그인 사용자 정보를 가져오지 못했습니다.");
+      return;
+    }
+
+    // 병원 객체
+    const hospitalToSend = fromHistory
+      ? selectedHospital // 과거 모드: 이미 DB조회한 병원
+      : selectedHospital || null;
+
     navigate("/print", {
-      state: {
+      state:{
         patient,
         aiResult,
-        newlyUploaded
+        bigPreview,
+        selectedHospital: hospitalToSend, // 병원객체
+        centerId: loginUser.centerId,
+        userName: loginUser.userName,
+        userEmail: loginUser.email,
+        userAddress: loginUser.address,
+        diagDate: selectedDate
       }
     });
   }
+   //------------------------------------------------
+  // 이미지 확대/이동 핸들러
+  //------------------------------------------------
+  function handleImageLoad(e) {
+    // 미리보기 영역 크기
+    const boxWidth = 480;
+    const boxHeight= 380;
+    const img = e.currentTarget;
+    const natW = img.naturalWidth;
+    const natH = img.naturalHeight;
+    const scaleW = boxWidth / natW;
+    const scaleH = boxHeight/ natH;
+    setBaseScale(Math.min(scaleW, scaleH));
+  }
+
+  function handleWheelCapture(e) {
+    if (e.nativeEvent.cancelable) {
+      e.nativeEvent.preventDefault();
+    }
+    const delta = e.deltaY<0 ? 0.1 : -0.1;
+    let newZ = zoom + delta;
+    if (newZ<0.5) newZ=0.5;
+    if (newZ>4.0) newZ=4.0;
+    setZoom(newZ);
+  }
+  function handleMouseDown(e) {
+    e.preventDefault();
+    setDragging(true);
+    setStartX(e.clientX - offsetX);
+    setStartY(e.clientY - offsetY);
+  }
+  function handleMouseMove(e) {
+    if (!dragging) return;
+    e.preventDefault();
+    setOffsetX(e.clientX - startX);
+    setOffsetY(e.clientY - startY);
+  }
+  function handleMouseUp(e) {
+    e.preventDefault();
+    setDragging(false);
+  }
+  function handleMouseLeave(e) {
+    e.preventDefault();
+    setDragging(false);
+  }
+  function handleDragStart(e) {
+    e.preventDefault();
+  }
+
+  // 최종 스케일 적용
+  const totalScale = baseScale * zoom;
+  const bigImgStyle = {
+    position:"absolute",
+    left:"50%",
+    top:"50%",
+    transform:`
+      translate(-50%, -50%)
+      translate(${offsetX}px, ${offsetY}px)
+      scale(${totalScale})
+    `,
+    transformOrigin:"center center",
+    cursor: dragging ? "grabbing" : "grab",
+    maxWidth:"none",
+    userSelect:"none"
+  };
+
 
   return (
     <div className="result-container">
-      {/* 왼쪽 사이드 메뉴 추가 */}
       <Menu />
       <div className="result-topbar">
-        <button className="team-logo-button">
-          <img src={teamLogo} alt="Team Logo" className="team-logo-img" />
-        </button>
+        <h2> </h2>
         <div>
-          <button onClick={handleGoBack}>뒤로가기</button>
-          <button onClick={handlePrint} style={{ marginLeft: "10px" }}>출력하기</button>
+          <button className="result_btn1" onClick={handleGoBack}>뒤로가기</button>
+          <button className="result_btn2" onClick={handlePrint} style={{ marginLeft: "10px" }}>
+            출력하기
+          </button>
         </div>
       </div>
 
-      {/* 메인 레이아웃 */}
       <div className="result-main">
-        {/* 왼쪽 패널: 환자 정보 + 진단 날짜 */}
+        {/* 왼쪽 패널 */}
         <div className="result-left-panel">
-          <div className="result-patient-detail">
-            <h2>환자 정보</h2>
-            {patient ? (
-              <>
-                <p>환자 번호 : {patient.pIdx}</p>
-                <p>환자 이름 : {patient.pName}</p>
-                <p>생년월일 : {patient.birth}</p>
-                <p>연락처 : {patient.tel}</p>
-                <p>주소 : {patient.pAdd}</p>
-              </>
-            ) : (
-              <p>정보 없음</p>
-            )}
+          <div className="patient-info-box">
+            <h2 style={{ marginLeft: 10 }}>환자 정보</h2>
+            <table className="patient-detail-table">
+              <tbody>
+                <tr>
+                  <th>환자 번호</th>
+                  <td>{patient.pIdx}</td>
+                </tr>
+                <tr>
+                  <th>환자 이름</th>
+                  <td>{patient.pName}</td>
+                </tr>
+                <tr>
+                  <th>생년월일</th>
+                  <td>{patient.birth}</td>
+                </tr>
+                <tr>
+                  <th>연락처</th>
+                  <td>{patient.tel}</td>
+                </tr>
+                <tr>
+                  <th>주소</th>
+                  <td>
+                    <div className="patient-address">{patient.pAdd}</div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
           </div>
 
-          <div className="result-date-list">
+          {/* 진단 날짜 텍스트를 panel-block 밖으로 이동 */}
+          {patient && (
+            <div className="diagnosis-date-title">
+              진단 날짜
+            </div>
+          )}
+          <div className="date-list-box">
             <DateList
               diagDates={diagDates}
               currentPage={datePage}
@@ -141,53 +471,114 @@ function Result() {
               onDateClick={handleDateClick}
             />
           </div>
+
+          <h2 style={{ marginLeft: 10 }}>AI 진단 결과</h2>
+          <div className="ai-result-box">
+            <p>{aiResult}</p>
+          </div>
         </div>
 
-        {/* 오른쪽 패널: X-ray (왼쪽), 진단 결과 (오른쪽) */}
+        {/* 중앙 패널 */}
+        <div className="result-center-panel">
+          <div className="big-preview-box"
+          onWheelCapture={handleWheelCapture}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          >
+            {bigPreview ? (
+              <img
+                ref={bigImgRef}
+                src={bigPreview}
+                alt="bigXray"
+                className="big-xray-image" 
+                // style={bigImgStyle}
+                onLoad={handleImageLoad}
+                onDragStart={handleDragStart}
+                draggable={false}
+              />
+            ) : (
+              <div style={{ color: "#ccc" }}>X-ray가 없습니다.</div>
+            )}
+          </div>
+
+          <div className="thumb-list">
+            {xrayList.map((x) => (
+              <div
+                key={x.imgIdx}
+                className="thumb-item"
+                onClick={() => handleThumbClick(x)}
+              >
+                <img src={`${process.env.REACT_APP_DB_URL2}/images/${x.imgPath}`} alt="thumb" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 오른쪽 패널 */}
         <div className="result-right-panel">
-          <div className="result-xray-area">
-            <div className="big-preview-box">
-              {oldBigPreview ? (
-                <img
-                  src={oldBigPreview}
-                  alt="old-big"
-                  className="big-preview-img"
-                />
-              ) : (
-                <div style={{ color: "#ccc" }}>X-ray가 없습니다.</div>
-              )}
-            </div>
-
-            {/* 썸네일 목록 */}
-            <div className="thumb-list" style={{ marginTop: "10px" }}>
-              {oldImages.map((item) => (
-                <div
-                  key={item.imgIdx}
-                  className="thumb-item"
-                  onClick={() => handleOldThumbClick(item)}
-                >
-                  <img
-                    src={`http://localhost:8090/SmOne/images/${item.imgPath}`}
-                    alt="thumb"
-                  />
+          {fromHistory ? (
+            <>
+              <h2>과거 선택 병원</h2>
+              {selectedHospital ? (
+                <div className="result-right-panel2">
+                  <p><b>◻ {selectedHospital.hosName}</b></p>
+                  <p>{selectedHospital.hosAdd}</p>
                 </div>
-              ))}
-            </div>
-          </div>
+              ) : (
+                <p className="result-right-panel3">저장된 병원 정보가 없습니다.</p>
+              )}
+              <h2>위치 확인</h2>
+              <div ref={mapRef} className="hospital-map" />
+            </>
+          ) : (
+            <>
+              {/* 병원 안내 제목과 버튼을 한 줄로 정렬 */}
+              <div className="hospital-header">
+                <h2 style={{ marginLeft: 10 }}>가까운 병원 안내</h2>
+                <button className="save-diagnosis-btn" onClick={handleSaveDiagnosis}>
+                  저장
+                </button>
+              </div>
 
-          <div className="result-diagnosis-area">
-            <h3>AI 진단 결과</h3>
-            <p>{aiResult}</p>
-            <hr style={{ margin: "20px 0" }} />
-            <h4>이번에 업로드된 파일들</h4>
-            {newlyUploaded && newlyUploaded.length > 0 ? (
-              <ul>
-                {newlyUploaded.map((fn, i) =>
-                  <li key={i}>{fn}</li>
+              <div className="result_hospital">
+                {(!patient?.pLat || !patient?.pLng) ? (
+                  <p>※ 환자 좌표가 없어 안내 불가</p>
+                ) : (
+                  <>
+                    {hospitals.length > 0 ? (
+                      <div style={{ padding: "10px" }}>
+                        {hospitals.map((h, i) => (
+                          <div
+                            key={h.hosIdx}
+                            onClick={() => handleHospitalClick(h)}
+                          >
+                            <input
+                              type="radio"
+                              name="hospitalSelect"
+                              value={h.hosIdx}
+                              checked={selectedHospital?.hosIdx===h.hosIdx}
+                              onChange={() => setSelectedHospital(h)}
+                              style={{ marginRight: "5px" }}
+                            />
+                            <b>{i + 1}. {h.hosName}</b>
+                            <br />
+                            <span style={{ fontSize: "14px" }}>{h.hosAdd}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p>병원 목록이 없습니다.</p>
+                    )}
+                  </>
                 )}
-              </ul>
-            ) : <p>(없음)</p>}
-          </div>
+              </div>
+              <h2 className="map-check">위치 확인</h2>
+              <div ref={mapRef} className="hospital-map" />
+
+            </>
+          )}
         </div>
       </div>
     </div>

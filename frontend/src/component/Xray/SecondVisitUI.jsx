@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import plusIcon from "./plus-image.png";
 
 function SecondVisitUI({
   oldImages, setOldImages,
@@ -20,8 +21,8 @@ function SecondVisitUI({
   diagnosisResult,
   setDiagnosisResult
 }) {
-  const previewBoxWidth = 550;
-  const previewBoxHeight = 468;
+  const previewBoxWidth = 570;
+  const previewBoxHeight = 570;
 
   // 과거 X-ray
   const [oldBaseScale, setOldBaseScale] = useState(1);
@@ -50,7 +51,6 @@ function SecondVisitUI({
     setOldBaseScale(Math.min(scaleW, scaleH));
   };
   const handleWheelOld = (e) => {
-    e.preventDefault();
     let delta = e.deltaY < 0 ? 0.1 : -0.1;
     let newZ = oldZoom + delta;
     if (newZ < 0.5) newZ = 0.5;
@@ -124,7 +124,6 @@ function SecondVisitUI({
     setNewBaseScale(Math.min(scaleW, scaleH));
   };
   const handleWheelNew = (e) => {
-    e.preventDefault();
     let delta = e.deltaY < 0 ? 0.1 : -0.1;
     let newZ = newZoom + delta;
     if (newZ < 0.5) newZ = 0.5;
@@ -172,14 +171,14 @@ function SecondVisitUI({
   return (
     <div className="xray-flex" style={{ position: "relative" }}>
       {/* 과거 X-ray */}
-      <div className="xray-subpanel">
+      <div className="xray-subpanel2">
         <h4 style={{ marginTop: 0 }}>{oldXrayTitle}</h4>
         <div
           style={{
             width: `${previewBoxWidth}px`,
             height: `${previewBoxHeight}px`,
-            border: "2px dashed #999",
-            marginBottom: "10px",
+            border: "1px solid #999",
+            marginBottom: "15px",
             overflow: "hidden",
             position: "relative"
           }}
@@ -200,9 +199,13 @@ function SecondVisitUI({
               style={oldTransform}
             />
           ) : (
-            <div style={{ color: "#999" }}>
-              과거 이미지를 클릭하면 확대
+            <div style={{
+              color: "#999",
+              marginTop: "250px"
+            }}>
+              기존 이미지를 클릭하면 확대
             </div>
+
           )}
         </div>
 
@@ -211,7 +214,8 @@ function SecondVisitUI({
           gap: "8px",
           flexWrap: "wrap",
           maxWidth: "550px",
-          marginBottom: "35px"
+          marginTop: "5px",
+          marginBottom: "10px"
         }}>
           {oldImages.length === 0 && <p>(none)</p>}
           {oldImages.map((item, i) => (
@@ -220,7 +224,7 @@ function SecondVisitUI({
               style={{
                 position: "relative",
                 width: "80px", height: "80px",
-                border: "2px dashed #999",
+                border: "1px solid #999",
                 cursor: "pointer"
               }}
               onClick={() => handleOldThumbClick(item)}
@@ -236,13 +240,13 @@ function SecondVisitUI({
       </div>
 
       {/* 신규 X-ray */}
-      <div className="xray-subpanel">
+      <div className="xray-subpanel2">
         <h4 style={{ marginTop: 0 }}>신규 X-ray 등록</h4>
         <div
           style={{
             width: `${previewBoxWidth}px`,
             height: `${previewBoxHeight}px`,
-            border: "2px dashed #999",
+            border: "1px solid #999",
             marginBottom: "10px",
             overflow: "hidden",
             position: "relative"
@@ -264,8 +268,8 @@ function SecondVisitUI({
               style={newTransform}
             />
           ) : (
-            <div style={{ color: "#999" }}>
-              신규 이미지를 클릭하면 확대
+            <div style={{ color: "#999", marginTop: "250px" }}>
+              밑의 아이콘을 클릭하여 사진을 등록해주세요
             </div>
           )}
         </div>
@@ -275,6 +279,7 @@ function SecondVisitUI({
           gap: "8px",
           flexWrap: "wrap",
           maxWidth: "550px",
+          marginTop: "10px",
           marginBottom: "10px"
         }}>
           {Array.from({ length: 5 }).map((_, i) => {
@@ -294,7 +299,13 @@ function SecondVisitUI({
                     }}
                     onClick={handleNewPhotoRegister}
                   >
-                    <span style={{ fontSize: "24px" }}>+</span>
+                    <span style={{ fontSize: "24px" }}>
+                      <img
+                        src={plusIcon}
+                        alt="plus-icon"
+                        style={{ width: "60%", height: "60%" }}
+                      />
+                    </span>
                   </div>
                 );
               } else {
@@ -303,7 +314,7 @@ function SecondVisitUI({
                     key={`full-${i}`}
                     style={{
                       width: "80px", height: "80px",
-                      border: "2px dashed #999",
+                      border: "1px solid #999",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center"
@@ -320,7 +331,7 @@ function SecondVisitUI({
                   style={{
                     position: "relative",
                     width: "80px", height: "80px",
-                    border: "2px dashed #999",
+                    border: "1px solid #999",
                     cursor: "pointer"
                   }}
                   onClick={() => handleNewThumbClick(item)}
@@ -355,31 +366,6 @@ function SecondVisitUI({
           })}
         </div>
 
-        <button
-          onClick={handleNewPhotoRegister}
-          style={{
-            width: "120px",  // 버튼 너비
-            height: "30px", // 버튼 높이
-            padding: "4px", // 내부 패딩 조정
-            border: "none",
-            borderRadius: "6px",
-            background: "#333", // 버튼 색상 변경
-            color: "white",
-            fontSize: "12px", // 크기에 맞게 글자 크기 조정
-            fontWeight: "bold",
-            cursor: "pointer",
-            transition: "background 0.3s ease-in-out, transform 0.2s",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          onMouseEnter={(e) => (e.target.style.background = "#555")}
-          onMouseLeave={(e) => (e.target.style.background = "#333")}
-          onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
-          onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
-        >
-          사진 등록
-        </button>
 
       </div>
     </div>

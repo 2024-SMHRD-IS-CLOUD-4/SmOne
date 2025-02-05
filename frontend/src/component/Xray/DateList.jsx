@@ -19,21 +19,16 @@ function DateList({
   const goPage = (p) => setCurrentPage(p);
 
   return (
-    <div>
-      <h2 style={{ marginTop: 0 }}>진단 날짜</h2>
+    <div className="date-list-container">
       {diagDates.length === 0 ? (
-        <p>등록된 진단 날짜가 없습니다.</p>
+        <p className="no-dates-message">등록된 진단 날짜가 없습니다</p>
       ) : (
         <>
           <ul style={{ listStyle: "none", padding: 0 }}>
             {currentDates.map((d, i) => (
               <li
                 key={i}
-                style={{
-                  marginBottom: "5px",
-                  padding: "5px",
-                  cursor: "pointer"
-                }}
+                className="date-item"
                 onClick={() => onDateClick(d)}
               >
                 {d}
@@ -57,10 +52,10 @@ function DateList({
             <button onClick={goNext} disabled={currentPage === totalPages}>{">"}</button>
             <button onClick={goLast} disabled={currentPage === totalPages}>{">>"}</button>
           </div>
-
         </>
       )}
     </div>
+
   );
 }
 

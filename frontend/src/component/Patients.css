@@ -99,7 +99,7 @@
 }
 
 .patient-name {
-  width: 335px;
+  width: 308px;
   /* 이름 입력 칸 넓이 */
   height: 20px;
   padding: 10px;
@@ -122,19 +122,20 @@
   outline: none;
 }
 
-.postcode-search-button {
+.patient-postcode-search-button {
   background-color: #333;
   color: white;
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
   width: 155px;
-  height: 50px;
+  height: 45px;
   cursor: pointer;
   text-align: center;
+  transition: background 0.3s ease-in-out;
 }
 
-.postcode-search-button:hover {
+.patient-postcode-search-button:hover {
   background-color: #555555;
 }
 
@@ -147,6 +148,7 @@
   cursor: pointer;
   border-radius: 4px;
   margin-top: 20px;
+  transition: background 0.3s ease-in-out;
 }
 
 .submit-button:hover {
@@ -201,7 +203,7 @@
 }
 
 .phone-number-box {
-  width: 132px;
+  width: 123px;
   height: 20px;
   padding: 10px;
   border: 1px solid #ccc;

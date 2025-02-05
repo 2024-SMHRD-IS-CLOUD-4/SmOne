@@ -1,7 +1,9 @@
 package com.smhrd.smone.controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.smhrd.smone.model.HospitalInfo;
@@ -53,5 +55,15 @@ public class HospitalController {
     ){
         List<HospitalInfo> sorted = hospitalService.findNearestHospitalsWithDisease(lat, lng, disease);
         return (sorted.size() > limit)? sorted.subList(0, limit) : sorted;
+    }
+ // [추가] 병원 단건 조회 (리액트에서 /api/hospitals/{hosIdx} 호출 시 사용)
+    @GetMapping("/{hosIdx}")
+    public ResponseEntity<?> getHospitalById(@PathVariable Integer hosIdx) {
+        Optional<HospitalInfo> found = hospitalRepo.findById(hosIdx);
+        if(found.isPresent()) {
+            return ResponseEntity.ok(found.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
