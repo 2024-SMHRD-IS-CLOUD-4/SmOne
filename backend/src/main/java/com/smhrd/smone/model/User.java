@@ -10,6 +10,8 @@ import lombok.ToString;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.sql.Timestamp;
 
 @ToString
@@ -22,6 +24,7 @@ import java.sql.Timestamp;
 public class User {
 
 	@Id
+	@JsonProperty("userId")
     @Column(name = "USER_ID", length = 100, nullable = false)
     private String userId; 
 
