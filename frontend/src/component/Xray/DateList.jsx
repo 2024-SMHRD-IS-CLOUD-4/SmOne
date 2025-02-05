@@ -21,7 +21,7 @@ function DateList({
   return (
     <div>
       {diagDates.length === 0 ? (
-        <p>등록된 진단 날짜가 없습니다.</p>
+        <p style={{textAlign: "center", lineHeight: "110px"}}>등록된 진단 날짜가 없습니다.</p>
       ) : (
         <>
           <ul style={{ listStyle: "none", padding: 0 }}>

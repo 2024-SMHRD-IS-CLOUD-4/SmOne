@@ -99,13 +99,16 @@ html, body {
   padding: 10px 15px;
   border: none;
   border-radius: 6px;
-  background: #333;
-  color: #fff;
+  background: #fff;
+  color: black;
   font-size: 16px;
   margin-right: 40px;
   font-weight: bold;
   cursor: pointer;
   transition: background 0.3s ease-in-out; /* 부드러운 색상 전환 */
+}
+.diagnose-top-btn:hover {
+  background: #a2a2a2;
 }
 .exdiagnose-btn {
   display: flex;
@@ -113,8 +116,8 @@ html, body {
   padding: 10px 15px;
   border: none;
   border-radius: 6px;
-  background: #333;
-  color: #fff;
+  background: #fff;
+  color: black;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
@@ -122,16 +125,16 @@ html, body {
 }
 
 .exdiagnose-btn:hover {
-  background: #555;
+  background: #a2a2a2;
 }
 
 /* Ensure both buttons have consistent sizing */
-.exdiagnose-btn,
-.diagnose-top-btn {
+.exdiagnose-btn{
   display: inline-flex;
   justify-content: center;
   align-items: center;
 }
+
 
 /* 아이콘 크기 조정 */
 .stethoscope-icon {
@@ -183,22 +186,26 @@ html, body {
 /* 왼쪽 패널 */
 .left-panel {
   width: 350px;
-  overflow-y: auto;
   background: rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.2);
   padding: 10px;
   color: #fff;
-  height: 841px;
+  height: 805px;
   border-radius: 6px;
   margin-top: 20px;
 }
 .panel-block {
+  position: relative; /* ✅ 패널 내부에서 위치 조정 */
+  display: grid;
+  grid-template-rows: 1fr auto; /* ✅ 내용이 차지하는 공간을 확보하고, 하단 배치 */
+  height: 110px;
   background: rgba(0,0,0,0.6);
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: 6px;
   padding: 10px;
   margin-bottom: 10px;
 }
+
 /* 환자 정보 리스트 스타일 */
 .patient-list {
   list-style: none;
@@ -318,7 +325,6 @@ html, body {
 .right-panel {
   flex: 1;
   padding: 20px;
-  overflow-y: hidden;
   background-color: transparent;
   color: #fff;
   position: relative;
@@ -354,7 +360,7 @@ html, body {
   padding: 20px;
   box-sizing: border-box;
   width: 650px;
-  height: 730px;
+  height: 690px;
   margin-top: 14px;
   /* 요소 내부의 컨텐츠를 가운데 정렬 */
   display: flex;
@@ -370,7 +376,7 @@ html, body {
   padding: 20px;
   box-sizing: border-box;
   width: 650px;
-  height: 730px;
+  height: 690px;
 
   /* 요소 내부의 컨텐츠를 가운데 정렬 */
   display: flex;
@@ -412,7 +418,7 @@ html, body {
   padding: 8px 12px;
   border: none;
   border-radius: 6px;
-  background: #333;
+  background: #fff;
   color: white;
   cursor: pointer;
   font-weight: bold;
@@ -429,14 +435,15 @@ html, body {
 }
 .search-text {
   font-size: 14px;
-  color: white;
+  color: black;
 }
 /* 버튼 호버 효과 */
 .search-toggle-button:hover {
-  background: #444;
+  background: #a2a2a2;
 }
 .patient-table {
   width: 100%;
+  min-height: 200px; /* 🔥 테이블의 최소 높이 고정 */
   border-collapse: separate; /* 기본적으로 border-radius가 적용되지 않는 문제 해결 */
   border-spacing: 0; /* border-collapse: separate를 사용할 때 간격 제거 */
   border-radius: 6px; /* 전체 테이블에 border-radius 적용 */
@@ -454,6 +461,14 @@ html, body {
   text-overflow: ellipsis; /* 길면 ...으로 표시 */
   max-width: 120px;  /* 컬럼 크기 제한 (필요 시 조정 가능) */
 }
+
+.patient-table td:first-child {
+  width: 77px; /* 🔥 이름 칸의 최대 너비 고정 */
+  white-space: nowrap; /* ✅ 줄바꿈 방지 */
+  overflow: hidden; /* ✅ 내용이 넘치면 숨김 */
+  text-overflow: ellipsis; /* ✅ 길면 ... 표시 */
+}
+
 
 .patient-table th {
   border: 1px solid rgba(255,255,255,0.2);
@@ -479,6 +494,12 @@ html, body {
   border-top-right-radius: 6px;
 }
 
+.patient-table tbody tr {
+  width: 350px;
+  height: 43px; /* 🔥 tbody의 높이를 일정하게 유지 */
+}
+
+
 /* 테이블 마지막 행 - 좌우 하단 모서리 둥글게 */
 .patient-table tbody tr:last-child td:first-child {
   border-bottom-left-radius: 6px;
@@ -500,7 +521,7 @@ html, body {
 .patient-detail-table th, .patient-detail-table td {
   background-color: rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px;
+  padding: 8px;
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
@@ -564,4 +585,10 @@ html, body {
   margin-top: 10px;
   margin-bottom: 5px;
   margin-left: 10px;
+}
+
+.document-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px; /* 아이콘과 텍스트 사이 간격 */
 }
