@@ -198,7 +198,7 @@ function Patients() {
               />
               <button
                 type="button"
-                className="postcode-search-button"
+                className="patient-postcode-search-button"
                 onClick={handleAddressSearch}
               >
                 검색

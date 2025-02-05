@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import plusIcon from "./plus-image.png";
 
 function FirstVisitUI({
   newImages, setNewImages,
@@ -93,7 +94,6 @@ function FirstVisitUI({
             height: `${previewBoxHeight}px`,
             border: "1px solid #999",
             marginBottom: "10px",
-            marginTop: "20px",
             overflow: "hidden",
             position: "relative"
           }}
@@ -114,8 +114,8 @@ function FirstVisitUI({
               style={previewStyle}
             />
           ) : (
-            <div style={{ color: "#999", textAlign: "center" }}>
-              이미지를 클릭하면 확대
+            <div style={{ marginTop: "250px", color: "#999", textAlign: "center" }}>
+              밑의 아이콘을 클릭하여 사진을 등록해주세요
             </div>
           )}
         </div>
@@ -139,11 +139,19 @@ function FirstVisitUI({
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      cursor: "pointer"
+                      cursor: "pointer",
+                      marginTop: "10px",
+                      marginBottom: "-15px"
                     }}
                     onClick={handleNewPhotoRegister}
                   >
-                    <span style={{ fontSize: "24px" }}>+</span>
+                    <span style={{ fontSize: "24px" }}>
+                      <img
+                        src={plusIcon}
+                        alt="plus-icon"
+                        style={{ width: "60%", height: "60%" }}
+                      />
+                    </span>
                   </div>
                 );
               } else {
@@ -156,6 +164,7 @@ function FirstVisitUI({
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center"
+
                     }}
                   >
                     (full)
@@ -170,7 +179,8 @@ function FirstVisitUI({
                     position: "relative",
                     width: "80px", height: "80px",
                     border: "1px solid #999",
-                    cursor: "pointer"
+                    cursor: "pointer",
+                    marginTop:"10px"
                   }}
                   onClick={() => handleThumbClick(item)}
                 >
@@ -203,35 +213,6 @@ function FirstVisitUI({
             }
           })}
         </div>
-
-        <button
-          onClick={handleNewPhotoRegister}
-          style={{
-            width: "120px",
-            height: "30px",
-            padding: "4px",
-            border: "none",
-            borderRadius: "6px",
-            background: "#333",
-            color: "white",
-            fontSize: "12px",
-            fontWeight: "bold",
-            cursor: "pointer",
-            transition: "background 0.3s ease-in-out, transform 0.2s",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: "10px" // ⬅️ 추가된 부분
-          }}
-          onMouseEnter={(e) => (e.target.style.background = "#555")}
-          onMouseLeave={(e) => (e.target.style.background = "#333")}
-          onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
-          onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
-        >
-          사진 등록
-        </button>
-
-
       </div>
     </div>
   );

@@ -87,6 +87,7 @@ const Findid = () => {
             value={formData.centerId}
             onChange={handleChange}
             className="long-input"
+            required
           />
           <select
             name="role"
@@ -108,6 +109,7 @@ const Findid = () => {
           placeholder="관리자명을 입력하세요"
           value={formData.userName}
           onChange={handleChange}
+          required
         />
 
         {/* 이메일 */}
@@ -120,6 +122,7 @@ const Findid = () => {
             placeholder="이메일 아이디"
             value={formData.emailId}
             onChange={handleChange}
+            required
           />
           <span className="at-symbol">@</span>
           <input
@@ -129,6 +132,7 @@ const Findid = () => {
             value={formData.emailDomain}
             onChange={handleChange}
             className="email-input"
+            required
           />
         </div>
 

@@ -25,12 +25,14 @@ function Mypage() {
   const [deletePassword, setDeletePassword] = useState("");
 
   useEffect(() => {
+    
     const userId = sessionStorage.getItem("userId");
     if (!userId) {
       alert("로그인이 필요합니다.");
       navigate("/");
       return;
     }
+    
     setUserData(prev => ({ ...prev, userId }));
   }, [navigate]);
 
@@ -258,7 +260,7 @@ function Mypage() {
             비밀번호 변경
           </button>
           <button type="button" className="action-btn" onClick={() => setShowDeleteModal(true)}>
-            탈퇴하기
+            회원탈퇴
           </button>
         </div>
       </form>

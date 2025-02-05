@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import plusIcon from "./plus-image.png";
 
 function SecondVisitUI({
   oldImages, setOldImages,
@@ -200,13 +201,9 @@ function SecondVisitUI({
           ) : (
             <div style={{
               color: "#999",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-              height: "100%"
+              marginTop: "250px"
             }}>
-              신규 이미지를 클릭하면 확대
+              기존 이미지를 클릭하면 확대
             </div>
 
           )}
@@ -217,7 +214,8 @@ function SecondVisitUI({
           gap: "8px",
           flexWrap: "wrap",
           maxWidth: "550px",
-          marginBottom: "35px"
+          marginTop: "5px",
+          marginBottom: "10px"
         }}>
           {oldImages.length === 0 && <p>(none)</p>}
           {oldImages.map((item, i) => (
@@ -270,8 +268,8 @@ function SecondVisitUI({
               style={newTransform}
             />
           ) : (
-            <div style={{ color: "#999" }}>
-              신규 이미지를 클릭하면 확대
+            <div style={{ color: "#999", marginTop: "250px" }}>
+              밑의 아이콘을 클릭하여 사진을 등록해주세요
             </div>
           )}
         </div>
@@ -281,6 +279,7 @@ function SecondVisitUI({
           gap: "8px",
           flexWrap: "wrap",
           maxWidth: "550px",
+          marginTop: "10px",
           marginBottom: "10px"
         }}>
           {Array.from({ length: 5 }).map((_, i) => {
@@ -300,7 +299,13 @@ function SecondVisitUI({
                     }}
                     onClick={handleNewPhotoRegister}
                   >
-                    <span style={{ fontSize: "24px" }}>+</span>
+                    <span style={{ fontSize: "24px" }}>
+                      <img
+                        src={plusIcon}
+                        alt="plus-icon"
+                        style={{ width: "60%", height: "60%" }}
+                      />
+                    </span>
                   </div>
                 );
               } else {
@@ -361,31 +366,6 @@ function SecondVisitUI({
           })}
         </div>
 
-        <button
-          onClick={handleNewPhotoRegister}
-          style={{
-            width: "120px",  // 버튼 너비
-            height: "30px", // 버튼 높이
-            padding: "4px", // 내부 패딩 조정
-            border: "none",
-            borderRadius: "6px",
-            background: "#333", // 버튼 색상 변경
-            color: "white",
-            fontSize: "12px", // 크기에 맞게 글자 크기 조정
-            fontWeight: "bold",
-            cursor: "pointer",
-            transition: "background 0.3s ease-in-out, transform 0.2s",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          onMouseEnter={(e) => (e.target.style.background = "#555")}
-          onMouseLeave={(e) => (e.target.style.background = "#333")}
-          onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
-          onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
-        >
-          사진 등록
-        </button>
 
       </div>
     </div>

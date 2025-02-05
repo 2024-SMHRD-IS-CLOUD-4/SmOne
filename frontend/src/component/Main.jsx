@@ -9,6 +9,7 @@ import FirstVisitUI from "./Xray/FirstVisitUI";
 import SecondVisitUI from "./Xray/SecondVisitUI";
 import stethoscopeIcon from "./png/stethoscope.png";
 import magnifyingGlassIcon from "./png/magnifying-glass.png";
+import documentIcon from "./png/document.png"; // 추가
 
 function Main() {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ function Main() {
   const [diagDates, setDiagDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [datePage, setDatePage] = useState(1);
-  const datesPerPage = 5;
+  const datesPerPage = 2;
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
@@ -507,11 +508,12 @@ function Main() {
             </button>
           </form>
         )}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center"}}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           {/* 버튼 영역 */}
           <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
             {/* 과거 결과 보기 버튼 */}
             <button className="exdiagnose-btn" onClick={handleViewOldResult}>
+            <img src={documentIcon} alt="과거 진단 아이콘" className="document-icon" />
               과거 진단 보기
             </button>
 
@@ -549,12 +551,20 @@ function Main() {
                     {currentPatients.map((pt, idx) => (
                       <React.Fragment key={pt.pIdx || idx}>
                         <tr onClick={() => handlePatientClick(pt)}>
-                          <td>{pt.pName}</td>
-                          <td>{pt.birth.slice(0, 6)}-*******</td>
+                        <td>{pt.pName.length > 4 ? pt.pName.slice(0, 4) + "..." : pt.pName}</td>
+                          <td>{pt.birth.slice(0, 6)}</td>
                           <td>{pt.tel}</td>
                         </tr>
                       </React.Fragment>
                     ))}
+
+                    {/* ✅ 빈 행 추가 (최대 5줄 유지) */}
+                    {Array.from({ length: Math.max(0, 5 - currentPatients.length) }).map((_, i) => (
+                      <tr key={`empty-${i}`} className="empty-row">
+                        <td colSpan="3"></td>
+                      </tr>
+                    ))}
+
                   </tbody>
                 </table>
 
@@ -641,6 +651,7 @@ function Main() {
               datesPerPage={datesPerPage}
               onDateClick={(dateStr) => handleDateClick(dateStr, selectedPatient)}
             />
+            
           </div>
         </div>
 

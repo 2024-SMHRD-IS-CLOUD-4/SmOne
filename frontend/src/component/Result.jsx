@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import DateList from "./Xray/DateList";
 import "./Result.css";
+import Menu from "./Menu";
 
 function Result() {
   const location = useLocation();
@@ -11,7 +12,7 @@ function Result() {
 
   // 넘어온 state
   const patient = location.state?.patient || null;
-  const [aiResult, setAiResult] = useState(location.state?.aiResult || "정상"); 
+  const [aiResult, setAiResult] = useState(location.state?.aiResult || "정상");
   const newlyUploaded = location.state?.newlyUploaded || [];
   const bigFilename = location.state?.bigFilename || null;
   const fromHistory = location.state?.fromHistory || false;
@@ -51,7 +52,7 @@ function Result() {
     const storedUserId = sessionStorage.getItem("userId");
     if (storedUserId) {
       axios
-        .get(`${process.env.REACT_APP_DB_URL}/users/mypage?userId=${storedUserId}`, { withCredentials:true })
+        .get(`${process.env.REACT_APP_DB_URL}/users/mypage?userId=${storedUserId}`, { withCredentials: true })
         .then(res => setLoginUser(res.data))
         .catch(err => console.error("유저 정보 불러오기 실패:", err));
     }
@@ -112,7 +113,7 @@ function Result() {
           }
         })
         .then((hosRes) => {
-          setSelectedHospital(hosRes.data); 
+          setSelectedHospital(hosRes.data);
         })
         .catch((err) => {
           console.log("과거 병원 데이터 없음 => ", err.message);
@@ -127,7 +128,7 @@ function Result() {
   // ---------------- 3) 병원 안내 (새 진단 모드) ----------------
   useEffect(() => {
     if (!patient) return;
-    if (fromHistory) return; 
+    if (fromHistory) return;
     const latNum = parseFloat(patient.pLat);
     const lngNum = parseFloat(patient.pLng);
     if (!latNum || !lngNum) {
@@ -319,40 +320,40 @@ function Result() {
       console.error("Kakao 지도 API가 로드되지 않았습니다.");
       return;
     }
-  
+
     const latNum = parseFloat(patient?.pLat) || 37.5665;
     const lngNum = parseFloat(patient?.pLng) || 126.9780;
     console.log("지도 생성 - 위도:", latNum, "경도:", lngNum);
-  
+
     const mapOption = {
       center: new window.kakao.maps.LatLng(latNum, lngNum),
       level: 5,
     };
-  
+
     const newMap = new window.kakao.maps.Map(mapRef.current, mapOption);
     setMap(newMap);
   }, [mapRef, patient]);
-  
+
   axios
-  .get(`${process.env.REACT_APP_DB_URL}/xray/dates?pIdx=${patient.pIdx}`, {
-    withCredentials: false, // ✅ 서드파티 쿠키 사용 방지
-  })
-  .then((res) => {
-    setDiagDates(res.data);
-    if (!fromHistory && !selectedDate && res.data.length > 0) {
-      setSelectedDate(res.data[0]);
-    }
-  })
-  .catch((err) => console.error(err));
+    .get(`${process.env.REACT_APP_DB_URL}/xray/dates?pIdx=${patient.pIdx}`, {
+      withCredentials: false, // ✅ 서드파티 쿠키 사용 방지
+    })
+    .then((res) => {
+      setDiagDates(res.data);
+      if (!fromHistory && !selectedDate && res.data.length > 0) {
+        setSelectedDate(res.data[0]);
+      }
+    })
+    .catch((err) => console.error(err));
 
   return (
     <div className="result-container">
-      {/* 상단 바 */}
+      <Menu />
       <div className="result-topbar">
-        <h2>진단 결과 페이지</h2>
+        <h2> </h2>
         <div>
-          <button onClick={handleGoBack}>뒤로가기</button>
-          <button onClick={handlePrint} style={{ marginLeft: "10px" }}>
+          <button className="result_btn1" onClick={handleGoBack}>뒤로가기</button>
+          <button className="result_btn2" onClick={handlePrint} style={{ marginLeft: "10px" }}>
             출력하기
           </button>
         </div>
@@ -362,19 +363,43 @@ function Result() {
         {/* 왼쪽 패널 */}
         <div className="result-left-panel">
           <div className="patient-info-box">
-            <h3>환자 정보</h3>
-            {patient && (
-              <>
-                <p>이름: {patient.pName}</p>
-                <p>생년월일: {patient.birth}</p>
-                <p>연락처: {patient.tel}</p>
-                <p>주소: {patient.pAdd}</p>
-              </>
-            )}
+            <h2 style={{ marginLeft: 10 }}>환자 정보</h2>
+            <table className="patient-detail-table">
+              <tbody>
+                <tr>
+                  <th>환자 번호</th>
+                  <td>{patient.pIdx}</td>
+                </tr>
+                <tr>
+                  <th>환자 이름</th>
+                  <td>{patient.pName}</td>
+                </tr>
+                <tr>
+                  <th>생년월일</th>
+                  <td>{patient.birth}</td>
+                </tr>
+                <tr>
+                  <th>연락처</th>
+                  <td>{patient.tel}</td>
+                </tr>
+                <tr>
+                  <th>주소</th>
+                  <td>
+                    <div className="patient-address">{patient.pAdd}</div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
           </div>
 
+          {/* 진단 날짜 텍스트를 panel-block 밖으로 이동 */}
+          {patient && (
+            <div className="diagnosis-date-title">
+              진단 날짜
+            </div>
+          )}
           <div className="date-list-box">
-            <h3>진단 날짜</h3>
             <DateList
               diagDates={diagDates}
               currentPage={datePage}
@@ -384,8 +409,8 @@ function Result() {
             />
           </div>
 
+          <h2 style={{ marginLeft: 10 }}>AI 진단 결과</h2>
           <div className="ai-result-box">
-            <h3>AI 진단 결과</h3>
             <p>{aiResult}</p>
           </div>
         </div>
@@ -416,55 +441,63 @@ function Result() {
         <div className="result-right-panel">
           {fromHistory ? (
             <>
-              <h3>과거 선택 병원</h3>
+              <h2>과거 선택 병원</h2>
               {selectedHospital ? (
-                <div>
-                  <p><b>{selectedHospital.hosName}</b></p>
+                <div className="result-right-panel2">
+                  <p><b>◻ {selectedHospital.hosName}</b></p>
                   <p>{selectedHospital.hosAdd}</p>
                 </div>
               ) : (
-                <p>저장된 병원 정보가 없습니다.</p>
+                <p className="result-right-panel3">저장된 병원 정보가 없습니다.</p>
               )}
+              <h2>위치 확인</h2>
               <div ref={mapRef} className="hospital-map" />
             </>
           ) : (
             <>
-              <h3>가까운 병원 안내</h3>
-              {(!patient?.pLat || !patient?.pLng) ? (
-                <p>※ 환자 좌표가 없어 안내 불가</p>
-              ) : (
-                <>
-                  {hospitals.length > 0 ? (
-                    <div>
-                      {hospitals.map((h, i) => (
-                        <div
-                          key={h.hosIdx}
-                          style={{ marginBottom: "5px", cursor: "pointer" }}
-                          onClick={() => handleHospitalClick(h)}
-                        >
-                          <input
-                            type="radio"
-                            name="hospitalSelect"
-                            value={h.hosIdx}
-                            checked={selectedHospital === h.hosIdx}
-                            onChange={() => setSelectedHospital(h.hosIdx)}
-                            style={{ marginRight: "5px" }}
-                          />
-                          <b>{i + 1}. {h.hosName}</b>
-                          <br />
-                          <span style={{ fontSize: "14px" }}>{h.hosAdd}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p>병원 목록이 없습니다.</p>
-                  )}
-                  <div ref={mapRef} className="hospital-map" />
-                  <button onClick={handleSaveDiagnosis} style={{ marginTop: "20px" }}>
-                    진단 결과 저장하기
-                  </button>
-                </>
-              )}
+              {/* 병원 안내 제목과 버튼을 한 줄로 정렬 */}
+              <div className="hospital-header">
+                <h2 style={{ marginLeft: 10 }}>가까운 병원 안내</h2>
+                <button className="save-diagnosis-btn" onClick={handleSaveDiagnosis}>
+                  저장
+                </button>
+              </div>
+
+              <div className="result_hospital">
+                {(!patient?.pLat || !patient?.pLng) ? (
+                  <p>※ 환자 좌표가 없어 안내 불가</p>
+                ) : (
+                  <>
+                    {hospitals.length > 0 ? (
+                      <div style={{padding: "10px"}}>
+                        {hospitals.map((h, i) => (
+                          <div
+                            key={h.hosIdx}
+                            onClick={() => handleHospitalClick(h)}
+                          >
+                            <input
+                              type="radio"
+                              name="hospitalSelect"
+                              value={h.hosIdx}
+                              checked={selectedHospital === h.hosIdx}
+                              onChange={() => setSelectedHospital(h.hosIdx)}
+                              style={{ marginRight: "5px" }}
+                            />
+                            <b>{i + 1}. {h.hosName}</b>
+                            <br />
+                            <span style={{ fontSize: "14px" }}>{h.hosAdd}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p>병원 목록이 없습니다.</p>
+                    )}
+                  </>
+                )}
+              </div>
+              <h2 className="map-check">위치 확인</h2>
+              <div ref={mapRef} className="hospital-map" />
+
             </>
           )}
         </div>
