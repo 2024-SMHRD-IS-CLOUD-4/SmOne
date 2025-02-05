@@ -183,7 +183,7 @@ def save_result(p_idx, diagnosis_name, doctor_id, img_idx):
     finally :
         conn.close()
 
-def test(doctor_id,p_idx):
+def test(doctor_id = "1",p_idx= 70):
 
     if not doctor_id:
         print(f"⚠ ERROR: doctor_id가 None입니다. P_IDX={p_idx}")
