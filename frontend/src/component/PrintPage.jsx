@@ -42,7 +42,7 @@ function PrintPage() {
   }, []);
 
   function handleBack() {
-    navigate("/result");
+    navigate("/main");
   }
   function handlePrint() {
     window.print();
@@ -52,10 +52,10 @@ function PrintPage() {
     <div className="print-container">
       <div className="print-topbar">
         {/* 상단 제목: (기관명) 소견서 */}
-        <h2>({centerId}) 소견서</h2>
-        <div>
-          <button onClick={handleBack}>결과 페이지로</button>
-          <button onClick={handlePrint} style={{ marginLeft: "10px" }}>
+        <h2> </h2>
+        <div className="print_header">
+          <button className="print_btn1" onClick={handleBack}>메인 페이지로</button>
+          <button className="print_btn2" onClick={handlePrint} style={{ marginLeft: "10px" }}>
             브라우저 인쇄
           </button>
         </div>
@@ -64,6 +64,7 @@ function PrintPage() {
       <div className="report-content">
         <div className="report-header">
           <h2>{centerId || "(기관명)"} 소견서</h2>
+        <button className="printpage-close-btn" onClick={() => navigate(-1)}>X</button>
           <p style={{ textAlign: "right", marginTop: "20px", marginBottom: "-15px" }}>
             발행일자: {printDateStr}
           </p>
