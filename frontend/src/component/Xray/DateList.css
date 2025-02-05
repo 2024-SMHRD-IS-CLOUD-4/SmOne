@@ -1,11 +1,23 @@
 /* 기존 Pagination과 동일한 스타일 적용 */
+.date-list-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 내용과 페이지네이션을 아래로 정렬 */
+  height: 120px; /* 전체 높이 지정 (필요에 따라 조정 가능) */
+  animation: slideDown 0.5s ease-in-out;
+}
+
+/* 페이지네이션을 항상 아래에 고정 */
 .date-pagination {
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    border-radius: 6px;
-    overflow: hidden;
-  }
+  margin-top: auto; /* 자동으로 아래쪽으로 밀림 */
+  display: flex;
+  justify-content: center;
+  border-radius: 6px;
+  overflow: hidden;
+  padding-top: 10px; /* 위쪽 여백 추가 */
+  animation: slideDown 0.5s ease-in-out;
+}
+
   
   .date-pagination button {
     padding: 8px 12px;
@@ -44,7 +56,7 @@
     margin-bottom: 5px;
     padding: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.1s ease, color 0.1s ease;
   }
   
   .date-item:hover {
@@ -52,4 +64,41 @@
     color: white;
     border-radius: 5px;
   }
+  .no-dates-message {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    margin-top: 40px;
+  }
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px); /* 위에서 아래로 내려오는 효과 */
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
   
+  /* 진단 날짜 리스트에 애니메이션 적용 */
+  .date-list-container {
+    animation: slideDown 0.5s ease-in-out;
+  }
+  
+  /* 진단 날짜 리스트의 개별 항목 애니메이션 */
+  .date-item {
+    animation: slideDown 0.5s ease-in-out;
+  }
+  
+  /* 등록된 진단 날짜가 없을 때 메시지도 부드럽게 나타나도록 */
+  .no-dates-message {
+    animation: slideDown 0.5s ease-in-out;
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    margin-top: 45px;
+  }
+  .panel-block {
+    animation: slideDown 0.5s ease-in-out;
+  }

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 import teamLogo from './png/teamlogo.png';
+import idIcon from './png/id.png';
+import pwIcon from './png/pw.png';
 
 const Login = () => {
   const [formData, setFormData] = useState({ userId: '', userPw: '' });
@@ -56,27 +58,35 @@ const Login = () => {
     <div className="login-page">
       <img src={teamLogo} alt="Team Logo" className="login-team-logo" />
       <form className="login-form" onSubmit={handleSubmit}>
-        <label>아이디</label>
-        <input
-          type="text"
-          name="userId"
-          placeholder="아이디를 입력하세요"
-          value={formData.userId}
-          onChange={handleChange}
-          className={`${errorState.userId ? 'error-border' : ''} ${shake.userId ? 'shake' : ''}`}
-          required
-        />
 
-        <label>비밀번호</label>
-        <input
-          type="password"
-          name="userPw"
-          placeholder="비밀번호를 입력하세요"
-          value={formData.userPw}
-          onChange={handleChange}
-          className={`${errorState.userPw ? 'error-border' : ''} ${shake.userPw ? 'shake' : ''}`}
-          required
-        />
+        {/* 아이디 입력 필드 */}
+        <div className={`input-container ${shake.userId ? 'shake' : ''}`}>
+          <img src={idIcon} alt="아이디 아이콘" className="input-icon" />
+          <input
+            type="text"
+            name="userId"
+            placeholder="아이디를 입력하세요"
+            value={formData.userId}
+            onChange={handleChange}
+            className={`${errorState.userId ? 'error-border' : ''}`}
+            required
+          />
+        </div>
+
+        {/* 비밀번호 입력 필드 */}
+        <div className={`input-container ${shake.userPw ? 'shake' : ''}`}>
+          <img src={pwIcon} alt="비밀번호 아이콘" className="input-icon" />
+          <input
+            type="password"
+            name="userPw"
+            placeholder="비밀번호를 입력하세요"
+            value={formData.userPw}
+            onChange={handleChange}
+            className={`${errorState.userPw ? 'error-border' : ''}`}
+            required
+          />
+        </div>
+
 
         {/* 에러 메시지 출력 */}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
@@ -88,9 +98,13 @@ const Login = () => {
 
       <div className="login-extra">
         <span onClick={() => navigate('/findid')}>아이디 찾기</span>
+        <span className="separator">|</span>  {/* 구분자 추가 */}
         <span onClick={() => navigate('/findpw')}>비밀번호 찾기</span>
+        <span className="separator">|</span>  {/* 구분자 추가 */}
         <span onClick={() => navigate('/signup')}>회원가입</span>
       </div>
+
+
     </div>
   );
 };

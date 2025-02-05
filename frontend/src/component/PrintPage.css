@@ -1,49 +1,262 @@
-/* src/component/PrintPage.css */
+.diagnosis-body {
+  position: relative;
+  width: 100vw; /* 화면 너비 전체 */
+  height: 100vh; /* 화면 높이 전체 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* 상단부터 배치 */
+  overflow: hidden;
+}
 
-.print-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
-  
+.print-button {
+  position: absolute; /* 위치를 절대값으로 설정 */
+  top: 20px; /* 상단에서 20px */
+  right: 20px; /* 오른쪽 가장자리에서 20px */
+  background-color: #4187f6;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  height: 60px;
+  width: 135px;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.print_header {
+  position: relative; /* 기준 위치 */
+  height: 40px;
+  color: #fff;
+  padding: 0 40px;
+  box-sizing: border-box;
+  margin-top: 10px;
+  text-align: right; /* 텍스트와 버튼 우측 정렬 */
+}
+
+
+/* 공통 버튼 스타일 */
+.print_btn1,
+.print_btn2 {
+  display: inline-block; /* 버튼을 가로로 배치 */
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  background: #333;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 10px; /* 버튼 간 간격 */
+  transition: background 0.3s ease-in-out; /* 부드러운 색상 전환 */
+}
+
+.print_btn1 {
+  margin-right: 10px
+}
+
+.print_btn2 {
+  margin-left: 10px;
+  margin-right: 40px;
+}
+
+.print_btn1:hover,
+.print_btn2:hover {
+  background: #555;
+}
+
+.print-button img {
+  width: 40px;
+  height: 40px;
+}
+
+.print-button:hover {
+  background-color: #005fa3;
+}
+/* 취소하기 버튼 스타일 */
+.cancel-button {
+  position: absolute;
+  top: 20px; /* 출력 버튼과 같은 높이 */
+  right: 230px; /* 출력 버튼의 오른쪽에 위치 */
+  background-color: #f44336; /* 빨간색 배경 */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  height: 60px;
+  width: 135px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cancel-button img {
+  width: 40px;
+  height: 40px;
+}
+
+.cancel-button:hover {
+  background-color: #d32f2f; /* 더 진한 빨간색 */
+}
+
+.overlay-box {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.5); /* 반투명 검은색 */
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column; /* 버튼과 콘텐츠를 세로로 배치 */
+  align-items: center;
+  justify-content: flex-start; /* 위쪽부터 배치 */
+  padding: 20px;
+  overflow: auto;
+}
+.report-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.7); /* 30% 축소 */
+  background-color: white;
+  padding: 20px;
+  max-width: 210mm;
+  max-height: 297mm;
+  box-sizing: border-box;
+}
+
+.report-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.report-header h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.report-header span {
+  display: block;
+  font-size: 14px;
+  color: gray;
+}
+
+.grid-table {
+  width: 100%;
+  height: 1000px;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.grid-table th,
+.grid-table td {
+  border: 1px solid #000;
+  padding: 10px;
+
+}
+
+.grid-table th {
+  font-weight: bold;
+}
+/* 특정 칸 배경색 설정 */
+.highlight-cell {
+  text-align: center;
+  background-color: #a7a8a6;
+  color: #000; /* 텍스트 색상을 검정으로 */
+}
+/* 의료기관 병합 스타일 */
+.merged-cell {
+  border: 2px solid #000; /* 두꺼운 테두리 */
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+}
+/* 치료소견 및 X-ray 병합 스타일 */
+.treatment-cell {
+  height: 200px; /* 병합된 칸의 높이 설정 */
+  vertical-align: top; /* 내용이 위쪽에 정렬되도록 설정 */
+  text-align: center; /* 텍스트 및 이미지 중앙 정렬 */
+}
+.grid-table .report-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+/* X-ray 칸과 진단내용 칸 스타일 */
+.xray-cell {
+  height: 500px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.diagnosis-cell {
+  height: 100px;
+  vertical-align: top;
+  padding: 10px;
+}
+
+
+/* 인쇄 스타일 */
+@media print {
   .print-topbar {
-    height: 60px;
-    background: rgba(0,0,0,0.5);
-    color: #fff;
-    display: flex;
+    display: none; /* 인쇄 시 상단바 숨기려면 */
+    position: relative; /* 부모 요소 기준 */
+    justify-content: space-between; /* 좌우 정렬 */
     align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
   }
-  .print-content {
-    flex: 1;
-    background: #fff; /* 인쇄 시 흰 배경 */
-    color: #000;
-    padding: 20px;
-    overflow-y: auto;
+ @page {
+    size: A4;
+    margin: 0; /* 프린트 시 여백 제거 */
+  }
+
+  .report-content {
+    width: 210mm; /* A4 너비 */
+    height: 297mm; /* A4 높이 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: none; /* 중앙 정렬 제거 (전체 용지를 채우기 위해) */
+    background-color: white;
+    padding-right: 15mm;
+    padding-left: 15mm;
     box-sizing: border-box;
   }
-  
-  /* 테이블 예시 */
-  .print-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+}
+
+/* X 버튼 (닫기 버튼) */
+.printpage-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 6px 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease-in-out;
+}
+.printpage-close-btn:hover{
+  background-color: #666;
+}
+
+.printpage-close-btn:hover {
+  background-color: #666;
+}
+
+/* ✅ 인쇄할 때 X 버튼 숨기기 */
+@media print {
+  .printpage-close-btn {
+    display: none !important;
   }
-  .print-table th, .print-table td {
-    border: 1px solid #333;
-    padding: 10px;
-    vertical-align: middle;
-  }
-  
-  /* 인쇄 스타일 */
-  @media print {
-    .print-topbar {
-      display: none; /* 상단 바 숨김 */
-    }
-    .print-content {
-      margin: 0;
-      padding: 0;
-    }
-  }
-  
+}

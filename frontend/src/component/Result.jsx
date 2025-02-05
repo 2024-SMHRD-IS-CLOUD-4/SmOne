@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import DateList from "./Xray/DateList";
 import "./Result.css";
+import Menu from "./Menu";
 
 function Result() {
   const location = useLocation();
@@ -11,7 +12,7 @@ function Result() {
 
   // 넘어온 state
   const patient = location.state?.patient || null;
-  const [aiResult, setAiResult] = useState(location.state?.aiResult || "정상"); 
+  const [aiResult, setAiResult] = useState(location.state?.aiResult || "정상");
   const newlyUploaded = location.state?.newlyUploaded || [];
   const bigFilename = location.state?.bigFilename || null;
   const fromHistory = location.state?.fromHistory || false;
@@ -20,7 +21,17 @@ function Result() {
   // X-ray 목록
   const [xrayList, setXrayList] = useState([]);
   const [selectedXray, setSelectedXray] = useState(null);
+
+  // 큰 이미지 미리보기 + 확대/이동
   const [bigPreview, setBigPreview] = useState(null);
+  const bigImgRef = useRef(null);
+  const [baseScale, setBaseScale] = useState(1);
+  const [zoom, setZoom] = useState(1);
+  const [offsetX, setOffsetX] = useState(0);
+  const [offsetY, setOffsetY] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
 
   // 병원 안내(새 진단) or 과거 병원(이전 결과)
   const [hospitals, setHospitals] = useState([]);
@@ -35,8 +46,12 @@ function Result() {
   const [datePage, setDatePage] = useState(1);
   const datesPerPage = 5;
 
-  // [추가] 로그인 사용자 정보 (기관명/이메일/주소/의사이름 등)
+  // 로그인 사용자 정보
   const [loginUser, setLoginUser] = useState(null);
+
+  // 새 진단 모드에서 "진단 결과 저장 완료" 여부
+  const [hasSaved, setHasSaved] = useState(false);
+
 
   // ---------------- 1) 마운트 시 유저정보, X-ray 날짜목록 불러오기 ----------------
   useEffect(() => {
@@ -51,7 +66,7 @@ function Result() {
     const storedUserId = sessionStorage.getItem("userId");
     if (storedUserId) {
       axios
-        .get(`${process.env.REACT_APP_DB_URL}/users/mypage?userId=${storedUserId}`, { withCredentials:true })
+        .get(`${process.env.REACT_APP_DB_URL}/users/mypage?userId=${storedUserId}`, { withCredentials: true })
         .then(res => setLoginUser(res.data))
         .catch(err => console.error("유저 정보 불러오기 실패:", err));
     }
@@ -61,12 +76,11 @@ function Result() {
       .get(`${process.env.REACT_APP_DB_URL}/xray/dates?pIdx=${patient.pIdx}`)
       .then((res) => {
         setDiagDates(res.data);
-        // 새 진단 모드 && 아직 날짜 선택안됨 => 최신 날짜
         if (!fromHistory && !selectedDate && res.data.length > 0) {
-          setSelectedDate(res.data[0]);
+          setSelectedDate(res.data[0]); // 최신 날짜
         }
       })
-      .catch((err) => console.error(err));
+      .catch(err => console.error(err));
   }, [patient, navigate, fromHistory, selectedDate]);
 
   // ---------------- 2) 날짜 선택 => X-ray 목록, 과거결과(병원/진단) ----------------
@@ -88,6 +102,7 @@ function Result() {
             setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${res.data[0].imgPath}`);
           }
         } else {
+          setXrayList([]);
           setSelectedXray(null);
           setBigPreview(null);
         }
@@ -111,23 +126,21 @@ function Result() {
             throw new Error("No past diagnosis data");
           }
         })
-        .then((hosRes) => {
-          setSelectedHospital(hosRes.data); 
-        })
-        .catch((err) => {
-          console.log("과거 병원 데이터 없음 => ", err.message);
+        .then(hosRes => setSelectedHospital(hosRes.data)) 
+        .catch(err => {
+          console.log("과거 병원 정보 없음 =>", err.message);
           setSelectedHospital(null);
         });
     } else {
       // 새 진단 => 병원 선택 초기화
       setSelectedHospital(null);
+      setHasSaved(false);
     }
   }, [selectedDate, fromHistory, patient]);
 
   // ---------------- 3) 병원 안내 (새 진단 모드) ----------------
   useEffect(() => {
-    if (!patient) return;
-    if (fromHistory) return; 
+    if (!patient || fromHistory) return;
     const latNum = parseFloat(patient.pLat);
     const lngNum = parseFloat(patient.pLng);
     if (!latNum || !lngNum) {
@@ -140,13 +153,9 @@ function Result() {
     } else if (aiResult === "폐렴") {
       url = `${process.env.REACT_APP_DB_URL}/hospitals/near/disease?lat=${latNum}&lng=${lngNum}&disease=폐렴&limit=5`;
     }
-
-    axios
-      .get(url)
-      .then((res) => {
-        setHospitals(res.data);
-      })
-      .catch((err) => console.error(err));
+    axios.get(url)
+      .then(res => setHospitals(res.data))
+      .catch(err => console.error(err));
   }, [patient, fromHistory, aiResult]);
 
   // ---------------- 4) 지도 생성 ----------------
@@ -176,18 +185,23 @@ function Result() {
     });
     markerRefs.current = {};
 
+    const { kakao } = window;
     if (fromHistory) {
       if (!selectedHospital) return;
       createSingleMarker(selectedHospital);
     } else {
-      const { kakao } = window;
-      hospitals.forEach((h) => {
+      hospitals.forEach((h, i) => {
         if (!h.lat || !h.lng) return;
         const pos = new kakao.maps.LatLng(h.lat, h.lng);
         const marker = new kakao.maps.Marker({ map, position: pos });
-        const info = new kakao.maps.InfoWindow({
-          content: `<div style="padding:5px; background:#fff; color:#000; border:1px solid #ccc;">${h.hosName}</div>`,
-        });
+        
+        const infoHtml = `
+          <div style="padding:5px; background:#fff; border:1px solid #ccc; color: black">
+            <strong>${i+1}. ${h.hosName}</strong><br/>
+            <span style="font-size:13px;">${h.hosAdd}</span>
+          </div>
+        `;
+        const info = new kakao.maps.InfoWindow({ content: infoHtml });
         kakao.maps.event.addListener(marker, "click", () => info.open(map, marker));
         markerRefs.current[h.hosIdx] = { marker, info };
       });
@@ -201,9 +215,13 @@ function Result() {
 
     const pos = new kakao.maps.LatLng(h.lat, h.lng);
     const marker = new kakao.maps.Marker({ map, position: pos });
-    const info = new kakao.maps.InfoWindow({
-      content: `<div style="padding:5px; background:#fff; color:#000; border:1px solid #ccc;">${h.hosName}</div>`,
-    });
+    const infoHtml = `
+      <div style="padding:5px; background:#fff; border:1px solid #ccc;">
+        <strong>${h.hosName}</strong><br/>
+        <span style="font-size:13px;">${h.hosAdd}</span>
+      </div>
+    `;
+    const info = new kakao.maps.InfoWindow({ content: infoHtml });
     kakao.maps.event.addListener(marker, "click", () => info.open(map, marker));
     markerRefs.current[h.hosIdx] = { marker, info };
     map.setCenter(pos);
@@ -212,7 +230,7 @@ function Result() {
   // 병원 라디오 선택(새 진단)
   useEffect(() => {
     if (!map || fromHistory || !selectedHospital) return;
-    const refObj = markerRefs.current[selectedHospital];
+    const refObj = markerRefs.current[selectedHospital.hosIdx];
     if (refObj) {
       map.setCenter(refObj.marker.getPosition());
       refObj.info.open(map, refObj.marker);
@@ -227,6 +245,11 @@ function Result() {
     } else {
       setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${x.imgPath}`);
     }
+    // 썸네일 클릭 시에만 확대/이동 초기화
+    setBaseScale(1);
+    setZoom(1);
+    setOffsetX(0);
+    setOffsetY(0);
   }
 
   // 날짜 클릭
@@ -236,7 +259,7 @@ function Result() {
 
   // 병원 클릭
   function handleHospitalClick(h) {
-    setSelectedHospital(h.hosIdx);
+    setSelectedHospital(h); // 병원 전체 객체
   }
 
   // 새 진단 결과 저장
@@ -246,13 +269,13 @@ function Result() {
       return;
     }
     const userId = sessionStorage.getItem("userId") || "testDoctor";
-
     try {
-      const matched = xrayList.filter((x) =>
-        newlyUploaded.some((orig) => x.imgPath.includes(orig))
+      // 새로 업로드된 X-ray와 매칭
+      const matched = xrayList.filter(x =>
+        newlyUploaded.some(orig => x.imgPath.includes(orig))
       );
-      if (matched.length === 0) {
-        alert("업로드된 X-ray와 매칭이 없습니다.");
+      if (matched.length===0) {
+        alert("업로드된 X-ray와 매칭된 이미지가 없습니다.");
         return;
       }
       // XRAY 업데이트
@@ -269,15 +292,17 @@ function Result() {
           imgIdx: img.imgIdx,
           diagnosis: aiResult,
           doctorId: userId,
-          hosIdx: selectedHospital,
+          hosIdx: selectedHospital.hosIdx
         };
         await axios.post(`${process.env.REACT_APP_DB_URL}/diagnosis-result`, body, {
           headers: { "Content-Type": "application/json" },
         });
       }
       alert("진단 결과 저장 완료!");
-    } catch (e) {
-      console.error(e);
+      setHasSaved(true);
+
+    } catch (err) {
+      console.error(err);
       alert("저장 중 오류 발생");
     }
   }
@@ -289,70 +314,109 @@ function Result() {
 
   // [★] 출력하기: PrintPage.jsx로 데이터 전달
   function handlePrint() {
-    if (!loginUser) {
-      alert("로그인 사용자 정보를 불러오지 못했습니다.");
+    if (!fromHistory && !hasSaved) {
+      alert("먼저 [진단 결과 저장하기]를 완료해야 출력 가능합니다!");
       return;
     }
+    if (!loginUser) {
+      alert("로그인 사용자 정보를 가져오지 못했습니다.");
+      return;
+    }
+
+    // 병원 객체
+    const hospitalToSend = fromHistory
+      ? selectedHospital // 과거 모드: 이미 DB조회한 병원
+      : selectedHospital || null;
+
     navigate("/print", {
-      state: {
-        // 환자
+      state:{
         patient,
         aiResult,
-        // X-ray 미리보기
         bigPreview,
-        // 과거 or 새 진단에서 선택된 병원
-        selectedHospital,
-
-        // 로그인 유저 정보
-        centerId: loginUser.centerId,     // 기관명
-        userName: loginUser.userName,     // 의사 이름
-        userEmail: loginUser.email,       // 이메일
-        userAddress: loginUser.address,   // 의료기관 주소
-
-        // 진단 날짜(= X-ray 날짜)
-        diagDate: selectedDate,
-      },
+        selectedHospital: hospitalToSend, // 병원객체
+        centerId: loginUser.centerId,
+        userName: loginUser.userName,
+        userEmail: loginUser.email,
+        userAddress: loginUser.address,
+        diagDate: selectedDate
+      }
     });
   }
-  useEffect(() => {
-    if (!window.kakao || !window.kakao.maps) {
-      console.error("Kakao 지도 API가 로드되지 않았습니다.");
-      return;
+   //------------------------------------------------
+  // 이미지 확대/이동 핸들러
+  //------------------------------------------------
+  function handleImageLoad(e) {
+    // 미리보기 영역 크기
+    const boxWidth = 480;
+    const boxHeight= 380;
+    const img = e.currentTarget;
+    const natW = img.naturalWidth;
+    const natH = img.naturalHeight;
+    const scaleW = boxWidth / natW;
+    const scaleH = boxHeight/ natH;
+    setBaseScale(Math.min(scaleW, scaleH));
+  }
+
+  function handleWheelCapture(e) {
+    if (e.nativeEvent.cancelable) {
+      e.nativeEvent.preventDefault();
     }
-  
-    const latNum = parseFloat(patient?.pLat) || 37.5665;
-    const lngNum = parseFloat(patient?.pLng) || 126.9780;
-    console.log("지도 생성 - 위도:", latNum, "경도:", lngNum);
-  
-    const mapOption = {
-      center: new window.kakao.maps.LatLng(latNum, lngNum),
-      level: 5,
-    };
-  
-    const newMap = new window.kakao.maps.Map(mapRef.current, mapOption);
-    setMap(newMap);
-  }, [mapRef, patient]);
-  
-  axios
-  .get(`${process.env.REACT_APP_DB_URL}/xray/dates?pIdx=${patient.pIdx}`, {
-    withCredentials: false, // ✅ 서드파티 쿠키 사용 방지
-  })
-  .then((res) => {
-    setDiagDates(res.data);
-    if (!fromHistory && !selectedDate && res.data.length > 0) {
-      setSelectedDate(res.data[0]);
-    }
-  })
-  .catch((err) => console.error(err));
+    const delta = e.deltaY<0 ? 0.1 : -0.1;
+    let newZ = zoom + delta;
+    if (newZ<0.5) newZ=0.5;
+    if (newZ>4.0) newZ=4.0;
+    setZoom(newZ);
+  }
+  function handleMouseDown(e) {
+    e.preventDefault();
+    setDragging(true);
+    setStartX(e.clientX - offsetX);
+    setStartY(e.clientY - offsetY);
+  }
+  function handleMouseMove(e) {
+    if (!dragging) return;
+    e.preventDefault();
+    setOffsetX(e.clientX - startX);
+    setOffsetY(e.clientY - startY);
+  }
+  function handleMouseUp(e) {
+    e.preventDefault();
+    setDragging(false);
+  }
+  function handleMouseLeave(e) {
+    e.preventDefault();
+    setDragging(false);
+  }
+  function handleDragStart(e) {
+    e.preventDefault();
+  }
+
+  // 최종 스케일 적용
+  const totalScale = baseScale * zoom;
+  const bigImgStyle = {
+    position:"absolute",
+    left:"50%",
+    top:"50%",
+    transform:`
+      translate(-50%, -50%)
+      translate(${offsetX}px, ${offsetY}px)
+      scale(${totalScale})
+    `,
+    transformOrigin:"center center",
+    cursor: dragging ? "grabbing" : "grab",
+    maxWidth:"none",
+    userSelect:"none"
+  };
+
 
   return (
     <div className="result-container">
-      {/* 상단 바 */}
+      <Menu />
       <div className="result-topbar">
-        <h2>진단 결과 페이지</h2>
+        <h2> </h2>
         <div>
-          <button onClick={handleGoBack}>뒤로가기</button>
-          <button onClick={handlePrint} style={{ marginLeft: "10px" }}>
+          <button className="result_btn1" onClick={handleGoBack}>뒤로가기</button>
+          <button className="result_btn2" onClick={handlePrint} style={{ marginLeft: "10px" }}>
             출력하기
           </button>
         </div>
@@ -362,19 +426,43 @@ function Result() {
         {/* 왼쪽 패널 */}
         <div className="result-left-panel">
           <div className="patient-info-box">
-            <h3>환자 정보</h3>
-            {patient && (
-              <>
-                <p>이름: {patient.pName}</p>
-                <p>생년월일: {patient.birth}</p>
-                <p>연락처: {patient.tel}</p>
-                <p>주소: {patient.pAdd}</p>
-              </>
-            )}
+            <h2 style={{ marginLeft: 10 }}>환자 정보</h2>
+            <table className="patient-detail-table">
+              <tbody>
+                <tr>
+                  <th>환자 번호</th>
+                  <td>{patient.pIdx}</td>
+                </tr>
+                <tr>
+                  <th>환자 이름</th>
+                  <td>{patient.pName}</td>
+                </tr>
+                <tr>
+                  <th>생년월일</th>
+                  <td>{patient.birth}</td>
+                </tr>
+                <tr>
+                  <th>연락처</th>
+                  <td>{patient.tel}</td>
+                </tr>
+                <tr>
+                  <th>주소</th>
+                  <td>
+                    <div className="patient-address">{patient.pAdd}</div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
           </div>
 
+          {/* 진단 날짜 텍스트를 panel-block 밖으로 이동 */}
+          {patient && (
+            <div className="diagnosis-date-title">
+              진단 날짜
+            </div>
+          )}
           <div className="date-list-box">
-            <h3>진단 날짜</h3>
             <DateList
               diagDates={diagDates}
               currentPage={datePage}
@@ -384,21 +472,37 @@ function Result() {
             />
           </div>
 
+          <h2 style={{ marginLeft: 10 }}>AI 진단 결과</h2>
           <div className="ai-result-box">
-            <h3>AI 진단 결과</h3>
             <p>{aiResult}</p>
           </div>
         </div>
 
         {/* 중앙 패널 */}
         <div className="result-center-panel">
-          <div className="big-preview-box">
+          <div className="big-preview-box"
+          onWheelCapture={handleWheelCapture}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          >
             {bigPreview ? (
-              <img src={bigPreview} alt="bigXray" className="big-xray-image" />
+              <img
+                ref={bigImgRef}
+                src={bigPreview}
+                alt="bigXray"
+                className="big-xray-image" 
+                // style={bigImgStyle}
+                onLoad={handleImageLoad}
+                onDragStart={handleDragStart}
+                draggable={false}
+              />
             ) : (
               <div style={{ color: "#ccc" }}>X-ray가 없습니다.</div>
             )}
           </div>
+
           <div className="thumb-list">
             {xrayList.map((x) => (
               <div
@@ -416,55 +520,63 @@ function Result() {
         <div className="result-right-panel">
           {fromHistory ? (
             <>
-              <h3>과거 선택 병원</h3>
+              <h2>과거 선택 병원</h2>
               {selectedHospital ? (
-                <div>
-                  <p><b>{selectedHospital.hosName}</b></p>
+                <div className="result-right-panel2">
+                  <p><b>▫ {selectedHospital.hosName}</b></p>
                   <p>{selectedHospital.hosAdd}</p>
                 </div>
               ) : (
-                <p>저장된 병원 정보가 없습니다.</p>
+                <p className="result-right-panel3">저장된 병원 정보가 없습니다.</p>
               )}
+              <h2>위치 확인</h2>
               <div ref={mapRef} className="hospital-map" />
             </>
           ) : (
             <>
-              <h3>가까운 병원 안내</h3>
-              {(!patient?.pLat || !patient?.pLng) ? (
-                <p>※ 환자 좌표가 없어 안내 불가</p>
-              ) : (
-                <>
-                  {hospitals.length > 0 ? (
-                    <div>
-                      {hospitals.map((h, i) => (
-                        <div
-                          key={h.hosIdx}
-                          style={{ marginBottom: "5px", cursor: "pointer" }}
-                          onClick={() => handleHospitalClick(h)}
-                        >
-                          <input
-                            type="radio"
-                            name="hospitalSelect"
-                            value={h.hosIdx}
-                            checked={selectedHospital === h.hosIdx}
-                            onChange={() => setSelectedHospital(h.hosIdx)}
-                            style={{ marginRight: "5px" }}
-                          />
-                          <b>{i + 1}. {h.hosName}</b>
-                          <br />
-                          <span style={{ fontSize: "14px" }}>{h.hosAdd}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p>병원 목록이 없습니다.</p>
-                  )}
-                  <div ref={mapRef} className="hospital-map" />
-                  <button onClick={handleSaveDiagnosis} style={{ marginTop: "20px" }}>
-                    진단 결과 저장하기
-                  </button>
-                </>
-              )}
+              {/* 병원 안내 제목과 버튼을 한 줄로 정렬 */}
+              <div className="hospital-header">
+                <h2 style={{ marginLeft: 10 }}>거리순 병원 찾기</h2>
+                <button className="save-diagnosis-btn" onClick={handleSaveDiagnosis}>
+                  저장
+                </button>
+              </div>
+
+              <div className="result_hospital">
+                {(!patient?.pLat || !patient?.pLng) ? (
+                  <p>※ 환자 좌표가 없어 안내 불가</p>
+                ) : (
+                  <>
+                    {hospitals.length > 0 ? (
+                      <div style={{ padding: "10px" }}>
+                        {hospitals.map((h, i) => (
+                          <div
+                            key={h.hosIdx}
+                            onClick={() => handleHospitalClick(h)}
+                          >
+                            <input
+                              type="radio"
+                              name="hospitalSelect"
+                              value={h.hosIdx}
+                              checked={selectedHospital?.hosIdx===h.hosIdx}
+                              onChange={() => setSelectedHospital(h)}
+                              style={{ marginRight: "5px" }}
+                            />
+                            <b>{i + 1}. {h.hosName}</b>
+                            <br />
+                            <span style={{ fontSize: "14px" }}>{h.hosAdd}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p>병원 목록이 없습니다.</p>
+                    )}
+                  </>
+                )}
+              </div>
+              <h2 className="map-check">위치 확인</h2>
+              <div ref={mapRef} className="hospital-map" />
+
             </>
           )}
         </div>
