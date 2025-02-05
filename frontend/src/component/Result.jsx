@@ -523,7 +523,7 @@ function Result() {
               <h2>과거 선택 병원</h2>
               {selectedHospital ? (
                 <div className="result-right-panel2">
-                  <p><b>◻ {selectedHospital.hosName}</b></p>
+                  <p><b>▫ {selectedHospital.hosName}</b></p>
                   <p>{selectedHospital.hosAdd}</p>
                 </div>
               ) : (
@@ -536,7 +536,7 @@ function Result() {
             <>
               {/* 병원 안내 제목과 버튼을 한 줄로 정렬 */}
               <div className="hospital-header">
-                <h2 style={{ marginLeft: 10 }}>가까운 병원 안내</h2>
+                <h2 style={{ marginLeft: 10 }}>거리순 병원 찾기</h2>
                 <button className="save-diagnosis-btn" onClick={handleSaveDiagnosis}>
                   저장
                 </button>
