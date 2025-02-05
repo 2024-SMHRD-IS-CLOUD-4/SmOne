@@ -1,5 +1,6 @@
 /* 반투명 컨테이너 */
 .changepw-container {
+  position: relative; /* 이 부분이 중요합니다 */
   width: 450px;
   height: 450px;
   margin: 200px auto 0 auto;
@@ -145,4 +146,23 @@ input:focus {
   .changepw_btn:disabled {
     background-color: #666;
     cursor: not-allowed;
+  }
+
+    /* X 버튼 (닫기 버튼) */
+  .changepw-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 6px 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .changepw-close-btn:hover {
+    background-color: #666;
   }

@@ -71,12 +71,13 @@ const Findid = () => {
 
   return (
     <div className={`findid-container ${foundUserId ? "expanded" : ""}`}>
+      <div className="findid_header">
       {/* X 버튼을 컨테이너 안쪽 상단 오른쪽에 배치 */}
-      <button className="findid-close-btn" onClick={() => navigate("/")}>X</button>
       <h1 className="findid-title">아이디 찾기</h1>
-
+      <button className="findid-close-btn" onClick={() => navigate("/")}>X</button>
+      </div>
+      
       <div className="findid-form">
-
         {/* 기관명/직책 */}
         <label>기관명 / 직책</label>
         <div className="flex-row">

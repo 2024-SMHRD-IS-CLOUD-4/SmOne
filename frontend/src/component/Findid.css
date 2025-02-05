@@ -1,10 +1,9 @@
-/* src/component/Findid.css */
-
 /* 전체 컨테이너 (반투명 박스) */
 .findid-container {
+  position: relative; /* 이 부분이 중요합니다 */
   width: 450px;
   height: 450px;
-  margin: 200px auto 0 auto;
+  margin: 200px auto;
   margin-bottom: 200px;
   background-color: rgba(0, 0, 0, 0.5);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 2.0);
@@ -146,8 +145,6 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  margin: 200px auto 0 auto;
-  margin-right: 710px;
   transition: background 0.3s ease-in-out;
 }
 .findid-close-btn:hover{
