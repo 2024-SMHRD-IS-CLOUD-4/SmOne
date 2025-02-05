@@ -17,3 +17,4 @@ INFO:     127.0.0.1:49334 - "POST /diagnose/ HTTP/1.1" 500 Internal Server Error
 INFO:     127.0.0.1:35126 - "POST /diagnose/ HTTP/1.1" 422 Unprocessable Entity
 INFO:     127.0.0.1:37640 - "POST /diagnose HTTP/1.1" 307 Temporary Redirect
 INFO:     127.0.0.1:59698 - "POST /diagnose HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:39358 - "POST /diagnose HTTP/1.1" 307 Temporary Redirect

@@ -17,14 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.smhrd.smone.model.XrayImages;
+import com.smhrd.smone.service.NaverS3Service;
 import com.smhrd.smone.service.XrayImagesService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/xray")
+@RequiredArgsConstructor
 public class XrayImagesController {
 	
 	@Autowired
 	private XrayImagesService xrayService;
+	
+	private final NaverS3Service naverS3Service;
 	
 	// 특정 환자 x-ray 목록 조회
 	@GetMapping("/{pIdx}")
@@ -36,13 +42,12 @@ public class XrayImagesController {
             return ResponseEntity.badRequest().body(e.getMessage());
             }
 	}
-	
-	// 진단하기 => 파일 업로드 => DB insert(RESULT=null)
+
 	@PostMapping("/diagnose")
 	public ResponseEntity<?> diagnoseXray(
 	    @RequestParam("pIdx") Integer pIdx,
 	    @RequestParam("files") List<MultipartFile> files,
-	    @RequestParam(value="bigFilename", required=false) String bigFilename // 추가
+	    @RequestParam(value="bigFilename", required=false) String bigFilename
 	) {
 	    try {
 	        List<XrayImages> saved = xrayService.insertXrayImages(pIdx, files, bigFilename);
@@ -54,7 +59,6 @@ public class XrayImagesController {
 	    }
 	}
 
-	
 	// 특정 환자의 연-월-일 목록 (중복 없이, 최신순)
 	@GetMapping("/dates")
 	public ResponseEntity<?> getDistinctDates(@RequestParam Integer pIdx){

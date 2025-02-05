@@ -63,6 +63,7 @@ const Changepw = () => {
 
     return (
         <div className="changepw-container">
+            <button className="changepw-close-btn" onClick={() => navigate("/")}>X</button>
             <h1 className="changepw-title">비밀번호 변경</h1>
             <form onSubmit={handleSubmit}>
 

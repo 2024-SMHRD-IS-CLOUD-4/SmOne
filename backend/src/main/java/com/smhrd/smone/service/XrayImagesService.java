@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class XrayImagesService {
 
+	private final NaverS3Service naverS3Service;
 	private final XrayImagesRepository xrayRepo;
 
 	@Value("${file.upload-dir}")
@@ -39,7 +40,9 @@ public class XrayImagesService {
 		for (MultipartFile mf : files) {
 			if (mf.isEmpty())
 				continue;
-
+			
+			String uploadedUrl = naverS3Service.uploadFile(mf);
+			
 			// 1) 로컬 파일 저장
 			String orig = mf.getOriginalFilename();
 			String saveName = System.currentTimeMillis() + "_" + orig;
@@ -49,12 +52,12 @@ public class XrayImagesService {
 			// 2) DB insert
 			XrayImages x = new XrayImages();
 			x.setPIdx(pIdx);
-			x.setImgPath(saveName);
+			x.setImgPath(uploadedUrl);
 			x.setProcessedAt(null);
 			x.setResult(null);
 
 			if (bigFilename != null && orig.equals(bigFilename)) {
-				x.setBigXray(saveName);
+				x.setBigXray(uploadedUrl);
 			} else {
 				x.setBigXray(null);
 			}

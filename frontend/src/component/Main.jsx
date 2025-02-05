@@ -63,7 +63,10 @@ function Main() {
 
   // 환자 목록 불러오기
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_DB_URL}/patients`)
+    axios
+    .get(`${process.env.REACT_APP_DB_URL}/patients`, {
+      withCredentials: true,  // ✅ 세션 정보 유지 (쿠키 필요할 때 추가)
+    })
       .then(res => {
         // pIdx 큰 순으로 정렬
         const sorted = [...res.data].sort((a, b) => b.pIdx - a.pIdx);
@@ -185,6 +188,8 @@ function Main() {
 
       await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
+        withCredentials : true
+        
       });
 
       // 2) (임시) AI 결과
@@ -270,7 +275,9 @@ function Main() {
       try {
         const x = await axios.get(
           `${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${pIdx}&date=${data.selectedDate}`
-        );
+        , {
+          withCredentials : true
+        });
         setOldImages(x.data);
         const foundBig = x.data.find(m => m.bigXray != null);
         if (foundBig) {
