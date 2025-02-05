@@ -140,6 +140,7 @@ margin: 0 auto 20px; /* 중앙 정렬 + 아래 간격 */
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+  margin-top: 20px;
 }
 
 .input-icon {
@@ -147,4 +148,5 @@ margin: 0 auto 20px; /* 중앙 정렬 + 아래 간격 */
   left: 7px; /* 입력 필드 왼쪽 가장자리에 배치 */
   width: 25px; /* 아이콘 크기 */
   height: 25px;
+  margin-top: 20px;
 }

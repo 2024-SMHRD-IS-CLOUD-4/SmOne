@@ -72,6 +72,14 @@ public class UserService {
         updatedUser.setUserPw(existingUser.getUserPw());
 
         // 사용자 정보 업데이트
+        String centerId = updatedUser.getCenterId();
+        boolean centerExists = centerRepository.existsById(centerId);
+        if(!centerExists) {
+        	Center newCenter = new Center();
+        	newCenter.setCenterId(centerId);
+        	newCenter.setCenterAdd(updatedUser.getAddress());
+        	centerRepository.save(newCenter);
+        }
         return userRepository.save(updatedUser);
     }
 

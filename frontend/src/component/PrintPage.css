@@ -21,12 +21,51 @@
   height: 60px;
   width: 135px;
   border-radius: 5px;
-  display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
 }
 
+.print_header {
+  position: relative; /* 기준 위치 */
+  height: 40px;
+  color: #fff;
+  padding: 0 40px;
+  box-sizing: border-box;
+  margin-top: 10px;
+  text-align: right; /* 텍스트와 버튼 우측 정렬 */
+}
+
+
+/* 공통 버튼 스타일 */
+.print_btn1,
+.print_btn2 {
+  display: inline-block; /* 버튼을 가로로 배치 */
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  background: #333;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 10px; /* 버튼 간 간격 */
+  transition: background 0.3s ease-in-out; /* 부드러운 색상 전환 */
+}
+
+.print_btn1 {
+  margin-right: 10px
+}
+
+.print_btn2 {
+  margin-left: 10px;
+  margin-right: 40px;
+}
+
+.print_btn1:hover,
+.print_btn2:hover {
+  background: #555;
+}
 
 .print-button img {
   width: 40px;
@@ -167,6 +206,12 @@
 @media print {
   .print-topbar {
     display: none; /* 인쇄 시 상단바 숨기려면 */
+    position: relative; /* 부모 요소 기준 */
+    justify-content: space-between; /* 좌우 정렬 */
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
   }
  @page {
     size: A4;
@@ -184,5 +229,34 @@
     padding-right: 15mm;
     padding-left: 15mm;
     box-sizing: border-box;
+  }
+}
+
+/* X 버튼 (닫기 버튼) */
+.printpage-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 6px 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease-in-out;
+}
+.printpage-close-btn:hover{
+  background-color: #666;
+}
+
+.printpage-close-btn:hover {
+  background-color: #666;
+}
+
+/* ✅ 인쇄할 때 X 버튼 숨기기 */
+@media print {
+  .printpage-close-btn {
+    display: none !important;
   }
 }
