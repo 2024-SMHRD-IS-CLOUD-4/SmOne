@@ -26,30 +26,51 @@ function Mypage() {
 
   useEffect(() => {
     
-    const userId = sessionStorage.getItem("userId");
-    if (!userId) {
+    const storedUserId = sessionStorage.getItem("userId");
+    if (!storedUserId) {
       alert("로그인이 필요합니다.");
       navigate("/");
       return;
     }
     
-    setUserData(prev => ({ ...prev, userId }));
+    axios.get(`/users/mypage?userId=${storedUserId}`)
+    .then(res => {
+      const data = res.data;
+
+      const [emailLocal="", emailDomain=""] = data.email.split("@");
+
+      setUserData({
+        userId:data.userId,
+        userName: data.userName,
+        role: data.role,
+        emailLocal,
+        emailDomain,
+        centerId: data.centerId,
+        address: data.address ?? ""
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      alert("마이페이지 로드 중 오류가 발생했습니다.");
+      navigate("/");
+    });
   }, [navigate]);
 
-  const handleChange = e => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserData(prev => ({ ...prev, [name]: value }));
   };
 
   // 입력값 검증 (간단 예시)
   const validateInputs = () => {
     const { userName, role, emailLocal, emailDomain, centerId, address } = userData;
-    if (!userName.trim() || !role.trim() || !emailLocal.trim() || !emailDomain.trim() || !centerId.trim() || !address.trim()) {
+    if(!userName.trim() || !role.trim() || !emailLocal.trim() || !emailDomain.trim() || !centerId.trim() || !address.trim()){
       alert("모든 필드를 입력해주세요.");
       return false;
     }
     const fullEmail = `${emailLocal}@${emailDomain}`;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(fullEmail)) {
+    if(!emailRegex.test(fullEmail)){
       alert("유효한 이메일 아이디/도메인을 입력하세요.");
       return false;
     }
@@ -58,20 +79,21 @@ function Mypage() {
 
   // 정보 수정
   const handleUpdate = async () => {
-    if (!validateInputs()) return;
+    if(!validateInputs()) return;
 
     const fullEmail = `${userData.emailLocal}@${userData.emailDomain}`;
+    
     const sendData = {
       ...userData,
       email: fullEmail  // 최종 email만 합쳐서 백엔드 전달
     };
     try {
-      await axios.put(`${process.env.REACT_APP_DB_URL}/users/update`, sendData, {
+      await axios.put("http://localhost:8090/SmOne/api/users/update", sendData, {
         headers: { "Content-Type": "application/json" }
       });
       alert("정보가 수정되었습니다.");
       navigate("/main");
-    } catch (err) {
+    } catch(err){
       console.error(err);
       alert("정보 수정에 실패했습니다.");
     }
@@ -157,10 +179,10 @@ function Mypage() {
   };
 
   return (
-    <>
+    <div className="mypage-wrapper" style={{ overflow: 'auto', height: '100vh' }}>
       <Menu /> {/* Menu 추가 */}
     <div className="mypage-container">
-    <button className="back-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
+    <button className="mypage-close-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
       <h2 className="mypage-title">마이페이지</h2>
 
       <form className="mypage-form">
@@ -328,7 +350,7 @@ function Mypage() {
         </div>
       )}
     </div>
-      </>
+    </div>
   );
 }
 
