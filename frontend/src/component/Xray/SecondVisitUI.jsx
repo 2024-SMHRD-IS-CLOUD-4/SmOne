@@ -1,10 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import plusIcon from "./plus-image.png";
+import axios from "axios";
 
 function SecondVisitUI({
   oldImages, setOldImages,
   oldBigPreview, setOldBigPreview,
   selectedOldImage, setSelectedOldImage,
+  selectedPatient, setselectedPatient,
 
   newImages, setNewImages,
   newBigPreview, setNewBigPreview,
@@ -12,7 +14,7 @@ function SecondVisitUI({
 
   handleNewPhotoRegister,
   handleRemoveNewImage,
-
+  
   selectedDate,
   patientName,
   earliestDate,
@@ -23,6 +25,21 @@ function SecondVisitUI({
 }) {
   const previewBoxWidth = 570;
   const previewBoxHeight = 570;
+
+  useEffect(() => {
+    if (selectedPatient){
+      console.log(`✅ 선택된 환자 ID: ${selectedPatient}`);
+
+            // API 요청 보내서 X-RAY 이미지 목록 가져오기
+            axios.get(`http://localhost:8090/SmOne/list?pIdx=${selectedPatient}`)
+                .then(response => {
+                    console.log("✅ X-RAY 이미지 데이터:", response.data);
+                    console.log(`http://localhost:8090/SmOne/list?pIdx=${selectedPatient}`);
+                    setOldImages(response.data); // imgPath 리스트 저장
+                })
+                .catch(error => console.error("❌ X-RAY 이미지 로드 실패:", error));
+    }
+  }, [selectedPatient]);
 
   // 과거 X-ray
   const [oldBaseScale, setOldBaseScale] = useState(1);
@@ -220,7 +237,7 @@ function SecondVisitUI({
           {oldImages.length === 0 && <p>(none)</p>}
           {oldImages.map((item, i) => (
             <div
-              key={item.imgIdx || i}
+              key={i}
               style={{
                 position: "relative",
                 width: "80px", height: "80px",
@@ -230,8 +247,8 @@ function SecondVisitUI({
               onClick={() => handleOldThumbClick(item)}
             >
               <img
-                src={`http://localhost:8090/SmOne/images/${item.imgPath}`}
-                alt="old-thumb"
+                src={item.imgPath}
+                alt={`item ${i + 1}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </div>
