@@ -156,7 +156,11 @@ def get_img_idx(p_idx):
     
 def get_result(result):
     labels = ["TB" , "PNEUMONIA" , "NORMAL" , "OTHER"]
+    
+    print("Raw output:", result[0])  # 예측된 확률값 출력
     max_index = result[0].argmax()
+    
+    print(f"Predicted label: {labels[max_index]}, Confidence: {result[0][max_index]:.4f}")
     return labels[max_index]
 
 def save_result(p_idx, diagnosis_name, doctor_id, img_idx):
