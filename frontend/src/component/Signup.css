@@ -76,12 +76,12 @@
 }
 
 /* 모달 */
-.search-modal {
+.search-modal1 {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80%;
+  width: 60%;
   height: 80%;
   background-color: #fff;
   z-index: 9999;
@@ -105,7 +105,24 @@
   color: #333;
 }
 
+.close-btn9 {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  padding: 0.375rem 0.625rem;
+  background-color: rgb(177, 177, 177);
+  color: black;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: bold;
+  transition: background 0.3s ease-in-out;
+}
 
+.close-btn9:hover {
+  background-color: red;
+}
 
 .modal-body {
   flex: 1;
@@ -316,4 +333,52 @@ transition: background 0.3s ease-in-out;
 
 .signup-close-btn:hover {
   background-color: #666;
+}
+
+.error-border1 {
+  border: 2px solid red !important;
+  transition: border 0.2s ease-in-out;
+}
+
+/* 흔들림 애니메이션 */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+/* 🚨 흔들림 적용 */
+.shake {
+  animation: shake 0.3s ease-in-out;
+}
+
+/* 중복된 아이디일 경우 빨간색 메시지 */
+.error-message1 {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* 사용 가능한 아이디일 경우 초록색 메시지 */
+.success-message1 {
+  color: green;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 5px;
+}
+
+
+/* 비밀번호 오류 메시지 */
+.password-error-message {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 5px;
+}
+
+/* 흔들림 효과 */
+.shake {
+  animation: shake 0.3s ease-in-out;
 }

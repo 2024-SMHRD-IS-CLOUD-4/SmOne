@@ -21,29 +21,40 @@ function Signup() {
 
   // 아이디 중복 여부
   const [isDuplicate, setIsDuplicate] = useState(false);
+  const [shake, setShake] = useState(false);
+  const [idCheckMessage, setIdCheckMessage] = useState("");
 
   // 기관 검색 모달 상태
   const [places, setPlaces] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState("");
+
   // 입력 변경 핸들러
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setIsDuplicate(false);
+    setShake(false);
+    setIdCheckMessage("");
   };
+  
 
   // 아이디 중복 체크
   const handleDuplicateCheck = async () => {
+    if (!formData.userId.trim()) {
+      alert("아이디를 입력하세요.");
+      return;
+    }
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_DB_URL}/users/check-duplicate/${formData.userId}`
       );
       setIsDuplicate(res.data); // true면 중복, false면 사용 가능
       if (res.data) {
-        alert("중복된 아이디 입니다.");
+        setIsDuplicate(true);  // ✅ 중복이면 상태 변경
+        setShake(true);  // 🚨 흔들림 효과 추가해야 하지만 누락됨!
+        setIdCheckMessage("중복된 아이디입니다.");
       } else {
         alert("사용 가능한 아이디 입니다.");
       }
@@ -53,9 +64,38 @@ function Signup() {
     }
   };
 
+  // 비밀번호 유효성 검사 함수
+  const validatePassword = (password) => {
+    const hasLetter = /[a-zA-Z]/.test(password); // 영문 포함 여부
+    const isLongEnough = password.length >= 5; // 5글자 이상
+
+    if (!hasLetter || !isLongEnough) {
+      setPasswordError(true);
+      setShake(true); // 🚨 흔들림 효과 추가
+      setPasswordMessage("비밀번호는 5자 이상이며 영문을 1글자 이상 포함해야 합니다.");
+      return false;
+    } else {
+      setPasswordError(false);
+      setShake(false);
+      setPasswordMessage("");
+      return true;
+    }
+  };
+
+  // 비밀번호 입력 변경 핸들러
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setFormData({ ...formData, userPw: newPassword });
+    validatePassword(newPassword); // 입력 시마다 검증
+  };
+
   // 회원가입 제출
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validatePassword(formData.userPw)) {
+      return;
+    }
 
     // (1) 아이디 중복 여부
     if (isDuplicate) {
@@ -168,7 +208,8 @@ function Signup() {
           <input
             type="text"
             name="userId"
-            className="userid_join"
+            className={`userid_join ${shake ? "shake" : ""} ${isDuplicate ? "error-border1" : idCheckMessage ? "success-border1" : ""
+              }`}
             placeholder="아이디"
             value={formData.userId}
             onChange={handleChange}
@@ -181,19 +222,28 @@ function Signup() {
           </button>
         </div>
 
+        {/* ✅ 중복 체크 결과 메시지 추가 */}
+        {idCheckMessage && (
+          <p className={isDuplicate ? "error-message1" : "success-message1"}>
+            {idCheckMessage}
+          </p>
+        )}
+
         {/* 비밀번호 */}
         <label>비밀번호</label>
-        <div className="pw-duplicate-group">
+        <div className={`pw-duplicate-group ${passwordError ? "shake" : ""}`}>
           <input
             type="password"
             name="userPw"
-            className="userpw_join"
+            className={`userpw_join ${passwordError ? "error-border1" : ""}`}
             placeholder="비밀번호"
             value={formData.userPw}
-            onChange={handleChange}
+            onChange={handlePasswordChange}
             required
           />
         </div>
+        {passwordMessage && <p className="password-error-message">{passwordMessage}</p>}
+        
         {/* 관리자명 */}
         <label>관리자명</label>
         <div className="my-duplicate-group">
@@ -211,9 +261,9 @@ function Signup() {
 
           <label>
             <select name="role"
-            value={formData.role}
-            className="signup_role"
-            onChange={handleChange}>
+              value={formData.role}
+              className="signup_role"
+              onChange={handleChange}>
               <option value="의사">의사</option>
               <option value="관리자">관리자</option>
             </select>
@@ -260,8 +310,8 @@ function Signup() {
             required
           />
           <button type="button"
-          className="search-btn1"
-          onClick={handleSearchCenter}
+            className="search-btn1"
+            onClick={handleSearchCenter}
           >
             검 색
           </button>
@@ -278,7 +328,7 @@ function Signup() {
             value={formData.address}
             readOnly
           />
-          </div>
+        </div>
 
         {/* 제출 버튼 */}
         <button type="submit" className="submit-btn">
@@ -288,10 +338,10 @@ function Signup() {
 
       {/* 모달 */}
       {showModal && (
-        <div className="search-modal">
+        <div className="search-modal1">
           <div className="modal-header">
             <h2>검색 결과</h2>
-            <button className="close-btn" onClick={closeModal}>닫기</button>
+            <button className="close-btn9" onClick={closeModal}>닫기</button>
           </div>
           <div className="modal-body">
             <div id="map" className="map-area"></div>

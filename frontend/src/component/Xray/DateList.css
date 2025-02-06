@@ -1,11 +1,17 @@
 /* 기존 Pagination과 동일한 스타일 적용 */
 .date-list-container {
   display: flex;
+  text-align: center;
   flex-direction: column;
   justify-content: space-between; /* 내용과 페이지네이션을 아래로 정렬 */
   height: 120px; /* 전체 높이 지정 (필요에 따라 조정 가능) */
   animation: slideDown 0.5s ease-in-out;
-  text-align: center;
+}
+
+/* 환자가 선택되지 않았을 때 높이 설정 */
+.date-list-container.expanded-panel {
+  height: 220px;
+  margin-top: 47px;
 }
 
 /* 환자가 선택되지 않았을 때 높이 설정 */
@@ -101,6 +107,17 @@
     font-size: 16px;
     color: #555;
     margin-top: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .no-dates-message1 {
+    animation: slideDown 0.5s ease-in-out;
+    text-align: center;
+    font-size: 16px;
+    color: #555;
     display: flex;
     align-items: center;
     justify-content: center;

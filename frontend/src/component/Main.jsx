@@ -50,13 +50,18 @@ function Main() {
   const datesPerPage = 2;
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [hideSearchBar, setHideSearchBar] = useState(false);
 
   const toggleSearchBar = () => {
     if (isSearchVisible) {
-      setNameSearch("");
-      setBirthSearch("");
+      setHideSearchBar(true); // 먼저 fadeOut 애니메이션 실행
+      setTimeout(() => {
+        setIsSearchVisible(false); // 애니메이션 후 display: none 적용
+        setHideSearchBar(false); // 다시 검색 바가 나타날 수 있도록 초기화
+      }, 300); // fadeOut 애니메이션 시간 (0.3초)과 동일하게 설정
+    } else {
+      setIsSearchVisible(true);
     }
-    setIsSearchVisible(!isSearchVisible);
   };
 
 
@@ -487,10 +492,9 @@ function Main() {
             <span className="search-text">환자 검색</span>
           </button>
         )}
-
         {/* 검색 바 (isSearchVisible이 true일 때만 표시) */}
         {isSearchVisible && (
-          <form className="search-form" onSubmit={handleSearchSubmit}>
+          <form className={`search-form ${hideSearchBar ? "hide" : ""}`} onSubmit={handleSearchSubmit}>
             <input
               type="text"
               placeholder="이름을 입력하세요"

@@ -91,13 +91,35 @@ html, body {
   box-sizing: border-box;
   margin-top: 0.625rem; /* 10px */
 }
-
+/* 검색 바 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px); /* 위에서 아래로 부드럽게 이동 */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* 검색 바 사라지는 애니메이션 */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px); /* 아래에서 위로 사라지는 효과 */
+  }
+}
 .search-form {
   display: flex;
   align-items: center;
   gap: 0.625rem; /* 10px */
   margin-left: 1.9375rem; /* 31px */
   margin-top: 0.3125rem; /* 5px */
+  animation: fadeIn 0.3s ease-in-out;
 }
 .search-form input {
   padding: 0.625rem 0.875rem; /* 10px 14px */
@@ -671,4 +693,49 @@ html, body {
   width: 1.25rem; /* 20px */
   height: 1.25rem;
   margin-right: 0.5rem; /* 8px */
+}
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px); /* 위에서 아래로 내려오는 효과 */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 환자 정보 애니메이션 */
+.patient-detail {
+  animation: slideDown 0.5s ease-in-out;
+}
+
+/* 진단 날짜 애니메이션 */
+.diagnosis-date-title {
+  animation: slideDown 0.5s ease-in-out;
+}
+/* panel-block (진단 날짜 목록 패널) 애니메이션 */
+.panel-block {
+  animation: slideDown 0.5s ease-in-out;
+}
+@keyframes slideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px); /* 왼쪽에서 시작 */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 신규 X-ray 등록 박스 애니메이션 */
+.xray-panel {
+  animation: slideFromLeft 0.5s ease-in-out;
+}
+.xray-subpanel2 {
+  animation: slideFromLeft 0.5s ease-in-out;
+}
+.xray-subpanel {
+  animation: slideFromLeft 0.5s ease-in-out;
 }

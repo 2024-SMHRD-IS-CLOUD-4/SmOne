@@ -113,28 +113,13 @@ function PrintPage() {
           {/* ✅ 세 번째 테이블: 질병분류, 처방인 성명, 근처병원, 치료소견 */}
           <tbody>
             <tr>
-              <th className="highlight-cell">질병 분류</th>
-              <td colSpan="4">{aiResult || "(진단없음)"}</td>
-            </tr>
-            <tr>
-              <th className="highlight-cell">처방인 성명</th>
-              <td colSpan="4">{userName || "(담당 의사)"}</td>
-            </tr>
-            <tr>
-              <th className="highlight-cell">근처병원</th>
-              <td colSpan="2">{selectedHospital?.hosName || "(선택된 병원 없음)"}</td>
-              <td colSpan="2">{selectedHospital?.hosAdd || "(선택된 병원 없음)"}</td>
-            </tr>
-            <tr>
-              <th className="highlight-cell" colSpan="5">X-ray 사진</th>
-            </tr>
-            <tr>
-              <td colSpan="5">
+              <th rowSpan="2" className="highlight-cell">치료소견</th>
+              <td colSpan="6" className="xray-cell">
                 {bigPreview ? (
                   <img
                     src={bigPreview}
                     alt="X-ray"
-                    style={{ width: "530px", display: "block", margin: "15px 0" }}
+                    style={{ width: "300px", height: "auto", display: "block", margin: "10px 0" }}
                   />
                 ) : (
                   <p>(X-ray 미리보기 없음)</p>

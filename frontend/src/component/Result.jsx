@@ -519,7 +519,7 @@ function Result() {
             </div>
           )}
           <div className="date-list-box">
-            <video autoPlay loop muted playsInline className="date-list-video">
+          <video autoPlay loop muted playsInline className="date-list-video">
               <source src="/video2.mp4" type="video/mp4" />
             </video>
             <DateList
@@ -542,10 +542,10 @@ function Result() {
                 className="ai-result-video"
               >
                 <source src="/video1.mp4" type="video/mp4" />
-                브라우저가 동영상을 지원하지 않습니다.
               </video>
               <p className="ai-result-text">{aiResult}</p>
             </div>
+
           </div>
         </div>
 
