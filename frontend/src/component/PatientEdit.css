@@ -1,21 +1,14 @@
-.Patient-container {
-  position: absolute;
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* Center vertically */
-  /* align-items: center; Center horizontally */
+.Patientedit-container {
+  transform: translate(133%, 23%);
+  padding: 1.875rem;
+  color: #fff;
+  position: relative;
   background: rgba(0, 0, 0, 0.5);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 2.0);
   border-radius: 10px;
   padding: 20px;
   height: 590px;
   width: 472px;
-  /* Ensures proper centering */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .back-btn {
@@ -265,7 +258,8 @@
   border: none;
   cursor: pointer;
   border-radius: 4px;
-  margin-top: 0px;
+  margin-top: 10px;
+  margin-right: 20px;
 }
 
 .submit-button:hover {
@@ -317,6 +311,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-bottom: 10px;
+  margin-right: 20px;
 }
 
 .address-field::placeholder {

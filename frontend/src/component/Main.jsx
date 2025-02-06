@@ -476,7 +476,7 @@ function Main() {
   );
 
   return (
-    <div className="main-container" style={{overflow: "auto"}}>
+    <div className="main-container" style={{ overflow: "auto" }}>
       <Menu /> {/* Menu.jsx를 왼쪽에 배치 */}
       {/* 상단 바 */}
       <div className="top-bar" ref={searchRef}>
@@ -513,7 +513,7 @@ function Main() {
           <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
             {/* 과거 결과 보기 버튼 */}
             <button className="exdiagnose-btn" onClick={handleViewOldResult}>
-            <img src={documentIcon} alt="과거 진단 아이콘" className="document-icon" />
+              <img src={documentIcon} alt="과거 진단 아이콘" className="document-icon" />
               과거 진단 보기
             </button>
 
@@ -551,7 +551,7 @@ function Main() {
                     {currentPatients.map((pt, idx) => (
                       <React.Fragment key={pt.pIdx || idx}>
                         <tr onClick={() => handlePatientClick(pt)}>
-                        <td>{pt.pName.length > 4 ? pt.pName.slice(0, 4) + "..." : pt.pName}</td>
+                          <td>{pt.pName.length > 4 ? pt.pName.slice(0, 4) + "..." : pt.pName}</td>
                           <td>{pt.birth.slice(0, 6)}</td>
                           <td>{pt.tel}</td>
                         </tr>
@@ -637,21 +637,31 @@ function Main() {
 
           {/* 진단 날짜 텍스트를 panel-block 밖으로 이동 */}
           {selectedPatient && (
-            <div className="diagnosis-date-title">
-              진단 날짜
-            </div>
+            <div className="diagnosis-date-title">진단 날짜</div>
           )}
 
           {/* 날짜 리스트 */}
-          <div className="date-list-container panel-block" style={{ marginTop: "10px" }}>
+          <div
+            className={`date-list-container panel-block
+              ${!selectedPatient ? "expanded-panel" : ""}`}
+            style={{ marginTop: "10px" }}
+          >
+            {/* ✅ selectedPatient가 없을 때만 비디오 표시 */}
+            {!selectedPatient && (
+              <video autoPlay loop muted playsInline className="date-list-video">
+                <source src="/video2.mp4" type="video/mp4" />
+              </video>
+            )}
+
             <DateList
               diagDates={diagDates}
               currentPage={datePage}
               setCurrentPage={setDatePage}
               datesPerPage={datesPerPage}
               onDateClick={(dateStr) => handleDateClick(dateStr, selectedPatient)}
+              selectedPatient={selectedPatient} // ✅ 추가
             />
-            
+
           </div>
         </div>
 
