@@ -739,3 +739,15 @@ html, body {
 .xray-subpanel {
   animation: slideFromLeft 0.5s ease-in-out;
 }
+/* ✅ plus-icon 기본 스타일 */
+.plus-icon {
+  width: 60%;
+  height: 60%;
+  transition: all 0.3s ease-in-out;
+}
+
+/* ✅ 마우스를 올렸을 때 흰색 후광 효과 */
+.plus-icon:hover {
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.9)); /* 부드러운 흰색 후광 */
+  transform: scale(1.2); /* 살짝 확대 효과 */
+}

@@ -303,7 +303,7 @@ function SecondVisitUI({
                       <img
                         src={plusIcon}
                         alt="plus-icon"
-                        style={{ width: "60%", height: "60%" }}
+                        className="plus-icon"  /* ✅ 클래스 추가 */
                       />
                     </span>
                   </div>

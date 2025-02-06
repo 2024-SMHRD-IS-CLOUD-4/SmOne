@@ -99,7 +99,7 @@ function PrintPage() {
               <th className="highlight-cell" rowSpan="2">환자</th>
               <th>성명</th>
               <td>{patient?.pName || "N/A"}</td>
-              <th>주민번호</th>
+              <th>주민등록번호</th>
               <td>{patient?.birth || "N/A"}</td>
             </tr>
             <tr>
