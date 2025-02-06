@@ -183,7 +183,12 @@ def save_result(p_idx, diagnosis_name, doctor_id, img_idx):
     finally :
         conn.close()
 
-def test(doctor_id = "1",p_idx= 70):
+def test(doctor_id ,p_idx):
+    """
+    - DB에서 이미지 가져오기
+    - 모델 실행하여 결과 생성
+    - 결과를 DB에 저장 후 FastAPI에 반환
+    """
 
     if not doctor_id:
         print(f"⚠ ERROR: doctor_id가 None입니다. P_IDX={p_idx}")
@@ -216,6 +221,12 @@ def test(doctor_id = "1",p_idx= 70):
 
     # 처리 상태 업데이트
     update_processed_at(p_idx)
+    
+    return {
+        "p_idx": p_idx,
+        "doctor_id": doctor_id,
+        "diagnosis": diagnosis_name
+         }
 
 if __name__ == "__main__":
     test()

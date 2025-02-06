@@ -9,7 +9,7 @@ import java.util.Map;
 @RequestMapping("/api/fastapi")
 public class FastApiController {
 
-    private final String FASTAPI_URL = "http://localhost:8000/diagnose";  // FastAPI 서버 주소
+    private final String FASTAPI_URL = "http://223.130.157.164:8000/diagnose";  // FastAPI 서버 주소
     private final RestTemplate restTemplate = new RestTemplate(); // HTTP 요청용
 
     @PostMapping("/send")

@@ -31,6 +31,12 @@ def login_to_java(user_id, user_pw):
 class LoginRequest(BaseModel):
     user_id: str
     user_pw: str
+    
+# 테스트용
+@app.get("/")
+def root():
+    return {"message": "FastAPI 서버 정상 작동 중!"}
+
 
 @app.post("/java-login")
 def java_login(request: LoginRequest):
@@ -38,7 +44,7 @@ def java_login(request: LoginRequest):
     Java 서버에 로그인 요청을 보냄
     """
     try:
-        login_to_java(request.user_id, request.user_pw)  # ������ 실제 입력값으로 로그인
+        login_to_java(request.user_id, request.user_pw)  # ������ 실제 입력값으로 로그인
         response_data = {"message": "Java 로그인 성공", "user_id": request.user_id}
         return JSONResponse(content=response_data, media_type="application/json; charset=utf-8")
     except Exception as e:
@@ -98,7 +104,7 @@ async def diagnose(request: DiagnosisRequest):
     - 모델 실행 및 DB 저장
     """
     try:
-        print(f"Received request: {request.model_dump()}")  # 요청 데이터 로그 출력
+        print(f"진단 요청 받음: {request.model_dump()}")  # 요청 데이터 로그 출력
 
         # doctor_id 자동 설정 (세션에서 가져오기)
         doctor_id = request.doctor_id if request.doctor_id else get_doctor_id()
@@ -109,15 +115,16 @@ async def diagnose(request: DiagnosisRequest):
         print(f"Using doctor_id: {doctor_id}, P_IDX: {request.p_idx}")  # doctor_id, p_idx 확인
 
         # `test()` 함수 호출 (p_idx, doctor_id 넘기기)
-        test(request.p_idx, doctor_id)
+        # 모델 실행 및 진단
+        result = test(request.doctor_id, request.p_idx) 
 
         print("Database updated successfully")  # DB 업데이트 확인
 
         return {
             "status": "success",
             "p_idx": request.p_idx,
-            "doctor_id": doctor_id,
-            "result": "진단 완료",
+            "doctor_id": request.doctor_id,
+            "result": result  # 진단 결과 추가
         }
     except HTTPException as e:
         print(f"HTTP Error: {e.detail}")  # HTTP 예외 로그 출력

@@ -166,50 +166,58 @@ function Main() {
   // [진단하기]
   async function handleDiagnose() {
     if (!selectedPatient) {
-      alert("환자를 먼저 선택하세요.");
-      return;
+        alert("환자를 먼저 선택하세요.");
+        return;
     }
     if (newImages.length === 0) {
-      alert("신규 X-ray가 없습니다. (진단 불가)");
-      return;
+        alert("신규 X-ray가 없습니다. (진단 불가)");
+        return;
     }
     if (!selectedNewImage) {
-      alert("등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.");
-      return;
+        alert("등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.");
+        return;
     }
 
     try {
-      // 1) 업로드
-      const formData = new FormData();
-      formData.append("pIdx", selectedPatient.pIdx);
-      newImages.forEach((obj) => formData.append("files", obj.file));
-      const bigFilename = selectedNewImage.file.name;
-      formData.append("bigFilename", bigFilename);
+        // 1) 📌 Java 서버에 X-ray 업로드
+        const formData = new FormData();
+        formData.append("pIdx", selectedPatient.pIdx);
+        newImages.forEach((obj) => formData.append("files", obj.file));
+        const bigFilename = selectedNewImage.file.name;
+        formData.append("bigFilename", bigFilename);
 
-      await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials : true
-        
-      });
+        await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+            withCredentials: true
+        });
 
-      // 2) (임시) AI 결과
-      const aiResult = "결핵";
+        console.log("X-ray 업로드 완료 ✅");
 
-      // 3) 결과 페이지 이동
-      navigate("/result", {
-        state: {
-          patient: selectedPatient,
-          aiResult,
-          newlyUploaded: newImages.map((img) => img.file.name),
-          bigFilename,
-          fromHistory: false,
-        },
-      });
+        // 2) 📌 FastAPI 모델 실행 요청
+        const fastApiResponse = await axios.post(`${process.env.REACT_APP_FASTAPI_URL}/diagnose/`, {
+            p_idx: selectedPatient.pIdx,
+            doctor_id: userId // 세션에서 doctor_id 가져오기
+        });
+
+        console.log("FastAPI 진단 결과:", fastApiResponse.data);
+
+        // 3) 📌 결과 페이지로 이동
+        navigate("/result", {
+            state: {
+                patient: selectedPatient,
+                aiResult: fastApiResponse.data.diagnosis,  // FastAPI에서 받은 진단 결과
+                newlyUploaded: newImages.map((img) => img.file.name),
+                bigFilename,
+                fromHistory: false,
+            },
+        });
+
     } catch (e) {
-      console.error(e);
-      alert("업로드 중 오류 발생");
+        console.error(e);
+        alert("진단 과정에서 오류가 발생했습니다.");
     }
-  }
+}
+
   // ========== "이전 결과 보기" ==========
   function handleViewOldResult() {
     if (!selectedPatient) {

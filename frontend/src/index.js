@@ -6,7 +6,7 @@ import axios from 'axios';
 import reportWebVitals from './reportWebVitals';
 
 // 전역 설정
-axios.defaults.baseURL = 'http://localhost:8090/SmOne/api'; 
+axios.defaults.baseURL = 'http://223.130.157.164:8090/SmOne/api'; 
 axios.defaults.withCredentials = true;
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
