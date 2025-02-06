@@ -1,20 +1,5 @@
 nohup: ignoring input
-2025-02-05 15:39:40,928 - INFO - ✅ FastAPI 서버 실행 시작!
-INFO:     Started server process [7028]
+INFO:     Started server process [9810]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-Received request: {'p_idx': 70, 'doctor_id': '1'}
-Using doctor_id: 1, P_IDX: 70
-Executing query: 
-        SELECT IMG_PATH
-        FROM XRAY_IMAGES
-        WHERE P_IDX = %s
-          AND IMG_PATH LIKE 'http%%'
-     with P_IDX = 1
-⚠ Unexpected Error: DB에서 P_IDX 1에 대한 이미지 경로를 찾을 수 없습니다.
-INFO:     127.0.0.1:49334 - "POST /diagnose/ HTTP/1.1" 500 Internal Server Error
-INFO:     127.0.0.1:35126 - "POST /diagnose/ HTTP/1.1" 422 Unprocessable Entity
-INFO:     127.0.0.1:37640 - "POST /diagnose HTTP/1.1" 307 Temporary Redirect
-INFO:     127.0.0.1:59698 - "POST /diagnose HTTP/1.1" 307 Temporary Redirect
-INFO:     127.0.0.1:39358 - "POST /diagnose HTTP/1.1" 307 Temporary Redirect

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-import logging
 import requests
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,12 +5,6 @@ from pydantic import BaseModel, Field
 from typing import Optional
 from inference import test  
 from fastapi.responses import JSONResponse
-
-
-# UTF-8 강제 적용
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", encoding="utf-8")
-
-logging.info("✅ FastAPI 서버 실행 시작!")
 
 app = FastAPI()
 
@@ -30,9 +22,9 @@ def login_to_java(user_id, user_pw):
     login_response = session.post(LOGIN_URL, json=login_data)
 
     if login_response.status_code == 200:
-        print(f"✅ Java 로그인 성공! userId: {user_id}, 세션 쿠키: {session.cookies.get_dict()}")
+        print(f"Java 로그인 성공! userId: {user_id}, 세션 쿠키: {session.cookies.get_dict()}")
     else:
-        print(f"❌ Java 로그인 실패: {login_response.text}")
+        print(f"Java 로그인 실패: {login_response.text}")
         exit()
 
 # 로그인 요청 모델 정의
@@ -46,7 +38,7 @@ def java_login(request: LoginRequest):
     Java 서버에 로그인 요청을 보냄
     """
     try:
-        login_to_java(request.user_id, request.user_pw)  # 실제 입력값으로 로그인
+        login_to_java(request.user_id, request.user_pw)  # ������ 실제 입력값으로 로그인
         response_data = {"message": "Java 로그인 성공", "user_id": request.user_id}
         return JSONResponse(content=response_data, media_type="application/json; charset=utf-8")
     except Exception as e:
@@ -119,7 +111,7 @@ async def diagnose(request: DiagnosisRequest):
         # `test()` 함수 호출 (p_idx, doctor_id 넘기기)
         test(request.p_idx, doctor_id)
 
-        print("✅ Database updated successfully")  # DB 업데이트 확인
+        print("Database updated successfully")  # DB 업데이트 확인
 
         return {
             "status": "success",
@@ -128,31 +120,8 @@ async def diagnose(request: DiagnosisRequest):
             "result": "진단 완료",
         }
     except HTTPException as e:
-        print(f"⚠ HTTP Error: {e.detail}")  # HTTP 예외 로그 출력
+        print(f"HTTP Error: {e.detail}")  # HTTP 예외 로그 출력
         raise
     except Exception as e:
-        print(f"⚠ Unexpected Error: {str(e)}")  # 일반 예외 로그 출력
+        print(f"Unexpected Error: {str(e)}")  # 일반 예외 로그 출력
         raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/get-images")
-def get_images(p_idx: int):
-    """
-    p_idx에 해당하는 X-ray 이미지 경로 가져오기
-    """
-    print(f"GET /get-images 요청 받음, P_IDX={p_idx}")
-    
-    query = """
-    SELECT IMG_PATH
-    FROM XRAY_IMAGES
-    WHERE P_IDX = %s
-      AND IMG_PATH LIKE 'http%%'
-    """
-    
-    # SQL 실행 (여기서 DB 커넥션을 사용해야 함)
-    result = db.execute(query, (p_idx,))
-    
-    if not result:
-        raise HTTPException(status_code=404, detail=f"DB에서 P_IDX {p_idx}에 대한 이미지 경로를 찾을 수 없습니다.")
-
-    print(f"✅ 조회된 결과: {result}")  
-    return {"images": result}
