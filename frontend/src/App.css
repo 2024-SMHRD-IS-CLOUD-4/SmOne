@@ -10,6 +10,7 @@
   overflow: auto;
 }
 
+<<<<<<< HEAD
 /* 스크롤 바 전체 스타일 */
 .app-container::-webkit-scrollbar {
   width: 0.5rem; /* 8px */
@@ -32,6 +33,8 @@
   background: rgba(255, 255, 255, 0.966); /* 마우스 올리면 더 밝게 */
 }
 
+=======
+>>>>>>> 58ce451f168d94dfb04ccd720ce5ba91c806d485
 @media (max-width: 100%) {
   .app-container {
     overflow: hidden; /* 기본적으로 스크롤 없음 */

@@ -85,6 +85,7 @@ const IdentityCheck = () => {
       <div className="pass-container">
         <div className="pass-box">
           <h1>본인확인</h1>
+          <button className="findid-close-btn" onClick={() => navigate("/")}>X</button>
           <form>
             <label htmlFor="userId">아이디</label>
             <input

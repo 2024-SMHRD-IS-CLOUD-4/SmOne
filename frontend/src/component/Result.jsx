@@ -23,7 +23,7 @@ function Result() {
   const patient = location.state?.patient || null;
   const [aiResult, setAiResult] = useState(location.state?.aiResult || "정상");
   const newlyUploaded = location.state?.newlyUploaded || [];
-  const bigFilename = location.state?.bigFilename || null;
+  // const bigFilename = location.state?.bigFilename || null;
   const fromHistory = location.state?.fromHistory || false;
   const preSelectedDate = location.state?.selectedDate || null;
 
@@ -77,7 +77,7 @@ function Result() {
       ctx.strokeStyle = color;
       ctx.lineWidth = lineWidth;
     }
-  }, [bigPreview]);
+  }, [color, bigPreview]);
 
   // ✅ 색상 및 굵기 변경 시 기존 그림을 유지하며 새로운 설정 적용
   useEffect(() => {
@@ -530,6 +530,10 @@ function Result() {
 
           <h2 style={{ marginLeft: 10 }}>AI 진단 결과</h2>
           <div className="ai-result-box">
+            <video autoPlay loop muted playsInline className="ai-result-video">
+              <source src="./png/video1.mp4" type="video/mp4" />
+              브라우저가 동영상을 지원하지 않습니다.
+            </video>
             <p>{aiResult}</p>
           </div>
         </div>
@@ -556,7 +560,13 @@ function Result() {
               <button className="erase-button" onClick={clearCanvas}></button>
             </div>
           </div>
-          <div className="big-preview-box" style={{ position: "relative" }}>
+          <div className="big-preview-box" style={{ position: "relative" }}
+            onWheelCapture={handleWheelCapture}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+          >
             {bigPreview ? (
               <>
                 <img ref={bigImgRef} src={bigPreview} alt="bigXray" className="big-xray-image" />
@@ -601,7 +611,7 @@ function Result() {
                 <p className="result-right-panel3">저장된 병원 정보가 없습니다.</p>
               )}
               <h2>위치 확인</h2>
-              <div ref={mapRef} className="hospital-map" />
+              <div ref={mapRef} className="hospital-map1" />
             </>
           ) : (
             <>
@@ -646,7 +656,7 @@ function Result() {
                 )}
               </div>
               <h2 className="map-check">위치 확인</h2>
-              <div ref={mapRef} className="hospital-map" />
+              <div ref={mapRef} className="hospital-map2" />
 
             </>
           )}

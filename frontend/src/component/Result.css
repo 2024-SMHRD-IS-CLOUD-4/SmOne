@@ -9,38 +9,37 @@
 }
 
 .result-topbar {
-  height: 40px;
+  height: 2.5rem; /* 40px */
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 40px;
+  padding: 0 2.5rem; /* 40px */
   box-sizing: border-box;
-  margin-top: 10px;
+  margin-top: 0.625rem; /* 10px */
 }
 
 .result-main {
   flex: 1;
   display: flex;
-  margin-left: 50px;
+  margin-left: 3.125rem; /* 50px */
   overflow: auto;
 }
 
-
 .result-main::-webkit-scrollbar {
-  width: 8px; /* 스크롤 바 너비 */
+  width: 0.5rem; /* 8px */
 }
 
 .result-main::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1); /* 반투명 배경 */
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.375rem; /* 6px */
 }
 
 .result-main::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.719); /* 흰색 반투명 */
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.719);
+  border-radius: 0.375rem; /* 6px */
   background-clip: padding-box;
-  border: 2px solid transparent;
+  border: 0.125rem solid transparent; /* 2px */
 }
 
 .result-main::-webkit-scrollbar-thumb:hover {
@@ -49,120 +48,112 @@
 
 /* 왼쪽 패널 */
 .result-left-panel {
-  width: 350px;
+  width: 21.875rem; /* 350px */
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  padding: 0.625rem; /* 10px */
   color: #fff;
-  height: 805px;
-  border-radius: 8px;
-  margin-top: 20px;
-  margin-left: 20px;
+  height: 50.3125rem; /* 805px */
+  border-radius: 0.5rem; /* 8px */
+  margin-top: 1.25rem; /* 20px */
+  margin-left: 1.25rem; /* 20px */
 }
 
-.result-patient-detail {
+.result-patient-detail, .result-date-list {
   background: rgba(0, 0, 0, 0.5);
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  color: #fff;
-}
-
-.result-date-list {
-  background: rgba(0, 0, 0, 0.5);
-  padding: 10px;
-  border-radius: 6px;
+  padding: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem; /* 10px */
+  border-radius: 0.375rem; /* 6px */
   color: #fff;
 }
 
 .patient-info-box {
   color: #fff;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 0.3125rem; /* 5px */
+  margin-bottom: 0.3125rem; /* 5px */
 }
 
 .result-left-panel h2 {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  margin-left: 10px;
+  margin-top: 0.3125rem; /* 5px */
+  margin-bottom: 0.3125rem; /* 5px */
+  margin-left: 0.625rem; /* 10px */
+}
+
+/* 수정된 CSS - flex-shrink를 0으로 설정하여 원래 너비 유지 */
+.result-left-panel,
+.result-center-panel,
+.result-right-panel {
+  flex-shrink: 0; /* 수정된 부분: 아이템 축소 방지 */
 }
 
 .result-right-panel2 {
-  background: rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 6px;
-  padding: 10px;
-  margin-bottom: 10px;
-  height: 300px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  border-radius: 0.375rem; /* 6px */
+  padding: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem; /* 10px */
+  height: 5.75rem; /* 300px */
 }
 
 .result-right-panel3 {
   position: relative;
-    display: grid;
-    grid-template-rows: 1fr auto;
-    height: 295px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    padding: 10px;
-    margin-bottom: 10px;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: 5.75rem; /* 295px */
+  background: rgba(0, 0, 0, 0.6);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  border-radius: 0.375rem; /* 6px */
+  padding: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem; /* 10px */
 }
 
 .result-right-panel h2 {
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 0.3125rem; /* 5px */
+  margin-bottom: 0.3125rem; /* 5px */
 }
 
 .patient-info-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-radius: 6px;
+  border-radius: 0.375rem; /* 6px */
   overflow: hidden;
 }
 
 .patient-info-table th {
   background-color: rgba(0, 0, 0, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  padding: 0.625rem; /* 10px */
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 70px;
+  width: 4.375rem; /* 70px */
 }
 
-.patient-info-table td
-
-/* .patient-info-table th  */
-  {
+.patient-info-table td {
   background-color: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px;
-  /* text-align: center; */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  padding: 0.625rem; /* 10px */
   color: #fff;
-  /* white-space: nowrap;  텍스트 줄바꿈 방지 */
-  /* overflow: hidden;      넘칠 경우 숨김 */
   text-overflow: ellipsis;
-  /* 길면 ...으로 표시 */
-  max-width: 120px;
-  /* 컬럼 크기 제한 (필요 시 조정 가능) */
+  max-width: 7.5rem; /* 120px */
 }
 
 .patient-info-table thead tr:first-child th:first-child {
-  border-top-left-radius: 6px;
+  border-top-left-radius: 0.375rem; /* 6px */
 }
 
 .patient-info-table thead tr:first-child th:last-child {
-  border-top-right-radius: 6px;
+  border-top-right-radius: 0.375rem; /* 6px */
 }
 
 .patient-info-table tbody tr:last-child td:first-child {
-  border-bottom-left-radius: 6px;
+  border-bottom-left-radius: 0.375rem; /* 6px */
 }
 
 .patient-info-table tbody tr:last-child td:last-child {
-  border-bottom-right-radius: 6px;
+  border-bottom-right-radius: 0.375rem; /* 6px */
 }
 
 .result_btn1,
@@ -170,32 +161,31 @@
   display: flex;
   align-items: center; /* 아이콘과 텍스트 세로 정렬 */
   justify-content: center;
-  gap: 6px; /* 아이콘과 텍스트 간격 조정 */
-  padding: 10px 15px;
+  gap: 0.375rem; /* 6px */
+  padding: 0.625rem 0.9375rem; /* 10px 15px */
   border: none;
-  border-radius: 6px;
+  border-radius: 0.375rem; /* 6px */
   background: #fff;
   color: black;
-  font-size: 16px;
+  font-size: 1rem; /* 16px */
   font-weight: bold;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
 }
 
 .result-btn1 {
-  margin-right: 10px;
+  margin-right: 0.625rem; /* 10px */
 }
 
-/* 이미지와 텍스트가 한 줄에 나타나도록 추가 */
 .result_btn2 {
-  margin-left: 10px; /* 간격 조정 */
-  margin-right: 40px;
+  margin-left: 0.625rem; /* 10px */
+  margin-right: 2.5rem; /* 40px */
 }
 
 .Stethoscope-Icon1 {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px; /* 필요에 따라 조정 */
+  width: 1.25rem; /* 20px */
+  height: 1.25rem;
+  margin-right: 0.625rem; /* 10px */
 }
 
 .result_btn1:hover,
@@ -210,133 +200,112 @@
 }
 
 .result-center-panel {
-  /* flex: 2 1; */
-  width: 938px;
-  height: 829px;
+  width: 58.625rem; /* 938px */
+  height: 51.8125rem; /* 829px */
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  padding: 10px;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  border-radius: 0.5rem; /* 8px */
+  padding: 0.625rem; /* 10px */
   box-sizing: border-box;
   color: #fff;
-  margin-top: 20px;
-  margin-left: 20px;
-
-
-  display: flex;            /* Flex 컨테이너로 지정 */
-  align-items: center;      /* 세로 방향 중앙 정렬 */
-  justify-content: center;  /* 가로 방향 중앙 정렬 */
-  flex-direction: column;   /* 자식 요소를 세로로 배열 */
+  margin-top: 1.25rem; /* 20px */
+  margin-left: 1.25rem; /* 20px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .date-list-box {
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    padding: 10px;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    height: 190px;
-    overflow-y: auto;
+  background: rgba(0, 0, 0, 0.6);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  border-radius: 0.375rem; /* 6px */
+  padding: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem; /* 10px */
+  margin-top: 0.625rem; /* 10px */
+  height: 11.875rem; /* 190px */
+  overflow-y: auto;
 }
 
-
-/* ✅ 스크롤 바 전체 스타일 */
 .date-list-box::-webkit-scrollbar {
-  width: 8px; /* 스크롤 바 너비 */
+  width: 0.5rem; /* 8px */
 }
 
-/* ✅ 스크롤 바 트랙(배경) */
 .date-list-box::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1); /* 반투명 배경 */
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.375rem; /* 6px */
 }
 
-/* ✅ 스크롤 바 핸들(움직이는 부분) */
 .date-list-box::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.719); /* 흰색 반투명 */
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.719);
+  border-radius: 0.375rem; /* 6px */
   background-clip: padding-box;
-  border: 2px solid transparent;
+  border: 0.125rem solid transparent; /* 2px */
 }
 
-/* ✅ 스크롤 바 호버 효과 */
 .date-list-box::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.966); /* 마우스 올리면 더 밝게 */
+  background: rgba(255, 255, 255, 0.966);
 }
 
 
 .ai-result-box {
   background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  padding: 10px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  height: 185px;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  border-radius: 0.375rem; /* 6px */
+  padding: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem; /* 10px */
+  margin-top: 0.625rem; /* 10px */
+  height: 11.5625rem; /* 185px */
 }
 
 
-/* 오른쪽 패널 */
 .result-right-panel {
-  width: 400px;
+  width: 25rem; /* 400px */
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  padding: 0.625rem; /* 10px */
   color: #fff;
-  height: 805px;
-  border-radius: 8px;
-  margin-top: 20px;
-  margin-left: 20px;
+  height: 50.3125rem; /* 805px */
+  border-radius: 0.5rem; /* 8px */
+  margin-top: 1.25rem; /* 20px */
+  margin-left: 1.25rem; /* 20px */
 }
 
-/* 오른쪽 패널 내부의 왼쪽= X-ray, 오른쪽= 진단결과 */
 .result-xray-area {
   flex: 2 1;
   width: 96%;
-  height: 829px;
+  height: 51.8125rem; /* 829px */
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  padding: 10px;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  border-radius: 0.5rem; /* 8px */
+  padding: 0.625rem; /* 10px */
   box-sizing: border-box;
   color: #fff;
 }
-
-/* .big-preview-box {
-  width: 700px;
-  height: 700px;
-  border: 2px dashed #aaa;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-} */
 
 .big-xray-image {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  width: 570px;
-  height: 570px;
-  border: 1px solid rgb(153, 153, 153);
-  margin-bottom: 15px;
+  width: 35.625rem; /* 570px */
+  height: 35.625rem; /* 570px */
+  border: 0.0625rem solid rgb(153, 153, 153); /* 1px */
+  margin-bottom: 0.9375rem; /* 15px */
   overflow: hidden;
   position: relative;
 }
 
-
 .thumb-list {
   display: flex;
-  gap: 10px;
+  gap: 0.625rem; /* 10px */
   flex-wrap: wrap;
-  margin-top: 10px;
+  margin-top: 0.625rem; /* 10px */
 }
 
 .thumb-item {
-  width: 80px;
-  height: 80px;
-  border: 2px dashed #666;
+  width: 5rem; /* 80px */
+  height: 5rem; /* 80px */
+  border: 0.125rem dashed #666; /* 2px */
   cursor: pointer;
 }
 
@@ -349,45 +318,43 @@
 .result-diagnosis-area {
   flex: 1;
   background: rgba(0, 0, 0, 0.5);
-  padding: 10px;
-  border-radius: 6px;
+  padding: 0.625rem; /* 10px */
+  border-radius: 0.375rem; /* 6px */
   color: #fff;
   overflow-y: auto;
 }
 
 .result_hospital {
   background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  padding: 10px;
-  margin-bottom: 10px;
-  height: 295px;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  border-radius: 0.375rem; /* 6px */
+  padding: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem; /* 10px */
+  height: 18.4375rem; /* 295px */
   overflow-y: auto;
-  margin-top: 10px;
+  margin-top: 0.625rem; /* 10px */
 }
 
 .result_hospital div {
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem; /* 10px */
   cursor: pointer;
 }
 
-/* ✅ 스크롤 바 전체 스타일 */
+/* 스크롤 바 전체 스타일 */
 .result_hospital::-webkit-scrollbar {
-  width: 8px; /* 스크롤 바 너비 */
+  width: 0.5rem; /* 8px */
 }
 
-/* ✅ 스크롤 바 트랙(배경) */
 .result_hospital::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1); /* 반투명 배경 */
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.375rem; /* 6px */
 }
 
-/* ✅ 스크롤 바 핸들(움직이는 부분) */
 .result_hospital::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.719); /* 흰색 반투명 */
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.719);
+  border-radius: 0.375rem; /* 6px */
   background-clip: padding-box;
-  border: 2px solid transparent;
+  border: 0.125rem solid transparent; /* 2px */
 }
 
 /* ✅ 스크롤 바 호버 효과 */
@@ -395,43 +362,49 @@
   background: rgba(255, 255, 255, 0.966); /* 마우스 올리면 더 밝게 */
 }
 
-
-
-
-.hospital-map {
+.hospital-map1 {
   background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  padding: 10px;
-  margin-bottom: 10px;
-  height: 355px;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  border-radius: 0.375rem; /* 6px */
+  padding: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem; /* 10px */
+  height: 36.1875rem; /* 355px */
+}
+
+.hospital-map2 {
+  background: rgba(0, 0, 0, 0.6);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  border-radius: 0.375rem; /* 6px */
+  padding: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem; /* 10px */
+  height: 22.1875rem; /* 355px */
 }
 
 .map-check {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px !important;
-    padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.9375rem; /* 15px */
+  padding: 0 0.625rem; /* 10px */
 }
 
 .hospital-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
-  padding: 0 10px;
+  margin-bottom: 0.625rem; /* 10px */
+  padding: 0 0.625rem; /* 10px */
 }
 
 .save-diagnosis-btn {
-  padding: 8px 12px;
+  padding: 0.5rem 0.75rem; /* 8px 12px */
   background: #ffffff;
   color: black;
   border: none;
-  border-radius: 6px;
+  border-radius: 0.375rem; /* 6px */
   cursor: pointer;
-  font-size: 14px;
-  margin-left: auto; /* 자동으로 오른쪽 정렬 */
+  font-size: 0.875rem; /* 14px */
+  margin-left: auto;
   font-weight: bold;
   transition: background 0.3s ease-in-out;
 }
@@ -440,35 +413,31 @@
   background: #a2a2a2;
 }
 
-/* ✅ 그림판 도구 박스 */
 .drawing-tools-container {
   display: flex;
   align-items: center;
-  gap: 5px;
-  background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
-  padding: 5px;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  gap: 0.3125rem; /* 5px */
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.3125rem; /* 5px */
+  border-radius: 0.5rem; /* 8px */
+  margin-bottom: 0.625rem; /* 10px */
   width: fit-content;
 }
 
-/* 그림판 도구 버튼 스타일 */
 .drawing-tools {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem; /* 10px */
 }
 
-/* 색상 선택 및 선 굵기 조절 스타일 */
 .color-picker,
 .line-width-slider {
-  border-radius: 4px;
-  border: 1px solid #ddd;
+  border-radius: 0.25rem; /* 4px */
+  border: 0.0625rem solid #ddd; /* 1px */
   background: white;
   cursor: pointer;
 }
 
-/* ✅ 캔버스 위에서만 마우스 커서를 signpen.png로 변경 */
 .drawing-canvas {
   position: absolute;
   top: 0;
@@ -479,14 +448,13 @@
   cursor: url('./png/signpen.png') 3 20, crosshair;
 }
 
-/* ✅ 지우기 버튼 (eraser.png 아이콘 적용) */
 .erase-button {
   background: none;
   border: none;
   cursor: pointer;
-  width: 32px;
-  height: 32px;
-  background-image: url('./png/eraser.png'); /* ✅ eraser.png 적용 */
+  width: 2rem; /* 32px */
+  height: 2rem; /* 32px */
+  background-image: url('./png/eraser.png');
   background-size: cover;
   background-position: center;
 }
@@ -494,8 +462,9 @@
 .erase-button:hover {
   opacity: 0.7;
 }
+
 .print-icon {
-  width: 25px; /* 아이콘 크기 조절 */
-  height: 25px;
-  margin-right: 8px; /* 아이콘과 텍스트 사이 간격 */
+  width: 1.5625rem; /* 25px */
+  height: 1.5625rem;
+  margin-right: 0.5rem; /* 8px */
 }
