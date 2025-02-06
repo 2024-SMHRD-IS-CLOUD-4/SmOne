@@ -73,7 +73,7 @@ margin: 0 auto 20px; /* 중앙 정렬 + 아래 간격 */
 
 /* 하단 링크(아이디 찾기, 비밀번호 찾기, 회원가입) */
 .login-extra {
-  margin-top: 40px;
+  margin-top: 35px;
   display: flex;
   justify-content: center;
   align-items: center; /* 수직 정렬 */

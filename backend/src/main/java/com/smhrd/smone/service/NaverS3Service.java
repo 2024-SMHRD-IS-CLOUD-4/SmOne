@@ -15,6 +15,7 @@ import software.amazon.awssdk.services.s3.model.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.UUID;
 
 @Service
 public class NaverS3Service {
@@ -34,24 +35,25 @@ public class NaverS3Service {
                 .build();
     }
 
-    // 📌 이미지 업로드 기능
-    public String uploadFile(MultipartFile file) throws IOException {
-        String fileName = file.getOriginalFilename();
+ 
+// 📌 이미지 업로드 기능
+public String uploadFile(MultipartFile file) throws IOException {
+    // 유니크한 파일명 생성 (타임스탬프 + UUID 조합)
+    String originalFileName = file.getOriginalFilename();
+    String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+    String uniqueFileName = System.currentTimeMillis() + "_" + UUID.randomUUID() + fileExtension;
 
-        // 파일 메타데이터 설정
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(file.getSize());
-        metadata.setContentType(file.getContentType());
+    // 파일 메타데이터 설정
+    ObjectMetadata metadata = new ObjectMetadata();
+    metadata.setContentLength(file.getSize());
+    metadata.setContentType(file.getContentType());
 
-        // S3에 파일 업로드
-        s3Client.putObject(bucketName, fileName, file.getInputStream(), metadata);
+    // S3에 파일 업로드
+    s3Client.putObject(bucketName, uniqueFileName, file.getInputStream(), metadata);
 
-        // 업로드된 파일의 URL 반환
-        return generateFileUrl(fileName);
-    }
+    // 업로드된 파일의 URL 반환
+    return generateFileUrl(uniqueFileName);
+}
 
-    private String generateFileUrl(String fileName) {
-        // 파일의 공개 URL 생성
-        return String.format("https://kr.object.ncloudstorage.com/%s/%s", bucketName, fileName);
-    }
+
 }

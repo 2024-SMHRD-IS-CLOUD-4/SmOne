@@ -83,7 +83,7 @@ const Findpw = () => {
   return (
     <div className="findpw-container">
       {/* X 버튼을 컨테이너 안쪽 상단 오른쪽에 배치 */}
-      <button className="findpw-close-btn" onClick={() => navigate("/")}>X</button>
+      <button className="findpw-close-btn" onClick={() => navigate(-1)}>X</button>
       <h1 className="findpw-title">본인 인증</h1>
 
       <div className="findpw-form">

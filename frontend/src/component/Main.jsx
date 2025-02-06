@@ -75,6 +75,7 @@ function Main() {
       })
       .catch(err => console.error(err));
   }, []);
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -309,6 +310,9 @@ function Main() {
 
   // 환자 클릭
   async function handlePatientClick(pt) {
+    setSelectedPatient(pt.pIdx);
+    console.log("선택된 환자 ID:", pt.pIdx);
+  
     // 기존 환자 상태 캐시
     if (selectedPatient) {
       storeCurrentPatientStateToCache(selectedPatient.pIdx);

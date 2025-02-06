@@ -167,7 +167,7 @@ function PatientEdit() {
     <>
       <form onSubmit={handleSubmit}>
         <Menu />  {/* ✅ 네비게이션 메뉴 추가 */}
-        <div className='Patient-container'>
+        <div className='Patientedit-container'>
           <button className="back-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
           <div className="form-wrapper">
             <h1 className="patient-title1">환자 수정</h1>

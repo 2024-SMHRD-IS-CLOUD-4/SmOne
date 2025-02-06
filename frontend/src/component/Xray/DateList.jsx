@@ -1,6 +1,6 @@
 import "./DateList.css";
 
-function DateList({ diagDates, currentPage, setCurrentPage, datesPerPage, onDateClick }) {
+function DateList({ diagDates, currentPage, setCurrentPage, datesPerPage, onDateClick, selectedPatient }) {
   const totalPages = Math.ceil(diagDates.length / datesPerPage);
   const indexOfLast = currentPage * datesPerPage;
   const indexOfFirst = indexOfLast - datesPerPage;
@@ -14,7 +14,9 @@ function DateList({ diagDates, currentPage, setCurrentPage, datesPerPage, onDate
 
   return (
     <div className="date-list-container">
-      {diagDates.length === 0 ? (
+       {!selectedPatient && diagDates.length === 0 ? (
+        <p className="no-dates-message">환자를 선택하세요</p>
+      ) : diagDates.length === 0 ? (
         <p className="no-dates-message">등록된 진단 날짜가 없습니다</p>
       ) : (
         <>

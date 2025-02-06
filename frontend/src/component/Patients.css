@@ -1,21 +1,15 @@
 .Patient-container {
+  transform: translate(133%, 23%);
+  padding: 1.875rem;
+  color: #fff;
+  text-align: center;
   position: relative;
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* Center vertically */
-  /* align-items: center; Center horizontally */
   background: rgba(0, 0, 0, 0.5);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 2.0);
   border-radius: 10px;
   padding: 20px;
   height: 590px;
   width: 472px;
-  /* Ensures proper centering */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .patients-close-btn {
@@ -52,7 +46,7 @@
   /* align-items: center; */
   font-size: 32px;
   margin-bottom: 27px;
-  /* margin-top: 20px; */
+  margin-top: 3px;
   text-align: center;
   color: white;
 }
