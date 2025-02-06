@@ -298,7 +298,7 @@ function Mypage() {
                 <p>비밀번호를 입력해주세요</p>
                 <input
                   type="password"
-                  placeholder="탈퇴하시려면 비밀번호를 입력해주세요"
+                  placeholder="회원 탈퇴를 원하시면 비밀번호를 입력해주세요"
                   value={deletePassword}
                   onChange={e => setDeletePassword(e.target.value)}
                   style={{ width: "100%", marginBottom: "10px" }}

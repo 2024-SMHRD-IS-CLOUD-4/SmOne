@@ -13,7 +13,7 @@
   color: #fff;
   box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 2.0); /* 0, 4px, 10px → 0, 0.25rem, 0.625rem */
   text-align: center;
-  position: absolute; /* 내부 요소 절대 위치 지정 가능하도록 설정 */
+  position: relative; /* 내부 요소 절대 위치 지정 가능하도록 설정 */
 }
 
 .flex-container {

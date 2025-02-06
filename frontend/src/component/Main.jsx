@@ -19,10 +19,10 @@ function Main() {
   const [birthSearch, setBirthSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const searchRef = useRef(null);
-  const newFileInputRef = useRef(null);
+  // const newFileInputRef = useRef(null);
   const patientsPerPage = 5;
 
-  const userId = sessionStorage.getItem("userId")
+  // const userId = sessionStorage.getItem("userId")
 
   // 선택된 환자
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -52,7 +52,6 @@ function Main() {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [hideSearchBar, setHideSearchBar] = useState(false);
 
-  
   const toggleSearchBar = () => {
     if (isSearchVisible) {
       setHideSearchBar(true); // 먼저 fadeOut 애니메이션 실행
@@ -234,16 +233,16 @@ function Main() {
       },
     });
   }
-  const handleLogoClick = () => {
-    setSelectedPatient(null);
-    setOldImages([]);
-    setOldBigPreview(null);
-    setNewImages([]);
-    setNewBigPreview(null);
-    setDiagDates([]);
-    setSelectedDate(null);
-    setDatePage(1);
-  };
+  // const handleLogoClick = () => {
+  //   setSelectedPatient(null);
+  //   setOldImages([]);
+  //   setOldBigPreview(null);
+  //   setNewImages([]);
+  //   setNewBigPreview(null);
+  //   setDiagDates([]);
+  //   setSelectedDate(null);
+  //   setDatePage(1);
+  // };
   // 캐시 복원
   async function restorePatientStateFromCache(pIdx, newlyLoadedDates = []) {
     const data = patientCache[pIdx];
@@ -381,22 +380,22 @@ function Main() {
     }
   }
 
-  // 로그아웃
-  async function handleLogout() {
-    const ok = window.confirm("정말 로그아웃하시겠습니까?");
-    if (!ok) return;
-    try {
-      await axios.post(
-        `${process.env.REACT_APP_DB_URL}/users/logout`,
-        {},
-        { withCredentials: true }
-      );
-      navigate("/");
-    } catch (e) {
-      console.error(e);
-      window.alert("로그아웃 실패");
-    }
-  }
+  // // 로그아웃
+  // async function handleLogout() {
+  //   const ok = window.confirm("정말 로그아웃하시겠습니까?");
+  //   if (!ok) return;
+  //   try {
+  //     await axios.post(
+  //       `${process.env.REACT_APP_DB_URL}/users/logout`,
+  //       {},
+  //       { withCredentials: true }
+  //     );
+  //     navigate("/");
+  //   } catch (e) {
+  //     console.error(e);
+  //     window.alert("로그아웃 실패");
+  //   }
+  // }
 
   // 신규 사진 등록(파일 선택)
   function handleNewPhotoRegister() {
@@ -482,7 +481,7 @@ function Main() {
   );
 
   return (
-    <div className="main-container">
+    <div className="main-container" style={{ overflow: "auto" }}>
       <Menu /> {/* Menu.jsx를 왼쪽에 배치 */}
       {/* 상단 바 */}
       <div className="top-bar" ref={searchRef}>
@@ -513,8 +512,6 @@ function Main() {
             </button>
           </form>
         )}
-
-
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           {/* 버튼 영역 */}
           <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
@@ -644,19 +641,28 @@ function Main() {
 
           {/* 진단 날짜 텍스트를 panel-block 밖으로 이동 */}
           {selectedPatient && (
-            <div className="diagnosis-date-title">
-              진단 날짜
-            </div>
+            <div className="diagnosis-date-title">진단 날짜</div>
           )}
 
           {/* 날짜 리스트 */}
-          <div className="date-list-container panel-block" style={{ marginTop: "10px" }}>
+          <div
+            className={`date-list-container panel-block
+              ${!selectedPatient ? "expanded-panel" : ""}`}
+          >
+            {/* ✅ selectedPatient가 없을 때만 비디오 표시 */}
+            {!selectedPatient && (
+              <video autoPlay loop muted playsInline className="date-list-video">
+                <source src="/video2.mp4" type="video/mp4" />
+              </video>
+            )}
+
             <DateList
               diagDates={diagDates}
               currentPage={datePage}
               setCurrentPage={setDatePage}
               datesPerPage={datesPerPage}
               onDateClick={(dateStr) => handleDateClick(dateStr, selectedPatient)}
+              selectedPatient={selectedPatient} // ✅ 추가
             />
 
           </div>
