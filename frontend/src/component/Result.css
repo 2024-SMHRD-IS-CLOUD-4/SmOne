@@ -79,13 +79,20 @@
   margin-left: 0.625rem; /* 10px */
 }
 
+/* 수정된 CSS - flex-shrink를 0으로 설정하여 원래 너비 유지 */
+.result-left-panel,
+.result-center-panel,
+.result-right-panel {
+  flex-shrink: 0; /* 수정된 부분: 아이템 축소 방지 */
+}
+
 .result-right-panel2 {
   background: rgba(0, 0, 0, 0.6);
   border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
   border-radius: 0.375rem; /* 6px */
   padding: 0.625rem; /* 10px */
   margin-bottom: 0.625rem; /* 10px */
-  height: 18.75rem; /* 300px */
+  height: 5.75rem; /* 300px */
 }
 
 .result-right-panel3 {
@@ -242,6 +249,7 @@
 
 
 .ai-result-box {
+  position: relative;
   background: rgba(0, 0, 0, 0.6);
   border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
   border-radius: 0.375rem; /* 6px */
@@ -249,6 +257,17 @@
   margin-bottom: 0.625rem; /* 10px */
   margin-top: 0.625rem; /* 10px */
   height: 11.5625rem; /* 185px */
+}
+
+.ai-result-video {
+  .ai-result-video {
+    width: 100%;
+    height: auto; /* 자동 높이 조정 */
+    max-height: 185px; /* ai-result-box 높이와 일치 */
+    object-fit: contain; /* 비율 유지하며 영상 크기 조정 */
+    border-radius: 6px;
+  }
+  
 }
 
 .result-right-panel {
@@ -354,7 +373,16 @@
   background: rgba(255, 255, 255, 0.966); /* 마우스 올리면 더 밝게 */
 }
 
-.hospital-map {
+.hospital-map1 {
+  background: rgba(0, 0, 0, 0.6);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
+  border-radius: 0.375rem; /* 6px */
+  padding: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem; /* 10px */
+  height: 36.1875rem; /* 355px */
+}
+
+.hospital-map2 {
   background: rgba(0, 0, 0, 0.6);
   border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
   border-radius: 0.375rem; /* 6px */

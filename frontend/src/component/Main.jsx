@@ -19,10 +19,10 @@ function Main() {
   const [birthSearch, setBirthSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const searchRef = useRef(null);
-  const newFileInputRef = useRef(null);
+  // const newFileInputRef = useRef(null);
   const patientsPerPage = 5;
 
-  const userId = sessionStorage.getItem("userId")
+  // const userId = sessionStorage.getItem("userId")
 
   // 선택된 환자
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -228,16 +228,16 @@ function Main() {
       },
     });
   }
-  const handleLogoClick = () => {
-    setSelectedPatient(null);
-    setOldImages([]);
-    setOldBigPreview(null);
-    setNewImages([]);
-    setNewBigPreview(null);
-    setDiagDates([]);
-    setSelectedDate(null);
-    setDatePage(1);
-  };
+  // const handleLogoClick = () => {
+  //   setSelectedPatient(null);
+  //   setOldImages([]);
+  //   setOldBigPreview(null);
+  //   setNewImages([]);
+  //   setNewBigPreview(null);
+  //   setDiagDates([]);
+  //   setSelectedDate(null);
+  //   setDatePage(1);
+  // };
   // 캐시 복원
   async function restorePatientStateFromCache(pIdx, newlyLoadedDates = []) {
     const data = patientCache[pIdx];
@@ -375,22 +375,22 @@ function Main() {
     }
   }
 
-  // 로그아웃
-  async function handleLogout() {
-    const ok = window.confirm("정말 로그아웃하시겠습니까?");
-    if (!ok) return;
-    try {
-      await axios.post(
-        `${process.env.REACT_APP_DB_URL}/users/logout`,
-        {},
-        { withCredentials: true }
-      );
-      navigate("/");
-    } catch (e) {
-      console.error(e);
-      window.alert("로그아웃 실패");
-    }
-  }
+  // // 로그아웃
+  // async function handleLogout() {
+  //   const ok = window.confirm("정말 로그아웃하시겠습니까?");
+  //   if (!ok) return;
+  //   try {
+  //     await axios.post(
+  //       `${process.env.REACT_APP_DB_URL}/users/logout`,
+  //       {},
+  //       { withCredentials: true }
+  //     );
+  //     navigate("/");
+  //   } catch (e) {
+  //     console.error(e);
+  //     window.alert("로그아웃 실패");
+  //   }
+  // }
 
   // 신규 사진 등록(파일 선택)
   function handleNewPhotoRegister() {
@@ -476,7 +476,7 @@ function Main() {
   );
 
   return (
-    <div className="main-container">
+    <div className="main-container" style={{overflow: "auto"}}>
       <Menu /> {/* Menu.jsx를 왼쪽에 배치 */}
       {/* 상단 바 */}
       <div className="top-bar" ref={searchRef}>
