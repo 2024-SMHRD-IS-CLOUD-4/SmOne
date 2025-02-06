@@ -111,7 +111,6 @@
 .result-right-panel h2 {
   margin-top: 5px;
   margin-bottom: 5px;
-  margin-left: 10px;
 }
 
 .patient-info-table {
@@ -168,18 +167,19 @@
 
 .result_btn1,
 .result_btn2 {
-  align-items: center;
+  display: flex;
+  align-items: center; /* 아이콘과 텍스트 세로 정렬 */
   justify-content: center;
-  gap: 8px; /* 아이콘과 텍스트 간격 */
+  gap: 6px; /* 아이콘과 텍스트 간격 조정 */
   padding: 10px 15px;
   border: none;
   border-radius: 6px;
-  background: #333;
-  color: #fff;
+  background: #fff;
+  color: black;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s ease-in-out; /* 부드러운 색상 전환 */
+  transition: background 0.3s ease-in-out;
 }
 
 .result-btn1 {
@@ -200,7 +200,7 @@
 
 .result_btn1:hover,
 .result_btn2:hover {
-  background: #555;
+  background: #a2a2a2;
 }
 
 .result_btn1:disabled,
@@ -273,7 +273,7 @@
   padding: 10px;
   margin-bottom: 10px;
   margin-top: 10px;
-  height: 200px;
+  height: 185px;
 }
 
 
@@ -426,16 +426,76 @@
 .save-diagnosis-btn {
   padding: 8px 12px;
   background: #ffffff;
-  color: #333;
+  color: black;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
   margin-left: auto; /* 자동으로 오른쪽 정렬 */
   font-weight: bold;
+  transition: background 0.3s ease-in-out;
 }
 
 .save-diagnosis-btn:hover {
-  background: #555;
-  color: #ffffff;
+  background: #a2a2a2;
+}
+
+/* ✅ 그림판 도구 박스 */
+.drawing-tools-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  padding: 5px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  width: fit-content;
+}
+
+/* 그림판 도구 버튼 스타일 */
+.drawing-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 색상 선택 및 선 굵기 조절 스타일 */
+.color-picker,
+.line-width-slider {
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+}
+
+/* ✅ 캔버스 위에서만 마우스 커서를 signpen.png로 변경 */
+.drawing-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  cursor: url('./png/signpen.png') 3 20, crosshair;
+}
+
+/* ✅ 지우기 버튼 (eraser.png 아이콘 적용) */
+.erase-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  background-image: url('./png/eraser.png'); /* ✅ eraser.png 적용 */
+  background-size: cover;
+  background-position: center;
+}
+
+.erase-button:hover {
+  opacity: 0.7;
+}
+.print-icon {
+  width: 25px; /* 아이콘 크기 조절 */
+  height: 25px;
+  margin-right: 8px; /* 아이콘과 텍스트 사이 간격 */
 }
