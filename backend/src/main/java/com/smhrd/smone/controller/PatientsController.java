@@ -142,6 +142,9 @@ public class PatientsController {
         String centerId = user.getCenterId();
         List<Patients> patients = patientsService.getPatientsByCenter(centerId);
 
+        // ✅ P_IDX 값이 정상적으로 포함되는지 확인
+        System.out.println("환자 리스트: " + patients);
+        
         return ResponseEntity.ok(patients);
     }
 

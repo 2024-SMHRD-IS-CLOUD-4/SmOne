@@ -1,6 +1,7 @@
 package com.smhrd.smone.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,19 @@ public class XrayImagesController {
             return ResponseEntity.ok(list);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-            }
+          }
+	}
+	
+	// 특정 환자의 X-ray 이미지 URL 리스트 반환
+	@GetMapping("/images/{pIdx}")
+	public ResponseEntity<List<String>> getXrayImages(@PathVariable Integer pIdx){
+		List<XrayImages> images = xrayService.getXraysByPatient(pIdx);
+		
+		List<String> imgUrls = images.stream()
+				.map(XrayImages::getImgPath)
+				.collect(Collectors.toList());
+		
+		return ResponseEntity.ok(imgUrls);
 	}
 
 	@PostMapping("/diagnose")
@@ -83,16 +96,16 @@ public class XrayImagesController {
     }
 	
 	// X-ray 결과 업데이트 => RESULT, PROCESSED_AT
-	 @PutMapping("/updateResult")
-	    public ResponseEntity<?> updateXrayResult(@RequestBody XrayImages req) {
-	        try {
-	            // req.imgIdx, req.result 필요
-	            xrayService.updateXrayResult(req.getImgIdx(), req.getResult());
-	            return ResponseEntity.ok("X-ray result updated");
-	        } catch(Exception e) {
-	            e.printStackTrace();
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                    .body("업데이트 실패: " + e.getMessage());
-	        }
-	    }
+	@PutMapping("/updateResult")
+    public ResponseEntity<?> updateXrayResult(@RequestBody XrayImages req) {
+        try {
+            // req.imgIdx, req.result 필요
+            xrayService.updateXrayResult(req.getImgIdx(), req.getResult());
+            return ResponseEntity.ok("X-ray result updated");
+        } catch(Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("업데이트 실패: " + e.getMessage());
+        }
 	}
+}
