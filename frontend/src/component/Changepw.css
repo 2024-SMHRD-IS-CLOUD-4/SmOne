@@ -1,4 +1,4 @@
-/* 반투명 컨테이너 */
+                  /* 반투명 컨테이너 */
 .changepw-container {
   position: relative; /* 이 부분이 중요합니다 */
   width: 450px;
@@ -166,3 +166,20 @@ input:focus {
   .changepw-close-btn:hover {
     background-color: #666;
   }
+
+  /* ✅ 비밀번호 유효성 검사 메시지 스타일 */
+.password-message {
+  font-size: 14px;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.password-message.valid {
+  color: green;
+}
+
+.password-message.invalid {
+  color: red;
+}

@@ -241,7 +241,7 @@
 .list-area {
   width: 18.75rem; /* 300px */
   padding: 0.625rem; /* 10px */
-  overflow-y: auto;
+  /* overflow-y: auto; */
   border-left: 0.0625rem solid #ccc; /* 1px */
 }
 

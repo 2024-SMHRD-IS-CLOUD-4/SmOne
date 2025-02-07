@@ -10,6 +10,8 @@ import SecondVisitUI from "./Xray/SecondVisitUI";
 import stethoscopeIcon from "./png/stethoscope.png";
 import magnifyingGlassIcon from "./png/magnifying-glass.png";
 import documentIcon from "./png/document.png"; // 추가
+import patientIcon from "./png/patientedit.png";
+import trashIcon from "./png/trash.png";
 
 function Main() {
   const navigate = useNavigate();
@@ -514,7 +516,7 @@ function Main() {
         )}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           {/* 버튼 영역 */}
-          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
+          <div style={{ display: "flex", flexDirection: "row", marginTop: "5px", alignItems: "center", gap: "10px" }}>
             {/* 과거 결과 보기 버튼 */}
             <button className="exdiagnose-btn" onClick={handleViewOldResult}>
               <img src={documentIcon} alt="과거 진단 아이콘" className="document-icon" />
@@ -633,8 +635,12 @@ function Main() {
               </table>
 
               <div className="patient-detail-actions">
-                <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>수정</button>
-                <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>삭제</button>
+                <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>
+                  <img src={patientIcon} alt="수정" className="edit-icon" />
+                </button>
+                <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>
+                  <img src={trashIcon} alt="삭제" className="trash-icon" />
+                </button>
               </div>
             </div>
           )}

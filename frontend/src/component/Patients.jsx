@@ -32,39 +32,44 @@ function Patients() {
     }
   };
 
+  // 다음 우편번호(다음주소) API
   const handleAddressSearch = () => {
     new window.daum.Postcode({
       oncomplete: (data) => {
-        const pAdd = `${data.zonecode} ${data.address}`;
-        setFormData({
-          ...formData,
+        setFormData((prev) => ({
+          ...prev,
           postcode: data.zonecode,
-          address: data.address,
-          pAdd: `${pAdd} ${formData.detailAddress}`,
-        });
-      },
+          address: data.roadAddress || data.address
+        }));
+      }
     }).open();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const updatedFormData = {
+
+    // 주민번호
+    const birth = `${formData.birthPart1}-${formData.birthPart2}`;
+    // 전화번호
+    const tel = `${formData.phonePart1}-${formData.phonePart2}-${formData.phonePart3}`;
+    // pAdd
+    const fullAddress = `${formData.postcode} ${formData.address} ${formData.detailAddress}`.trim();
+
+    const sendData = {
       pName: formData.pName,
       gender: formData.gender,
-      birth: `${formData.birthPart1}-${formData.birthPart2}`,
-      tel: `${formData.phonePart1}-${formData.phonePart2}-${formData.phonePart3}`,
-      pAdd: `${formData.postcode} ${formData.address} ${formData.detailAddress}`,
+      birth,
+      tel,
+      pAdd: fullAddress
     };
 
-    console.log("제출 데이터:", updatedFormData); // 확인용 로그
-
     try {
+      console.log("제출 데이터:", sendData);
       const response = await axios.post(
         `${process.env.REACT_APP_DB_URL}/patients/register`,
-        updatedFormData,
+        sendData,
         {
-          headers: { "Content-Type": "application/json" },
-        }
+          headers: { "Content-Type": "application/json" } }
       );
       if (response.status === 200) {
         alert("환자 등록이 완료되었습니다.");
@@ -80,7 +85,7 @@ function Patients() {
     <form onSubmit={handleSubmit}>
       <Menu />  {/* ✅ 네비게이션 메뉴 추가 */}
       <div className="Patient-container">
-      <button className="patients-close-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
+        <button className="patients-close-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
         <div className="form-wrapper">
           <h1 className="patient-title">환자 등록</h1>
 

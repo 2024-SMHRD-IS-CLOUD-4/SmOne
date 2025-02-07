@@ -14,7 +14,7 @@ function SecondVisitUI({
 
   handleNewPhotoRegister,
   handleRemoveNewImage,
-  
+
   selectedDate,
   patientName,
   earliestDate,
@@ -27,17 +27,17 @@ function SecondVisitUI({
   const previewBoxHeight = 570;
 
   useEffect(() => {
-    if (selectedPatient){
+    if (selectedPatient) {
       console.log(`✅ 선택된 환자 ID: ${selectedPatient}`);
 
-            // API 요청 보내서 X-RAY 이미지 목록 가져오기
-            axios.get(`http://localhost:8090/SmOne/list?pIdx=${selectedPatient}`)
-                .then(response => {
-                    console.log("✅ X-RAY 이미지 데이터:", response.data);
-                    console.log(`http://localhost:8090/SmOne/list?pIdx=${selectedPatient}`);
-                    setOldImages(response.data); // imgPath 리스트 저장
-                })
-                .catch(error => console.error("❌ X-RAY 이미지 로드 실패:", error));
+      // API 요청 보내서 X-RAY 이미지 목록 가져오기
+      axios.get(`http://localhost:8090/SmOne/list?pIdx=${selectedPatient}`)
+        .then(response => {
+          console.log("✅ X-RAY 이미지 데이터:", response.data);
+          console.log(`http://localhost:8090/SmOne/list?pIdx=${selectedPatient}`);
+          setOldImages(response.data); // imgPath 리스트 저장
+        })
+        .catch(error => console.error("❌ X-RAY 이미지 로드 실패:", error));
     }
   }, [selectedPatient]);
 
@@ -320,7 +320,7 @@ function SecondVisitUI({
                       <img
                         src={plusIcon}
                         alt="plus-icon"
-                        style={{ width: "60%", height: "60%" }}
+                        className="plus-icon"
                       />
                     </span>
                   </div>

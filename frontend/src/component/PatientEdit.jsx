@@ -95,15 +95,26 @@ function PatientEdit() {
       });
   }, [pIdx, navigate]);
 
-  // 입력 핸들러 => 숫자만 입력해야 하는곳(주민번호, 전화번호) 정규식 처리
-  const handleChange = (e) => {
-    const { name, value, maxLength } = e.target;
-    if (["birthPart1", "birthPart2", "phonePart1", "phonePart2", "phonePart3"].includes(name)) {
-      setFormData((prev) => ({ ...prev, [name]: value.replace(/\D/g, "").slice(0, maxLength) }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    // 숫자만 입력
+    const handleChange = (e) => {
+      const { name, value, maxLength } = e.target;
+      if(
+          name === "birthPart1" ||
+          name === "birthPart2" ||
+          name === "phonePart1" ||
+          name === "phonePart2" ||
+          name === "phonePart3"
+      ) {
+          const onlyNums = value.replace(/\D/g, "");
+          setFormData((prev) => ({
+              ...prev,
+              [name]: onlyNums.slice(0, maxLength),
+          }));
+      } else {
+          setFormData((prev) => ({ ...prev, [name]: value }));
+      }
   };
+  
 
 
   // 입력중에 maxLength까지 채우면 다음 필드로 포커스 이동
@@ -125,8 +136,8 @@ function PatientEdit() {
           ...prev,
           postcode: data.zonecode,
           address: data.address,
-          // detailAddress는 기존 그대로 유지
-          pAdd: `${pAdd} ${prev.detailAddress}`, // DB 저장용 전체 주소
+          detailAddress: "", // ✅ 주소 검색 시 상세주소는 초기화
+          pAdd: `${data.zonecode} ${data.address}`, // ✅ 기본 주소만 저장 (상세주소 제거)
         }));
       },
     }).open();
@@ -139,7 +150,7 @@ function PatientEdit() {
     // 최종 DB에 저장할 birth, tel, pAdd
     const newBirth = `${formData.birthPart1}-${formData.birthPart2}`;
     const newTel = `${formData.phonePart1}-${formData.phonePart2}-${formData.phonePart3}`;
-    const newPAdd = `${formData.postcode} ${formData.address} ${formData.detailAddress}`;
+    const newPAdd = `${formData.postcode} ${formData.address} ${formData.detailAddress}`.trim();
 
     // 백엔드로 전송할 데이터
     const sendData = {

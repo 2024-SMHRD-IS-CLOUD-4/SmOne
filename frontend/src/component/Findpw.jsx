@@ -112,7 +112,7 @@ const Findpw = () => {
           <input
             type="text"
             name="emailDomain"
-            placeholder="이메일 도메인"
+            placeholder="(예: gmail.com)"
             value={formData.emailDomain}
             onChange={handleChange}
             style={{ flex: 1 }}
@@ -139,7 +139,7 @@ const Findpw = () => {
         </div>
 
         {/* 메시지 */}
-        {message && <p style={{ color: "#ccc" }}>{message}</p>}
+        {message && <p style={{ color: "#ccc", margintop: "15px", marginBottom: "-18px"}}>{message}</p>}
 
         {/* 비밀번호 변경 이동 버튼 */}
         <button
