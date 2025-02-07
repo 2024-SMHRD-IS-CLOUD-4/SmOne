@@ -28,13 +28,9 @@ function SecondVisitUI({
 
   useEffect(() => {
     if (selectedPatient){
-      console.log(`✅ 선택된 환자 ID: ${selectedPatient}`);
-
             // API 요청 보내서 X-RAY 이미지 목록 가져오기
             axios.get(`http://localhost:8090/SmOne/list?pIdx=${selectedPatient}`)
                 .then(response => {
-                    console.log("✅ X-RAY 이미지 데이터:", response.data);
-                    console.log(`http://localhost:8090/SmOne/list?pIdx=${selectedPatient}`);
                     setOldImages(response.data); // imgPath 리스트 저장
                 })
                 .catch(error => console.error("❌ X-RAY 이미지 로드 실패:", error));
@@ -53,7 +49,7 @@ function SecondVisitUI({
 
   const handleOldThumbClick = (item) => {
     setSelectedOldImage(item);
-    setOldBigPreview(`http://localhost:8090/SmOne/images/${item.imgPath}`);
+    setOldBigPreview(item.bigXray);
     setOldBaseScale(1);
     setOldZoom(1);
     setOldOffsetX(0);
@@ -247,7 +243,7 @@ function SecondVisitUI({
               onClick={() => handleOldThumbClick(item)}
             >
               <img
-                src={item.imgPath}
+                src={item.bigXray}
                 alt={`item ${i + 1}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />

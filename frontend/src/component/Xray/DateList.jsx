@@ -17,7 +17,7 @@ function DateList({ diagDates, currentPage, setCurrentPage, datesPerPage, onDate
        {!selectedPatient && diagDates.length === 0 ? (
         <p className="no-dates-message">환자를 선택하세요</p>
       ) : diagDates.length === 0 ? (
-        <p className="no-dates-message">등록된 진단 날짜가 없습니다</p>
+        <p className="no-dates-message1">등록된 진단 날짜가 없습니다</p>
       ) : (
         <>
           {/* 진단 날짜 목록 */}

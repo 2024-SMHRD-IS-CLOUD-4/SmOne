@@ -226,6 +226,7 @@
   margin-top: 0.625rem; /* 10px */
   height: 11.875rem; /* 190px */
   overflow-y: auto;
+  text-align: center;
 }
 
 .date-list-box::-webkit-scrollbar {
@@ -255,9 +256,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* ✅ 영상이 꽉 차도록 설정 */
-  opacity: 0.5; /* ✅ 투명도 조절 */
-  z-index: -1; /* ✅ 배경처럼 표시 */
+  object-fit: cover;
+  opacity: 0.5;
+  z-index: -1;
 }
 
 .ai-result-box {
