@@ -2,7 +2,6 @@ package com.smhrd.smone.controller;
 
 import com.smhrd.smone.model.Patients;
 import com.smhrd.smone.model.User;
-import com.smhrd.smone.service.KakaoGeocodeService;
 import com.smhrd.smone.service.PatientsService;
 import com.smhrd.smone.service.UserService;
 
@@ -26,9 +25,6 @@ public class PatientsController {
     private PatientsService patientsService;
 
     @Autowired
-    private KakaoGeocodeService geoService;
-
-    @Autowired
     private UserService userService; // 로그인 사용자 정보 조회용
 
     // [1] 환자 등록
@@ -47,18 +43,6 @@ public class PatientsController {
 
             System.out.println("받은 데이터(등록): " + patient);
 
-            // (B) 주소 전처리 + 지오코딩
-            String fullAddr = patient.getPAdd();
-            if (fullAddr != null && !fullAddr.isBlank()) {
-                String baseAddr = refineAddress(fullAddr);
-                if (baseAddr != null && !baseAddr.isBlank()) {
-                    Double[] latlng = geoService.getLatLngFromAddress(baseAddr);
-                    if (latlng != null) {
-                        patient.setPLat(latlng[0]);
-                        patient.setPLng(latlng[1]);
-                    }
-                }
-            }
 
             // (C) 본인 센터 ID 세팅
             String centerId = user.getCenterId();
@@ -94,24 +78,12 @@ public class PatientsController {
 
             System.out.println("받은 데이터(수정): " + newData);
 
-            // (B) 주소 전처리 + 지오코딩
-            String fullAddr = newData.getPAdd();
-            if (fullAddr != null && !fullAddr.isBlank()) {
-                String baseAddr = refineAddress(fullAddr);
-                if (baseAddr != null && !baseAddr.isBlank()) {
-                    Double[] latlng = geoService.getLatLngFromAddress(baseAddr);
-                    if (latlng != null) {
-                        newData.setPLat(latlng[0]);
-                        newData.setPLng(latlng[1]);
-                    }
-                }
-            }
 
             // (C) 본인 센터 ID
             String centerId = user.getCenterId();
 
             // (D) 업데이트
-            patientsService.updatePatient(centerId, pIdx, newData);
+            patientsService.updatePatientWithoutGeocording(centerId, pIdx, newData);
 
             return ResponseEntity.ok("환자 정보가 수정되었습니다.");
 

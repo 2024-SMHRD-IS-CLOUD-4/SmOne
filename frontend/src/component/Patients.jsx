@@ -17,12 +17,25 @@ function Patients() {
     postcode: "",
     address: "",
     detailAddress: "",
+    pAdd: "",
+    
+    pLat: null,
+    pLng: null,
   });
 
   const handleChange = (e) => {
     const { name, value, maxLength } = e.target;
-    const onlyNumbers = value.replace(/\D/g, ""); // 숫자 이외의 문자 제거
-    setFormData({ ...formData, [name]: onlyNumbers.slice(0, maxLength) });
+    if (
+      ["birthPart1","birthPart2","phonePart1","phonePart2","phonePart3"].includes(name)
+    ) {
+      const onlyNums = value.replace(/\D/g, "");
+      setFormData(prev => ({
+        ...prev,
+        [name]: onlyNums.slice(0, maxLength),
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleNextFocus = (e, nextField) => {
@@ -35,44 +48,72 @@ function Patients() {
   const handleAddressSearch = () => {
     new window.daum.Postcode({
       oncomplete: (data) => {
-        const pAdd = `${data.zonecode} ${data.address}`;
-        setFormData({
-          ...formData,
-          postcode: data.zonecode,
-          address: data.address,
-          pAdd: `${pAdd} ${formData.detailAddress}`,
+        const zonecode = data.zonecode;
+        const baseAddr = data.address;  // 예) "서울 어딘가..."
+
+        // 1) 기본 주소 세팅
+        setFormData(prev => ({
+          ...prev,
+          postcode: zonecode,
+          address: baseAddr,
+          pAdd: `${zonecode} ${baseAddr} ${prev.detailAddress}`.trim(),
+        }));
+
+        // 2) 카카오 지도 JS Geocoder → 위/경도
+        const geocoder = new window.daum.maps.services.Geocoder();
+        geocoder.addressSearch(baseAddr, (result, status) => {
+          if (status === window.daum.maps.services.Status.OK) {
+            const { x, y } = result[0];  // x=경도, y=위도
+            console.log("브라우저 지오코딩:", {x, y});
+
+            setFormData(prev => ({
+              ...prev,
+              pLat: y,
+              pLng: x,
+            }));
+          } else {
+            console.warn("주소→좌표 변환 실패");
+            setFormData(prev => ({
+              ...prev,
+              pLat: null,
+              pLng: null
+            }));
+          }
         });
-      },
+      }
     }).open();
   };
 
+  // (3) 등록 버튼
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const updatedFormData = {
+    const newBirth = `${formData.birthPart1}-${formData.birthPart2}`;
+    const newTel   = `${formData.phonePart1}-${formData.phonePart2}-${formData.phonePart3}`;
+    const newPAdd  = `${formData.postcode} ${formData.address} ${formData.detailAddress}`.trim();
+
+    // 백엔드로 전송할 데이터
+    const sendData = {
       pName: formData.pName,
       gender: formData.gender,
-      birth: `${formData.birthPart1}-${formData.birthPart2}`,
-      tel: `${formData.phonePart1}-${formData.phonePart2}-${formData.phonePart3}`,
-      pAdd: `${formData.postcode} ${formData.address} ${formData.detailAddress}`,
+      birth: newBirth,
+      tel: newTel,
+      pAdd: newPAdd,
+      pLat: formData.pLat, // 프론트에서 계산한 위도
+      pLng: formData.pLng, // 프론트에서 계산한 경도
     };
 
-    console.log("제출 데이터:", updatedFormData); // 확인용 로그
-
     try {
-      const response = await axios.post(
+      const res = await axios.post(
         `${process.env.REACT_APP_DB_URL}/patients/register`,
-        updatedFormData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+        sendData
       );
-      if (response.status === 200) {
-        alert("환자 등록이 완료되었습니다.");
+      if (res.status === 200) {
+        alert("환자 등록 완료");
         navigate("/main");
       }
-    } catch (error) {
-      console.error("환자 등록 에러:", error);
-      alert("환자 등록 중 오류가 발생했습니다.");
+    } catch (err) {
+      console.error(err);
+      alert("등록 실패");
     }
   };
 
