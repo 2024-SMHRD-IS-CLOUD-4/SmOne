@@ -1,9 +1,18 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Loading.css";
 
 const Loading = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate("/result", { state: location.state });
+    }, 3000); // 3초 후 이동
+
+    return () => clearTimeout(timer); // 클린업 함수
+  }, [navigate, location.state]);
 
   return (
     <div className="loading-container">

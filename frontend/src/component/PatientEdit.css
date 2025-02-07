@@ -196,13 +196,28 @@
   /* 성별 버튼 간격 */
 }
 
+/* 남/여 버튼 기본 스타일 */
 .radio {
   background-color: #333;
   color: #fff;
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
 }
+
+/* 남/여 버튼 호버 효과 */
+.radio:hover {
+  background-color: #555; /* 밝은 회색으로 변경 */
+  transform: scale(1.05); /* 약간 확대 효과 */
+}
+
+/* 선택된 상태의 버튼 */
+.radio.selected {
+  background-color: #777;
+  border: 2px solid #fff;
+}
+
 
 .radio.selected {
   background-color: #555;

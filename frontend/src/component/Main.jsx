@@ -101,7 +101,6 @@ function Main() {
       setOldBigPreview(null);
     }
   }, [oldImages]);
-  
   // 검색
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -188,7 +187,13 @@ function Main() {
       alert("등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.");
       return;
     }
-
+    navigate("/loading", {
+      state: {
+        patient: selectedPatient,
+        newlyUploaded: newImages.map((img) => img.file.name),
+        bigFilename: selectedNewImage.file.name,
+      },
+    });
     try {
       // 1) 업로드
       const formData = new FormData();

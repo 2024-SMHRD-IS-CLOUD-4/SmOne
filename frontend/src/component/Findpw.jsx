@@ -112,7 +112,7 @@ const Findpw = () => {
           <input
             type="text"
             name="emailDomain"
-            placeholder="(예: gmail.com)"
+            placeholder="예 : gmail.com"
             value={formData.emailDomain}
             onChange={handleChange}
             style={{ flex: 1 }}

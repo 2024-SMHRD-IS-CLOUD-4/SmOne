@@ -80,8 +80,8 @@
   font-size: 14px;
   box-sizing: border-box;
   background-color: #fff;
-  text-align: center;
   margin-left: 10px;
+  text-align: center;
 }
 
 /* 이메일 인풋 */
@@ -108,6 +108,7 @@
   cursor: pointer;
   margin-top: 20px;
   transition: background 0.3s ease-in-out;
+  margin-top: 30px;
 }
 .findid-btn:hover {
   background-color: #555;
@@ -115,7 +116,7 @@
 
 /* 결과 박스 */
 .result-box {
-  margin-top: 20px;
+  margin-top: 5px;
   /* background-color: rgba(255,255,255,0.2); */
   padding: 15px;
   border-radius: 6px;

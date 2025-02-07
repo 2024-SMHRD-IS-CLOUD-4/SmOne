@@ -25,18 +25,19 @@ function SecondVisitUI({
 }) {
   const previewBoxWidth = 570;
   const previewBoxHeight = 570;
+  
+ /** ✅ useEffect 내부에서 X-ray 이미지 목록을 불러오기 */
+ useEffect(() => {
+  if (selectedPatient) {
+    axios
+      .get(`${process.env.REACT_APP_DB_URL2}/list?pIdx=${selectedPatient}`)
+      .then(response => {
+        setOldImages(response.data); // ✅ API 응답 데이터를 상태에 저장
+      })
+      .catch(error => console.error("❌ X-RAY 이미지 로드 실패:", error));
+  }
+}, [selectedPatient, setOldImages]);  // ✅ 의존성 배열 수정
 
-  useEffect(() => {
-
-    if (selectedPatient){
-            // API 요청 보내서 X-RAY 이미지 목록 가져오기
-            axios.get(`${process.env.REACT_APP_DB_URL2}/list?pIdx=${selectedPatient}`)
-                .then(response => {
-                    setOldImages(response.data); // imgPath 리스트 저장
-                })
-                .catch(error => console.error("❌ X-RAY 이미지 로드 실패:", error));
-    }
-  }, [selectedPatient]);
 
   // 과거 X-ray
   const [oldBaseScale, setOldBaseScale] = useState(1);
@@ -56,6 +57,7 @@ function SecondVisitUI({
     setOldOffsetX(0);
     setOldOffsetY(0);
   };
+
   const handleOldImageLoad = (e) => {
     const img = e.currentTarget;
     const natW = img.naturalWidth;
@@ -64,6 +66,7 @@ function SecondVisitUI({
     const scaleH = previewBoxHeight / natH;
     setOldBaseScale(Math.min(scaleW, scaleH));
   };
+  
   const handleWheelOld = (e) => {
     let delta = e.deltaY < 0 ? 0.1 : -0.1;
     let newZ = oldZoom + delta;
@@ -386,4 +389,4 @@ function SecondVisitUI({
   );
 }
 
-export default SecondVisitUI;
+export default SecondVisitUI; 

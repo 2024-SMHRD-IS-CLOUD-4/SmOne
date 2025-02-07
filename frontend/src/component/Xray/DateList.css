@@ -1,13 +1,12 @@
-/* 기존 Pagination과 동일한 스타일 적용 */
+/* 날짜 리스트 컨테이너 */
 .date-list-container {
   display: flex;
-  text-align: center;
   flex-direction: column;
-  justify-content: space-between; /* 내용과 페이지네이션을 아래로 정렬 */
-  height: 65px; /* 전체 높이 지정 (필요에 따라 조정 가능) */
+  justify-content: space-between;
+  text-align: center;
+  height: 140px; /* 높이 조정 */
   animation: slideDown 0.5s ease-in-out;
 }
-
 /* 환자가 선택되지 않았을 때 높이 설정 */
 .date-list-container.expanded-panel {
   height: 220px;
@@ -22,176 +21,155 @@
 
 /* 페이지네이션을 항상 아래에 고정 */
 .date-pagination {
-  margin-top: auto; /* 자동으로 아래쪽으로 밀림 */
+  margin-top: auto;
+  /* 자동으로 아래쪽으로 밀림 */
   display: flex;
   justify-content: center;
   border-radius: 6px;
   overflow: hidden;
-  padding-top: 10px; /* 위쪽 여백 추가 */
+  padding-top: 10px;
+  /* 위쪽 여백 추가 */
   animation: slideDown 0.5s ease-in-out;
 }
 
-  
-  .date-pagination button {
-    padding: 8px 12px;
-    border: none;
-    background: #fff;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    transition: background 0.2s;
-  }
-  
-  .date-pagination button:hover {
-    background: #bbb;
-  }
-  
-  .date-pagination button:disabled {
-    background: #eee;
-  }
-  
-  /* 첫 번째 버튼 (왼쪽 끝) */
-  .date-pagination button:first-child {
-    border-radius: 6px 0 0 6px;
-  }
-  
-  /* 마지막 버튼 (오른쪽 끝) */
-  .date-pagination button:last-child {
-    border-radius: 0 6px 6px 0;
-  }
-  
-  /* 현재 페이지 버튼 강조 */
-  .date-pagination button.active {
-    background: #333;
-    color: white;
-  }
-  .date-item {
-    font-size: 18px;
-    margin-bottom: 5px;
-    padding: 5px;
-    cursor: pointer;
-    transition: background-color 0.1s ease, color 0.1s ease;
-  }
-  
-  .date-item:hover {
-    background-color: rgba(255,255,255,0.2);
-    color: white;
-    border-radius: 5px;
-  }
 
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px); /* 위에서 아래로 내려오는 효과 */
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* 진단 날짜 리스트에 애니메이션 적용 */
-  .date-list-container {
-    animation: slideDown 0.5s ease-in-out;
-  }
-  
-  /* 진단 날짜 리스트의 개별 항목 애니메이션 */
-  .date-item {
-    animation: slideDown 0.5s ease-in-out;
-  }
-  
-  /* 등록된 진단 날짜가 없을 때 메시지도 부드럽게 나타나도록 */
-  .no-dates-message {
-    animation: slideDown 0.5s ease-in-out;
-    text-align: center;
-    font-size: 16px;
-    color: #555;
-    margin-top: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-
-  .no-dates-message1 {
-    animation: slideDown 0.5s ease-in-out;
-    text-align: center;
-    font-size: 16px;
-    color: #555;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-
-  .panel-block {
-    animation: slideDown 0.5s ease-in-out;
-  }
-/* 진단 날짜 테이블 */
-.diagnosis-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: center;
-}
-
-/* 개별 날짜 셀 */
-.diagnosis-date {
-  padding: 8px 12px; /* ✅ 내부 여백 최소화 */
-  border: 0.0625rem solid rgba(255,255,255,0.2); /* 1px */
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  white-space: nowrap; /* ✅ 텍스트 줄바꿈 방지 */
-  text-align: center;
-  min-width: 50px; /* ✅ 최소 너비 설정 */
-  max-width: 150px; /* ✅ 최대 너비 제한 */
+.date-pagination button {
+  padding: 8px 12px;
+  border: none;
+  background: #fff;
   cursor: pointer;
-  transition: background 0.3s ease-in-out;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background 0.2s;
 }
 
-/* 셀 크기 자동 조정 */
-.diagnosis-table td {
-  width: auto; /* ✅ 셀 크기를 텍스트에 맞게 조정 */
-  height: auto;
-  padding: 5px 10px; /* ✅ 내부 여백 최소화 */
+.date-pagination button:hover {
+  background: #bbb;
 }
 
-/* 날짜 셀 호버 효과 */
-.diagnosis-date:hover {
+.date-pagination button:disabled {
+  background: #eee;
+}
+
+/* 첫 번째 버튼 (왼쪽 끝) */
+.date-pagination button:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+/* 마지막 버튼 (오른쪽 끝) */
+.date-pagination button:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+/* 현재 페이지 버튼 강조 */
+.date-pagination button.active {
+  background: #333;
+  color: white;
+}
+
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+    /* 위에서 아래로 내려오는 효과 */
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* 날짜 리스트: 2줄(총 4개)로 정렬 */
+.date-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 가로 2개 */
+  grid-template-rows: repeat(2, auto); /* 세로 2줄 */
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+  justify-content: center;
+  align-items: center;
+}
+/* 진단 날짜 리스트에 애니메이션 적용 */
+.date-list-container {
+  animation: slideDown 0.5s ease-in-out;
+}
+
+/* 날짜 아이템 스타일 */
+.date-item {
+  font-size: 18px;
+  background: transparent;
+  border-radius: 6px;
+  padding: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  animation: slideDown 0.5s ease-in-out;
+}
+.date-item:hover {
   background-color: #a2a2a2;
 }
-
-/* 빈 셀 스타일 */
-.empty-cell {
-  border: 1px solid transparent;
-  background-color: transparent;
-  width: auto;
-  height: auto;
-}
-
-/* 날짜 없음 메시지 */
-.no-dates {
+/* 등록된 진단 날짜가 없을 때 메시지도 부드럽게 나타나도록 */
+.no-dates-message {
+  animation: slideDown 0.5s ease-in-out;
   text-align: center;
-  padding: 10px;
+  font-size: 16px;
+  color: #555;
+  margin-top: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.no-dates-message1 {
+  animation: slideDown 0.5s ease-in-out;
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.panel-block {
+  animation: slideDown 0.5s ease-in-out;
+}
+/* 페이지네이션 컨테이너 */
+.date-pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* 페이지네이션 버튼 */
+.date-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.date-pagination button {
+  padding: 8px 12px;
+  border: none;
+  background: #fff;
+  cursor: pointer;
   font-size: 14px;
-  color: #999;
-}
-  /* ✅ 첫 번째 행 (첫 번째 열 - 좌측 상단) */
-.diagnosis-table tr:first-child td:first-child {
-  border-top-left-radius: 6px;
+  font-weight: bold;
+  transition: background 0.2s;
 }
 
-/* ✅ 첫 번째 행 (두 번째 열 - 우측 상단) */
-.diagnosis-table tr:first-child td:last-child {
-  border-top-right-radius: 6px;
+.date-pagination button:hover {
+  background: #bbb;
 }
 
-/* ✅ 두 번째 행 (첫 번째 열 - 좌측 하단) */
-.diagnosis-table tr:last-child td:first-child {
-  border-bottom-left-radius: 6px;
+.date-pagination button:disabled {
+  background: #eee;
 }
 
-/* ✅ 두 번째 행 (두 번째 열 - 우측 하단) */
-.diagnosis-table tr:last-child td:last-child {
-  border-bottom-right-radius: 6px;
+.date-pagination .active {
+  background: #333;
+  color: white;
 }

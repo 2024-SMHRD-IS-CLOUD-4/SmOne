@@ -221,19 +221,20 @@ transition: background 0.3s ease-in-out;
   background-color: #fff;
   margin-top: 5px;
   text-align: center;
+  margin-left: 10px;
 }
 
 .my-duplicate-group {
   display: flex;
   align-items: center;
   margin-top: -5px;
-  gap: 1rem;
+  gap: 5px;
 }
 
 .id-duplicate-group {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 5px;
 }
 
 .userid_join {
@@ -246,6 +247,13 @@ transition: background 0.3s ease-in-out;
   height: 44px;
 }
 
+/* 비밀번호 입력 필드 스타일 */
+.password-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
 
 .userpw_join {
   padding: 10px;
@@ -255,6 +263,32 @@ transition: background 0.3s ease-in-out;
   box-sizing: border-box;
   width: 450px;
   height: 44px;
+  padding-right: 45px;
+}
+
+/* 👁 비밀번호 보기 버튼 */
+.toggle-password-btn5 {
+  position: absolute;
+  right: 40px;
+  top: 236px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+}
+
+.toggle-password-btn5:hover .password-icon5 {
+  opacity: 0.7;
+}
+
+/* 👁 아이콘 스타일 */
+.password-icon5 {
+  width: 24px; /* 아이콘 크기 */
+  height: 15px;
+  margin-top: 8px;
+  opacity: 0.5;
+  transition: opacity 0.3s ease; /* 부드러운 전환 효과 */
 }
 
 .join_address {
@@ -312,6 +346,12 @@ transition: background 0.3s ease-in-out;
   cursor: pointer;
   width: 100px;
   height: 44px;
+  margin-left: 10px;
+}
+
+.duplicate-check-btn0:hover,
+.search-btn1:hover {
+  background-color: #666;
 }
 
 .duplicate-check-btn0:active {
