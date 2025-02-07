@@ -88,7 +88,7 @@ function Mypage() {
       email: fullEmail  // 최종 email만 합쳐서 백엔드 전달
     };
     try {
-      await axios.put("http://localhost:8090/SmOne/api/users/update", sendData, {
+      await axios.put(`${process.env.REACT_APP_DB_URL}/users/update`, sendData, {
         headers: { "Content-Type": "application/json" }
       });
       alert("정보가 수정되었습니다.");
@@ -97,6 +97,11 @@ function Mypage() {
       console.error(err);
       alert("정보 수정에 실패했습니다.");
     }
+  };
+
+  // X 버튼 동작
+  const handleBackToMain = () => {
+    navigate("/main"); // ✅ 단순히 메인 페이지로 이동
   };
 
   // 비밀번호 변경 페이지로 이동
@@ -182,7 +187,7 @@ function Mypage() {
     <>
       <Menu /> {/* Menu 추가 */}
       <div className="mypage-container">
-        <button className="back-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
+        <button className="back-btn" onClick={handleBackToMain}>X</button> {/* ✅ X 버튼 추가 */}
         <h2 className="mypage-title">마이페이지</h2>
 
         <form className="mypage-form">

@@ -99,7 +99,7 @@ const Findpw = () => {
 
         {/* 이메일 */}
         <label>이메일</label>
-        <div className="flex-row">
+        <div className="flex-row3">
           <input
             type="text"
             name="emailId"
@@ -112,13 +112,13 @@ const Findpw = () => {
           <input
             type="text"
             name="emailDomain"
-            placeholder="이메일 도메인"
+            placeholder="예 : gmail.com"
             value={formData.emailDomain}
             onChange={handleChange}
             style={{ flex: 1 }}
           />
           <button className="send-btn" onClick={handleSendCode}>
-            인증번호 전송
+            인증
           </button>
         </div>
 
@@ -139,7 +139,7 @@ const Findpw = () => {
         </div>
 
         {/* 메시지 */}
-        {message && <p style={{ color: "#ccc" }}>{message}</p>}
+        {message && <p style={{ color: "#ccc", marginTop: "16px", marginBottom: "-22px" }}>{message}</p>}
 
         {/* 비밀번호 변경 이동 버튼 */}
         <button

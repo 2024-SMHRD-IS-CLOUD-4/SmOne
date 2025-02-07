@@ -150,3 +150,9 @@ margin: 0 auto 20px; /* 중앙 정렬 + 아래 간격 */
   height: 25px;
   margin-top: 20px;
 }
+/* 입력 필드 클릭 시 테두리 강조 */
+.input-container input:focus {
+  border: 2px solid #007bff; /* 파란색 테두리 */
+  outline: none; /* 기본 브라우저 테두리 제거 */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 부드러운 그림자 효과 */
+}

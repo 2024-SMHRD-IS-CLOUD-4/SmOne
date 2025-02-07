@@ -1,7 +1,7 @@
 import "./DateList.css";
 
 function DateList({ diagDates, currentPage, setCurrentPage, onDateClick, selectedPatient }) {
-  const datesPerPage = 4; // ✅ 4개씩 표시 (2행 x 2열)
+  const datesPerPage = 4; // 한 페이지에 4개씩 표시 (2줄 X 2개)
   const totalPages = Math.ceil(diagDates.length / datesPerPage);
   const indexOfLast = currentPage * datesPerPage;
   const indexOfFirst = indexOfLast - datesPerPage;
@@ -21,31 +21,18 @@ function DateList({ diagDates, currentPage, setCurrentPage, onDateClick, selecte
         ) : diagDates.length === 0 ? (
           <p className="no-dates-message1">등록된 진단 날짜가 없습니다</p>
         ) : (
-          <div className="diagnosis-table-container">
-            <table className="diagnosis-table">
-              <tbody>
-                {Array.from({ length: 2 }).map((_, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {Array.from({ length: 2 }).map((_, colIndex) => {
-                      const dateIndex = rowIndex * 2 + colIndex;
-                      return currentDates[dateIndex] ? (
-                        <td key={colIndex} className="diagnosis-date" onClick={() => onDateClick(currentDates[dateIndex])}>
-                          {currentDates[dateIndex]}
-                        </td>
-                      ) : (
-                        <td key={`empty-${colIndex}`} className="empty-cell"></td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ul className="date-list">
+            {currentDates.map((d, i) => (
+              <li key={i} className="date-item" onClick={() => onDateClick(d)}>
+                {d}
+              </li>
+            ))}
+          </ul>
         )}
       </div>
 
-      {/* ✅ 페이지네이션을 완전히 박스 밖으로 이동 */}
-      {totalPages > 1 && (
+      {/* 페이지네이션 (5개 이상일 경우 표시) */}
+      {diagDates.length > datesPerPage && (
         <div className="date-pagination-container">
           <div className="date-pagination">
             <button onClick={goFirst} disabled={currentPage === 1}>{"<<"}</button>

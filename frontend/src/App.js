@@ -11,7 +11,7 @@ import Mypage from "./component/Mypage";
 import PatientEdit from "./component/PatientEdit";
 import Result from "./component/Result";
 import PrintPage from "./component/PrintPage";
-
+import Loading from "./component/Loading";
 
 import './App.css';
 
@@ -56,6 +56,7 @@ function App() {
         <Route path="/findid" element={<Findid />} />
         <Route path="/findpw" element={<Findpw />} />
         <Route path="/mypage" element={<Mypage/>} />
+        <Route path="/loading" element={<Loading />} />
         <Route path="/patients/edit/:pIdx" element={<PatientEdit />} />
         <Route path='/result' element={<Result/>} />
         <Route path='print' element={<PrintPage/>} />

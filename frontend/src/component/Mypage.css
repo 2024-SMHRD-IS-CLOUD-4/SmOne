@@ -1,7 +1,7 @@
 /* 반투명 박스(폼) */
 .mypage-container {
   width: 28.125rem; /* 450px → 28.125rem */
-  height: 39.95rem; /* 620px → 38.75rem */
+  height: 40.65rem; /* 620px → 38.75rem */
   /* margin: 190px auto 0 auto;
   margin-bottom: 100px; */
   top: 50%; /* 변경 없음 */
@@ -286,7 +286,7 @@
   font-size: 0.875rem; /* 14px */
   cursor: pointer;
   transition: background 0.3s ease-in-out;
-  height: 2.1875rem; /* 35px */
+  height: 2.75rem; /* 35px */
   width: 25rem; /* 400px */
 }
 
@@ -294,19 +294,6 @@
   background-color: #666;
 }
 
-/* 회원탈퇴 버튼 */
-.delete-btn {
-  padding: 0.625rem 0.875rem; /* 10px 14px */
-  border: none;
-  border-radius: 0.25rem; /* 4px */
-  background-color: #dc3545;
-  color: #fff;
-  font-size: 0.875rem; /* 14px */
-  cursor: pointer;
-  transition: background 0.3s ease-in-out;
-  height: 2.1875rem; /* 35px */
-  width: 25rem; /* 400px */
-}
 
 .delete-btn:hover {
   background-color: #b21f2d;
@@ -391,7 +378,7 @@
   font-size: 0.875rem;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
-  height: 2.1875rem;
+  height: 2.75rem;
   width: 25rem;
 }
 
