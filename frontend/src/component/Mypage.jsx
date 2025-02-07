@@ -273,31 +273,37 @@ function Mypage() {
 
         {/* 탈퇴 모달 */}
         {showDeleteModal && (
-          <div className="search-modal">
-            <div className="modal-header">
-              <h2>회원 탈퇴</h2>
-              <button className="close-btn" onClick={closeDeleteModal}>닫기</button>
-            </div>
-            <div className="modal-body" style={{ flexDirection: "column", padding: "20px" }}>
-              <p>비밀번호를 입력해주세요</p>
-              <input
-                type="password"
-                placeholder="비밀번호"
-                value={deletePassword}
-                onChange={e => setDeletePassword(e.target.value)}
-                style={{ width: "100%", marginBottom: "10px" }}
-              />
-              <div style={{ textAlign: "right" }}>
-                <button className="small-btn" onClick={handleDelete} style={{ marginRight: "10px" }}>
-                  탈퇴하기
-                </button>
-                <button className="small-btn" onClick={closeDeleteModal}>
-                  취소
-                </button>
+          <>
+            <div className="modal-overlay"></div> {/* ✅ 배경 어둡게 */}
+            <div className="delete-modal">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h2>회원 탈퇴</h2>
+                </div>
+                <div className="modal-body" style={{ flexDirection: "column", padding: "20px" }}>
+                  <p>비밀번호를 입력해주세요</p>
+                  <input
+                    type="password"
+                    placeholder="비밀번호"
+                    value={deletePassword}
+                    onChange={e => setDeletePassword(e.target.value)}
+                    style={{ width: "100%", marginBottom: "10px" }}
+                  />
+                  <div style={{ textAlign: "right" }}>
+                    <button className="small-btn delete-confirm" onClick={handleDelete} style={{ marginRight: "10px" }}>
+                      탈퇴하기
+                    </button>
+                    <button className="small-btn" onClick={closeDeleteModal}>
+                      취소
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </>
         )}
+
+
 
         {/* 지도/검색 모달 */}
         {showModal && (

@@ -4,7 +4,7 @@
   text-align: center;
   flex-direction: column;
   justify-content: space-between; /* 내용과 페이지네이션을 아래로 정렬 */
-  height: 120px; /* 전체 높이 지정 (필요에 따라 조정 가능) */
+  height: 65px; /* 전체 높이 지정 (필요에 따라 조정 가능) */
   animation: slideDown 0.5s ease-in-out;
 }
 
@@ -127,5 +127,71 @@
   .panel-block {
     animation: slideDown 0.5s ease-in-out;
   }
+/* 진단 날짜 테이블 */
+.diagnosis-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
 
-  
+/* 개별 날짜 셀 */
+.diagnosis-date {
+  padding: 8px 12px; /* ✅ 내부 여백 최소화 */
+  border: 0.0625rem solid rgba(255,255,255,0.2); /* 1px */
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  white-space: nowrap; /* ✅ 텍스트 줄바꿈 방지 */
+  text-align: center;
+  min-width: 50px; /* ✅ 최소 너비 설정 */
+  max-width: 150px; /* ✅ 최대 너비 제한 */
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+/* 셀 크기 자동 조정 */
+.diagnosis-table td {
+  width: auto; /* ✅ 셀 크기를 텍스트에 맞게 조정 */
+  height: auto;
+  padding: 5px 10px; /* ✅ 내부 여백 최소화 */
+}
+
+/* 날짜 셀 호버 효과 */
+.diagnosis-date:hover {
+  background-color: #a2a2a2;
+}
+
+/* 빈 셀 스타일 */
+.empty-cell {
+  border: 1px solid transparent;
+  background-color: transparent;
+  width: auto;
+  height: auto;
+}
+
+/* 날짜 없음 메시지 */
+.no-dates {
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  color: #999;
+}
+  /* ✅ 첫 번째 행 (첫 번째 열 - 좌측 상단) */
+.diagnosis-table tr:first-child td:first-child {
+  border-top-left-radius: 6px;
+}
+
+/* ✅ 첫 번째 행 (두 번째 열 - 우측 상단) */
+.diagnosis-table tr:first-child td:last-child {
+  border-top-right-radius: 6px;
+}
+
+/* ✅ 두 번째 행 (첫 번째 열 - 좌측 하단) */
+.diagnosis-table tr:last-child td:first-child {
+  border-bottom-left-radius: 6px;
+}
+
+/* ✅ 두 번째 행 (두 번째 열 - 우측 하단) */
+.diagnosis-table tr:last-child td:last-child {
+  border-bottom-right-radius: 6px;
+}

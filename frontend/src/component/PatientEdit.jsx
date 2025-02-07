@@ -168,7 +168,16 @@ function PatientEdit() {
       <form onSubmit={handleSubmit}>
         <Menu />  {/* ✅ 네비게이션 메뉴 추가 */}
         <div className='Patientedit-container'>
-          <button className="back-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
+          <button
+            className="back-btn"
+            onClick={(e) => {
+              e.preventDefault(); // ✅ 기본 동작 방지
+              navigate("/main");  // ✅ 환자 수정 없이 페이지 이동
+            }}
+          >
+            X
+          </button>
+
           <div className="form-wrapper">
             <h1 className="patient-title1">환자 수정</h1>
             <div className="name-and-gender-group">
