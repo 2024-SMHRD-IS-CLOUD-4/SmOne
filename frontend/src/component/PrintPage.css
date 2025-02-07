@@ -165,7 +165,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
+  transform: translate(-50%, -50%) scale(0.7); /* 30% 축소 */
   background-color: white;
   padding: 20px;
   max-width: 210mm;

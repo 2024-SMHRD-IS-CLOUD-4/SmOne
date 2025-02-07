@@ -533,19 +533,19 @@ function Result() {
 
           <h2 style={{ marginLeft: 10 }}>AI 진단 결과</h2>
           <div className="ai-result-box">
-          <div className="video-container">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="ai-result-video"
+            <div className="video-container">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="ai-result-video"
               >
-              <source src="/video1.mp4" type="video/mp4" />
-              브라우저가 동영상을 지원하지 않습니다.
-            </video>
-            <p className="ai-result-text">{aiResult}</p>
-          </div>
+                <source src="/video1.mp4" type="video/mp4" />
+              </video>
+              <p className="ai-result-text">{aiResult}</p>
+            </div>
+
           </div>
         </div>
 
