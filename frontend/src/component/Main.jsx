@@ -22,7 +22,7 @@ function Main() {
   // const newFileInputRef = useRef(null);
   const patientsPerPage = 5;
 
-  // const userId = sessionStorage.getItem("userId")
+  const userId = sessionStorage.getItem("userId")
 
   // 선택된 환자
   const [selectedPatient, setSelectedPatient] = useState(null);
