@@ -13,6 +13,7 @@ import documentIcon from "./png/document.png"; // 추가
 import patientIcon from "./png/patientedit.png";
 import trashIcon from "./png/trash.png";
 
+
 function Main() {
   const navigate = useNavigate();
   const [patients, setPatients] = useState([]);
@@ -202,19 +203,21 @@ function Main() {
       const bigFilename = selectedNewImage.file.name;
       formData.append("bigFilename", bigFilename);
 
-      await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, formData, {
+      const response = await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       // 2) (임시) AI 결과
       const aiResult = "결핵";
 
+      const imgPaths = response.data.map((item) => item.imgPath);
+
       // 3) 결과 페이지 이동
       navigate("/result", {
         state: {
           patient: selectedPatient,
           aiResult,
-          newlyUploaded: newImages.map((img) => img.file.name),
+          newlyUploaded: imgPaths,
           bigFilename,
           fromHistory: false,
         },
@@ -312,6 +315,21 @@ function Main() {
 
   // 환자 클릭
   async function handlePatientClick(pt) {
+
+    if (selectedPatient && selectedPatient.pIdx === pt.pIdx) {
+      // ✅ 같은 환자를 다시 클릭하면 초기화
+      setSelectedPatient(null);
+      setDiagDates([]);
+      setSelectedDate(null);
+      setOldImages([]);
+      setSelectedOldImage(null);
+      setOldBigPreview(null);
+      setNewImages([]);
+      setSelectedNewImage(null);
+      setNewBigPreview(null);
+      return;
+    }
+
     // 기존 환자 상태 캐시
     if (selectedPatient) {
       storeCurrentPatientStateToCache(selectedPatient.pIdx);
