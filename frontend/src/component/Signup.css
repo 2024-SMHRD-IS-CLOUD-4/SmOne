@@ -227,13 +227,13 @@ transition: background 0.3s ease-in-out;
   display: flex;
   align-items: center;
   margin-top: -5px;
-  gap: 5px;
+  gap: 1rem;
 }
 
 .id-duplicate-group {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 1rem;
 }
 
 .userid_join {
@@ -287,6 +287,7 @@ transition: background 0.3s ease-in-out;
   cursor: pointer;
   width: 100px;
   height: 44px;
+  margin-left: 10px;
 }
 
 .search-btn1:active {

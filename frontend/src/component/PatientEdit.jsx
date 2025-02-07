@@ -246,7 +246,7 @@ function PatientEdit() {
                   onInput={(e) => handleNextFocus(e, "phonePart2")}
                   required
                 />
-                <span className="phone-number-dash">-</span>
+                <span className="phone-number-dash1">-</span>
                 <input
                   type="text"
                   name="phonePart2"
@@ -258,7 +258,7 @@ function PatientEdit() {
                   onInput={(e) => handleNextFocus(e, "phonePart3")}
                   required
                 />
-                <span className="phone-number-dash">-</span>
+                <span className="phone-number-dash1">-</span>
                 <input
                   type="text"
                   name="phonePart3"

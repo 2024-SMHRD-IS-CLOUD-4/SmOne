@@ -99,7 +99,7 @@ const Findpw = () => {
 
         {/* 이메일 */}
         <label>이메일</label>
-        <div className="flex-row">
+        <div className="flex-row3">
           <input
             type="text"
             name="emailId"
@@ -118,7 +118,7 @@ const Findpw = () => {
             style={{ flex: 1 }}
           />
           <button className="send-btn" onClick={handleSendCode}>
-            인증번호 전송
+            인증
           </button>
         </div>
 

@@ -61,8 +61,9 @@ function Signup() {
       if (res.data) {
         setIsDuplicate(true);  // ✅ 중복이면 상태 변경
         setShake(true);  // 🚨 흔들림 효과 추가해야 하지만 누락됨!
-        setIdCheckMessage("중복된 아이디입니다.");
       } else {
+        setIsDuplicate(false); // ✅ 중복이 아니면 false
+        setShake(false); // ✅ 흔들림 제거
         alert("사용 가능한 아이디 입니다.");
       }
     } catch (error) {
@@ -323,8 +324,9 @@ useEffect(() => {
           <input
             type="text"
             name="userId"
-            className={`userid_join ${shake ? "shake" : ""} ${isDuplicate ? "error-border1" : idCheckMessage ? "success-border1" : ""
-              }`}
+            className={`userid_join ${shake ? "shake" : ""} ${
+              isDuplicate ? "error-border1" : idCheckMessage ? "success-border1" : ""
+            }`}
             placeholder="아이디"
             value={formData.userId}
             onChange={handleChange}

@@ -62,7 +62,7 @@
 .flex-row {
   display: flex;
   align-items: center;
-  gap: 10px; /* 수평 간격 */
+  gap: 5px; /* 수평 간격 */
 }
 
 /* 기관명 인풋 폭 */
@@ -80,6 +80,8 @@
   font-size: 14px;
   box-sizing: border-box;
   background-color: #fff;
+  text-align: center;
+  margin-left: 10px;
 }
 
 /* 이메일 인풋 */

@@ -123,8 +123,8 @@
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
-  width: 155px;
-  height: 45px;
+  width: 100px;
+  height: 46px;
   cursor: pointer;
   text-align: center;
   transition: background 0.3s ease-in-out;
@@ -210,6 +210,7 @@
   font-size: 18px;
   font-weight: bold;
   color: #cccccc;
+  margin-top: -4px;
 }
 
 .resident-number-container {
@@ -217,7 +218,7 @@
   align-items: center;
   gap: 5px;
   /* 필드와 대시(-) 간격 */
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .resident-number-box {
