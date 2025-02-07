@@ -66,8 +66,6 @@ function Main() {
     }
   };
 
-
-
   // 환자 목록 불러오기
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_DB_URL}/patients`)
@@ -95,6 +93,15 @@ function Main() {
     };
   },);
 
+  // 이미지 미리보기
+  useEffect(() => {
+    if (oldImages.length > 0) {
+      setOldBigPreview(oldImages[0]?.imgPath || null);
+    } else {
+      setOldBigPreview(null);
+    }
+  }, [oldImages]);
+  
   // 검색
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -271,7 +278,6 @@ function Main() {
     setSelectedNewImage(data.selectedNewImage || null);
     setNewBigPreview(data.newBigPreview || null);
 
-
     // 날짜별 X-ray 다시 로드
     if (data.selectedDate) {
       try {
@@ -442,7 +448,6 @@ function Main() {
     }
   }
 
-
   // Edit / Delete
   const handleEditPatient = (thePatient) => {
     navigate(`/patients/edit/${thePatient.pIdx}`);
@@ -516,7 +521,7 @@ function Main() {
         )}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           {/* 버튼 영역 */}
-          <div style={{ display: "flex", flexDirection: "row", marginTop: "5px", alignItems: "center", gap: "10px" }}>
+          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
             {/* 과거 결과 보기 버튼 */}
             <button className="exdiagnose-btn" onClick={handleViewOldResult}>
               <img src={documentIcon} alt="과거 진단 아이콘" className="document-icon" />
@@ -601,7 +606,6 @@ function Main() {
               <p>등록된 환자 정보가 없습니다.</p>
             )}
           </div>
-
 
           {selectedPatient && (
             <div className="patient-detail">

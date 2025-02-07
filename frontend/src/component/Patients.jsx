@@ -48,11 +48,8 @@ function Patients() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 주민번호
     const birth = `${formData.birthPart1}-${formData.birthPart2}`;
-    // 전화번호
     const tel = `${formData.phonePart1}-${formData.phonePart2}-${formData.phonePart3}`;
-    // pAdd
     const fullAddress = `${formData.postcode} ${formData.address} ${formData.detailAddress}`.trim();
 
     const sendData = {
@@ -60,7 +57,10 @@ function Patients() {
       gender: formData.gender,
       birth,
       tel,
-      pAdd: fullAddress
+      pAdd: fullAddress,
+      pLat: formData.pLat, // ✅ 위도 포함
+      pLng: formData.pLng, // ✅ 경도 포함
+
     };
 
     try {
@@ -69,7 +69,8 @@ function Patients() {
         `${process.env.REACT_APP_DB_URL}/patients/register`,
         sendData,
         {
-          headers: { "Content-Type": "application/json" } }
+          headers: { "Content-Type": "application/json" }
+        }
       );
       if (response.status === 200) {
         alert("환자 등록이 완료되었습니다.");
