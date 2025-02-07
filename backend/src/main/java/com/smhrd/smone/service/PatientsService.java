@@ -43,7 +43,7 @@ public class PatientsService {
 
     // [D] 환자 정보 수정
     //     => 수정 시 "해당 환자가 로그인 사용자 센터 소속인지" 확인 필요
-    public void updatePatient(String centerId, Integer pIdx, Patients newData) {
+    public void updatePatientWithoutGeocoding(String centerId, Integer pIdx, Patients newData) {
         Patients existing = patientsRepository.findById(pIdx.longValue())
             .orElseThrow(() -> new NoSuchElementException("해당 환자를 찾을 수 없습니다."));
 
