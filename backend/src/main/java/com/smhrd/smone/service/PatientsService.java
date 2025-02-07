@@ -4,18 +4,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.smhrd.smone.model.Patients;
 import com.smhrd.smone.repository.PatientsRepository;
-
+import com.smhrd.smone.repository.DiagnosisResultRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
 public class PatientsService {
 
+
+    private final PatientsRepository patientsRepository;
+
+    private final DiagnosisResultRepository diagnosisResultRepository;
+
+
     @Autowired
-    private PatientsRepository patientsRepository;
+    public PatientsService(PatientsRepository patientsRepository, DiagnosisResultRepository diagnosisResultRepository) {
+        this.patientsRepository = patientsRepository;
+        this.diagnosisResultRepository = diagnosisResultRepository;
+    }
 
     // [A] 환자 등록
     //     => Controller에서 centerId 세팅 후 Patients에 넣어준 뒤 저장
@@ -65,6 +75,7 @@ public class PatientsService {
     }
 
     // [E] 환자 삭제
+    @Transactional
     public void deletePatient(String centerId, Integer pIdx) {
         Patients existing = patientsRepository.findById(pIdx.longValue())
             .orElseThrow(() -> new NoSuchElementException("해당 환자를 찾을 수 없습니다."));
@@ -72,6 +83,9 @@ public class PatientsService {
         if (!existing.getCenterId().equals(centerId)) {
             throw new SecurityException("해당 환자는 다른 센터 소속입니다.");
         }
+
+        diagnosisResultRepository.deleteByPIdx(pIdx);  // ✅ 원래대로 돌리기
+
         patientsRepository.delete(existing);
     }
 }

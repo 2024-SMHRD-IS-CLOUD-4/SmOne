@@ -102,13 +102,6 @@
 		    <version>1.12.657</version>
 		</dependency>
 		
-		<!-- .env파일 로드 -->
-		<dependency>
-    		<groupId>io.github.cdimascio</groupId>
-		    <artifactId>java-dotenv</artifactId>
-		    <version>5.2.2</version>
-		</dependency>
-		
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-actuator</artifactId>

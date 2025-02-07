@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import com.smhrd.smone.model.DiagnosisResult;
 
@@ -26,5 +29,12 @@ public interface DiagnosisResultRepository extends JpaRepository<DiagnosisResult
         @Param("pIdx") Integer pIdx,
         @Param("dateStr") String dateStr
     );
+
+  // ✅ 특정 환자의 모든 진단 결과 삭제 추가
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM DiagnosisResult dr WHERE dr.pIdx = :pIdx")  // ✅ dr.PIdx → dr.pIdx 수정
+    void deleteByPIdx(@Param("pIdx") Integer pIdx);
 
 }

@@ -63,7 +63,15 @@ function Main() {
       setIsSearchVisible(true);
     }
   };
-
+  
+  // 이미지 미리보기
+  useEffect(() => {
+    if (oldImages.length > 0) {
+      setOldBigPreview(oldImages[0]?.imgPath || null);
+    } else {
+      setOldBigPreview(null);
+    }
+  }, [oldImages]);
 
 
   // 환자 목록 불러오기
@@ -426,6 +434,8 @@ function Main() {
       fileInputRef.current.click();
     }
   }
+
+  
 
   function handleFileChange(e) {
     if (!e.target.files || e.target.files.length === 0) return;

@@ -135,5 +135,11 @@ public class UserService {
 		int code = 100000 + random.nextInt(900000); // 6자리 난수 생성
 		return String.valueOf(code);
 	}
+
+	public String getDoctorIdByUserId(String userId) {
+    // userId 자체가 doctorId이므로 그대로 반환
+    return userId;
+}
+
 }
 
