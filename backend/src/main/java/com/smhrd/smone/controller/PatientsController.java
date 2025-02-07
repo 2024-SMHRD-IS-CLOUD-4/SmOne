@@ -2,7 +2,6 @@ package com.smhrd.smone.controller;
 
 import com.smhrd.smone.model.Patients;
 import com.smhrd.smone.model.User;
-import com.smhrd.smone.service.KakaoGeocodeService;
 import com.smhrd.smone.service.PatientsService;
 import com.smhrd.smone.service.UserService;
 
@@ -25,8 +24,7 @@ public class PatientsController {
     @Autowired
     private PatientsService patientsService;
 
-    @Autowired
-    private KakaoGeocodeService geoService;
+
 
     @Autowired
     private UserService userService; // 로그인 사용자 정보 조회용
