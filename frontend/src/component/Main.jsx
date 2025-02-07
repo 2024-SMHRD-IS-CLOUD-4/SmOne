@@ -10,6 +10,8 @@ import SecondVisitUI from "./Xray/SecondVisitUI";
 import stethoscopeIcon from "./png/stethoscope.png";
 import magnifyingGlassIcon from "./png/magnifying-glass.png";
 import documentIcon from "./png/document.png"; // 추가
+import patientEditIcon from "./png/patientedit.png";
+import trashIcon from "./png/trash.png";
 
 function Main() {
   const navigate = useNavigate();
@@ -642,9 +644,14 @@ function Main() {
               </table>
 
               <div className="patient-detail-actions">
-                <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>수정</button>
-                <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>삭제</button>
+                <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>
+                  <img src={patientEditIcon} alt="수정" className="edit-icon" />
+                </button>
+                <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>
+                  <img src={trashIcon} alt="삭제" className="trash-icon" />
+                </button>
               </div>
+
             </div>
           )}
 
