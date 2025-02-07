@@ -207,10 +207,16 @@ function Main() {
         console.log("X-ray 업로드 완료 ✅");
 
         // 2) 📌 FastAPI 모델 실행 요청
-        const fastApiResponse = await axios.post(`${process.env.REACT_APP_FASTAPI_URL}/diagnose/`, {
-            p_idx: selectedPatient.pIdx,
-            doctor_id: userId // 세션에서 doctor_id 가져오기
-        });
+        const fastApiResponse = await axios.post(`${process.env.REACT_APP_FASTAPI_URL}/diagnose/`, 
+          {
+              p_idx: selectedPatient.pIdx,
+              doctor_id: userId // 세션에서 doctor_id 가져오기
+          },
+          {
+              headers: { "Content-Type": "application/json" },
+              withCredentials: true // 세션 쿠키 포함
+          }
+      );
 
         console.log("FastAPI 진단 결과:", fastApiResponse.data);
 

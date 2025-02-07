@@ -83,10 +83,10 @@ def fetch_doctor_id():
 # CORS 설정 (필요한 도메인만 허용)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  #  실제 사용 환경에서는 특정 도메인으로 제한 권장
+    allow_origins=["http://223.130.157.164"],  #  실제 사용 환경에서는 특정 도메인으로 제한 권장
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 # Pydantic 모델 정의
@@ -120,12 +120,17 @@ async def diagnose(request: DiagnosisRequest):
 
         print("Database updated successfully")  # DB 업데이트 확인
 
-        return {
-            "status": "success",
-            "p_idx": request.p_idx,
-            "doctor_id": request.doctor_id,
-            "result": result  # 진단 결과 추가
-        }
+        # JSON 응답 반환 (content-type: application/json)
+        return JSONResponse(
+            content={
+                "status": "success",
+                "p_idx": request.p_idx,
+                "doctor_id": doctor_id,
+                "result": result  # 진단 결과 추가
+            },
+            media_type="application/json"
+        )
+        
     except HTTPException as e:
         print(f"HTTP Error: {e.detail}")  # HTTP 예외 로그 출력
         raise
