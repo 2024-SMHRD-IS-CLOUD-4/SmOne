@@ -5,3 +5,6 @@
 **/.env.test.local
 **/.env.production.local
 /node_modules/*.env
+
+__pycache__/
+*.pyc
