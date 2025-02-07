@@ -1,7 +1,7 @@
 /* 반투명 박스(폼) */
 .mypage-container {
   width: 28.125rem; /* 450px → 28.125rem */
-  height: 38.75rem; /* 620px → 38.75rem */
+  height: 39.95rem; /* 620px → 38.75rem */
   /* margin: 190px auto 0 auto;
   margin-bottom: 100px; */
   top: 50%; /* 변경 없음 */
@@ -89,7 +89,7 @@
   border-radius: 0.25rem; /* 4px → 0.25rem */
   font-size: 0.875rem; /* 14px → 0.875rem */
   box-sizing: border-box;
-  width: 18.125rem; /* 290px → 18.125rem */
+  width: 20.500rem; /* 290px → 18.125rem */
   height: 2.75rem; /* 44px → 2.75rem */
   margin-top: 0.9375rem; /* 15px → 0.9375rem */
 }
@@ -135,10 +135,16 @@
 }
 
 /* 플렉스 줄 */
-.flex-row {
-  display: flex;
-  align-items: center;
-  gap: 0.3125rem;             /* 5px → 0.3125rem */
+.flex-row5 select{
+  width: 100px;
+  height: 44px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: #fff;
+  margin-top: 23px;
+  text-align: center;
 }
 
 /* 버튼 정렬 */
@@ -162,6 +168,7 @@
   cursor: pointer;
   transition: background 0.3s ease-in-out;
   height: 2.8125rem;            /* 45px → 2.8125rem */
+  width: 115px;
 }
 
 .action-btn:hover,

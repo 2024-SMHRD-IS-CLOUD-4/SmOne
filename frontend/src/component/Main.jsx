@@ -10,6 +10,8 @@ import SecondVisitUI from "./Xray/SecondVisitUI";
 import stethoscopeIcon from "./png/stethoscope.png";
 import magnifyingGlassIcon from "./png/magnifying-glass.png";
 import documentIcon from "./png/document.png"; // 추가
+import patientIcon from "./png/patientedit.png";
+import trashIcon from "./png/trash.png";
 
 function Main() {
   const navigate = useNavigate();
@@ -19,10 +21,10 @@ function Main() {
   const [birthSearch, setBirthSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const searchRef = useRef(null);
-  const newFileInputRef = useRef(null);
+  // const newFileInputRef = useRef(null);
   const patientsPerPage = 5;
 
-  const userId = sessionStorage.getItem("userId")
+  // const userId = sessionStorage.getItem("userId")
 
   // 선택된 환자
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -50,13 +52,18 @@ function Main() {
   const datesPerPage = 2;
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [hideSearchBar, setHideSearchBar] = useState(false);
 
   const toggleSearchBar = () => {
     if (isSearchVisible) {
-      setNameSearch("");
-      setBirthSearch("");
+      setHideSearchBar(true); // 먼저 fadeOut 애니메이션 실행
+      setTimeout(() => {
+        setIsSearchVisible(false); // 애니메이션 후 display: none 적용
+        setHideSearchBar(false); // 다시 검색 바가 나타날 수 있도록 초기화
+      }, 300); // fadeOut 애니메이션 시간 (0.3초)과 동일하게 설정
+    } else {
+      setIsSearchVisible(true);
     }
-    setIsSearchVisible(!isSearchVisible);
   };
 
 
@@ -72,7 +79,6 @@ function Main() {
       })
       .catch(err => console.error(err));
   }, []);
-
   useEffect(() => {
     function handleClickOutside(event) {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -229,16 +235,16 @@ function Main() {
       },
     });
   }
-  const handleLogoClick = () => {
-    setSelectedPatient(null);
-    setOldImages([]);
-    setOldBigPreview(null);
-    setNewImages([]);
-    setNewBigPreview(null);
-    setDiagDates([]);
-    setSelectedDate(null);
-    setDatePage(1);
-  };
+  // const handleLogoClick = () => {
+  //   setSelectedPatient(null);
+  //   setOldImages([]);
+  //   setOldBigPreview(null);
+  //   setNewImages([]);
+  //   setNewBigPreview(null);
+  //   setDiagDates([]);
+  //   setSelectedDate(null);
+  //   setDatePage(1);
+  // };
   // 캐시 복원
   async function restorePatientStateFromCache(pIdx, newlyLoadedDates = []) {
     const data = patientCache[pIdx];
@@ -295,9 +301,6 @@ function Main() {
 
   // 환자 클릭
   async function handlePatientClick(pt) {
-    setSelectedPatient(pt.pIdx);
-    console.log("선택된 환자 ID:", pt.pIdx);
-  
     // 기존 환자 상태 캐시
     if (selectedPatient) {
       storeCurrentPatientStateToCache(selectedPatient.pIdx);
@@ -379,22 +382,22 @@ function Main() {
     }
   }
 
-  // 로그아웃
-  async function handleLogout() {
-    const ok = window.confirm("정말 로그아웃하시겠습니까?");
-    if (!ok) return;
-    try {
-      await axios.post(
-        `${process.env.REACT_APP_DB_URL}/users/logout`,
-        {},
-        { withCredentials: true }
-      );
-      navigate("/");
-    } catch (e) {
-      console.error(e);
-      window.alert("로그아웃 실패");
-    }
-  }
+  // // 로그아웃
+  // async function handleLogout() {
+  //   const ok = window.confirm("정말 로그아웃하시겠습니까?");
+  //   if (!ok) return;
+  //   try {
+  //     await axios.post(
+  //       `${process.env.REACT_APP_DB_URL}/users/logout`,
+  //       {},
+  //       { withCredentials: true }
+  //     );
+  //     navigate("/");
+  //   } catch (e) {
+  //     console.error(e);
+  //     window.alert("로그아웃 실패");
+  //   }
+  // }
 
   // 신규 사진 등록(파일 선택)
   function handleNewPhotoRegister() {
@@ -480,7 +483,7 @@ function Main() {
   );
 
   return (
-    <div className="main-container">
+    <div className="main-container" style={{ overflow: "auto" }}>
       <Menu /> {/* Menu.jsx를 왼쪽에 배치 */}
       {/* 상단 바 */}
       <div className="top-bar" ref={searchRef}>
@@ -491,10 +494,9 @@ function Main() {
             <span className="search-text">환자 검색</span>
           </button>
         )}
-
         {/* 검색 바 (isSearchVisible이 true일 때만 표시) */}
         {isSearchVisible && (
-          <form className="search-form" onSubmit={handleSearchSubmit}>
+          <form className={`search-form ${hideSearchBar ? "hide" : ""}`} onSubmit={handleSearchSubmit}>
             <input
               type="text"
               placeholder="이름을 입력하세요"
@@ -514,10 +516,10 @@ function Main() {
         )}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           {/* 버튼 영역 */}
-          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
+          <div style={{ display: "flex", flexDirection: "row", marginTop: "5px", alignItems: "center", gap: "10px" }}>
             {/* 과거 결과 보기 버튼 */}
             <button className="exdiagnose-btn" onClick={handleViewOldResult}>
-            <img src={documentIcon} alt="과거 진단 아이콘" className="document-icon" />
+              <img src={documentIcon} alt="과거 진단 아이콘" className="document-icon" />
               과거 진단 보기
             </button>
 
@@ -555,7 +557,7 @@ function Main() {
                     {currentPatients.map((pt, idx) => (
                       <React.Fragment key={pt.pIdx || idx}>
                         <tr onClick={() => handlePatientClick(pt)}>
-                        <td>{pt.pName.length > 4 ? pt.pName.slice(0, 4) + "..." : pt.pName}</td>
+                          <td>{pt.pName.length > 4 ? pt.pName.slice(0, 4) + "..." : pt.pName}</td>
                           <td>{pt.birth.slice(0, 6)}</td>
                           <td>{pt.tel}</td>
                         </tr>
@@ -633,29 +635,43 @@ function Main() {
               </table>
 
               <div className="patient-detail-actions">
-                <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>수정</button>
-                <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>삭제</button>
+                <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>
+                  <img src={patientIcon} alt="수정" className="edit-icon" />
+                </button>
+                <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>
+                  <img src={trashIcon} alt="삭제" className="trash-icon" />
+                </button>
               </div>
             </div>
           )}
 
           {/* 진단 날짜 텍스트를 panel-block 밖으로 이동 */}
           {selectedPatient && (
-            <div className="diagnosis-date-title">
-              진단 날짜
-            </div>
+            <div className="diagnosis-date-title">진단 날짜</div>
           )}
 
           {/* 날짜 리스트 */}
-          <div className="date-list-container panel-block" style={{ marginTop: "10px" }}>
+          <div
+            className={`date-list-container panel-block
+              ${!selectedPatient ? "expanded-panel" : ""}`}
+            style={{ marginTop: "10px" }}
+          >
+            {/* ✅ selectedPatient가 없을 때만 비디오 표시 */}
+            {!selectedPatient && (
+              <video autoPlay loop muted playsInline className="date-list-video">
+                <source src="/video2.mp4" type="video/mp4" />
+              </video>
+            )}
+
             <DateList
               diagDates={diagDates}
               currentPage={datePage}
               setCurrentPage={setDatePage}
               datesPerPage={datesPerPage}
               onDateClick={(dateStr) => handleDateClick(dateStr, selectedPatient)}
+              selectedPatient={selectedPatient} // ✅ 추가
             />
-            
+
           </div>
         </div>
 

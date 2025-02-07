@@ -132,9 +132,8 @@ margin: 0 auto 20px; /* 중앙 정렬 + 아래 간격 */
   width: 100%;
 }
 
-/* 입력 필드 클릭 시 커지는 효과 */
 .input-container input {
-  padding-left: 50px;
+  padding-left: 50px; /* 아이콘 크기만큼 왼쪽 패딩 추가 */
   width: 100%;
   height: 44px;
   font-size: 14px;
@@ -142,14 +141,6 @@ margin: 0 auto 20px; /* 중앙 정렬 + 아래 간격 */
   border-radius: 4px;
   box-sizing: border-box;
   margin-top: 20px;
-  transition: all 0.2s ease-in-out; /* 부드러운 전환 효과 */
-}
-
-/* 클릭 또는 포커스 시 확대 */
-.input-container input:focus {
-  width: 102%; /* 기존보다 2% 증가 */
-  height: 48px; /* 4px 증가 */
-  border: 2px solid #4187f6; /* 강조 효과 */
 }
 
 .input-icon {

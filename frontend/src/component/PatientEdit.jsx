@@ -310,7 +310,7 @@ function PatientEdit() {
               />
             </div>
 
-            <button type="submit" className="submit-button" style={{ marginTop: "10px" }}>
+            <button type="submit" className="submit-button" >
               환자 수정
             </button>
           </div>

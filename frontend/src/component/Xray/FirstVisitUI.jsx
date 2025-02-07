@@ -149,11 +149,10 @@ function FirstVisitUI({
                       <img
                         src={plusIcon}
                         alt="plus-icon"
-                        className="plus-icon"  /* ✅ 클래스 추가 */
+                        className="plus-icon"
                       />
                     </span>
                   </div>
-
                 );
               } else {
                 return (
@@ -181,7 +180,7 @@ function FirstVisitUI({
                     width: "80px", height: "80px",
                     border: "1px solid #999",
                     cursor: "pointer",
-                    marginTop: "10px"
+                    marginTop:"10px"
                   }}
                   onClick={() => handleThumbClick(item)}
                 >
