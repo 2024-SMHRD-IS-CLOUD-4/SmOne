@@ -103,6 +103,7 @@ function PatientEdit() {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
+  
 
   // [2-1] 최대 글자수 채우면 다음 필드 포커스
   const handleNextFocus = (e, nextField) => {
@@ -192,7 +193,16 @@ function PatientEdit() {
       <form onSubmit={handleSubmit}>
         <Menu />  {/* ✅ 네비게이션 메뉴 추가 */}
         <div className='Patientedit-container'>
-          <button className="back-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
+          <button
+            className="back-btn"
+            onClick={(e) => {
+              e.preventDefault(); // ✅ 기본 동작 방지
+              navigate("/main");  // ✅ 환자 수정 없이 페이지 이동
+            }}
+          >
+            X
+          </button>
+
           <div className="form-wrapper">
             <h1 className="patient-title1">환자 수정</h1>
             <div className="name-and-gender-group">
@@ -270,7 +280,7 @@ function PatientEdit() {
                   onInput={(e) => handleNextFocus(e, "phonePart2")}
                   required
                 />
-                <span className="phone-number-dash">-</span>
+                <span className="phone-number-dash1">-</span>
                 <input
                   type="text"
                   name="phonePart2"
@@ -282,7 +292,7 @@ function PatientEdit() {
                   onInput={(e) => handleNextFocus(e, "phonePart3")}
                   required
                 />
-                <span className="phone-number-dash">-</span>
+                <span className="phone-number-dash1">-</span>
                 <input
                   type="text"
                   name="phonePart3"
@@ -334,7 +344,7 @@ function PatientEdit() {
               />
             </div>
 
-            <button type="submit" className="submit-button" style={{ marginTop: "10px" }}>
+            <button type="submit" className="submit-button" >
               환자 수정
             </button>
           </div>

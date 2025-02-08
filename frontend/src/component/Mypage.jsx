@@ -88,7 +88,7 @@ function Mypage() {
       email: fullEmail  // 최종 email만 합쳐서 백엔드 전달
     };
     try {
-      await axios.put("http://localhost:8090/SmOne/api/users/update", sendData, {
+      await axios.put(`${process.env.REACT_APP_DB_URL}/users/update`, sendData, {
         headers: { "Content-Type": "application/json" }
       });
       alert("정보가 수정되었습니다.");
@@ -97,6 +97,11 @@ function Mypage() {
       console.error(err);
       alert("정보 수정에 실패했습니다.");
     }
+  };
+
+  // X 버튼 동작
+  const handleBackToMain = () => {
+    navigate("/main"); // ✅ 단순히 메인 페이지로 이동
   };
 
   // 비밀번호 변경 페이지로 이동
@@ -182,7 +187,7 @@ function Mypage() {
     <>
       <Menu /> {/* Menu 추가 */}
       <div className="mypage-container">
-        <button className="back-btn" onClick={() => navigate("/main")}>X</button> {/* ✅ X 버튼 추가 */}
+        <button className="back-btn" onClick={handleBackToMain}>X</button> {/* ✅ X 버튼 추가 */}
         <h2 className="mypage-title">마이페이지</h2>
 
         <form className="mypage-form">
@@ -202,28 +207,13 @@ function Mypage() {
               />
             </div>
             <div className="role-group">
-              <label style={{ marginBottom: "30px" }}>사용자 직업</label>
-              <div className="flex-row" style={{ gap: "20px" }}>
-                <label>
-                  <input
-                    type="radio"
-                    name="role"
-                    value="의사"
-                    checked={userData.role === "의사"}
-                    onChange={handleChange}
-                  />
-                  의사
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="role"
-                    value="관리자"
-                    checked={userData.role === "관리자"}
-                    onChange={handleChange}
-                  />
-                  관리자
-                </label>
+              <label style={{ marginBottom: "15px" }}> </label>
+              <div className="flex-row5" style={{ gap: "20px" }}>
+                <select name="role" value={userData.role} onChange={handleChange}>
+                  <option value="의사">의사</option>
+                  <option value="관리자">관리자</option>
+                </select>
+
               </div>
             </div>
           </div>
@@ -286,33 +276,39 @@ function Mypage() {
           </div>
         </form>
 
-      {/* 탈퇴 모달 */}
-      {showDeleteModal && (
-        <div className="search-modal">
-          <div className="modal-header">
-            <h2>회원 탈퇴</h2>
-            <button className="close-btn" onClick={closeDeleteModal}>닫기</button>
-          </div>
-          <div className="modal-body" style={{ flexDirection: "column", padding: "20px" }}>
-            <p>비밀번호를 입력해주세요</p>
-            <input
-              type="password"
-              placeholder="비밀번호"
-              value={deletePassword}
-              onChange={e => setDeletePassword(e.target.value)}
-              style={{ width: "100%", marginBottom: "10px" }}
-            />
-            <div style={{ textAlign: "right" }}>
-              <button className="small-btn" onClick={handleDelete} style={{ marginRight: "10px" }}>
-                탈퇴하기
-              </button>
-              <button className="small-btn" onClick={closeDeleteModal}>
-                취소
-              </button>
+        {/* 탈퇴 모달 */}
+        {showDeleteModal && (
+          <>
+            <div className="modal-overlay"></div> {/* ✅ 배경 어둡게 */}
+            <div className="delete-modal">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h2>회원 탈퇴</h2>
+                </div>
+                <div className="modal-body" style={{ flexDirection: "column", padding: "20px" }}>
+                  <p>비밀번호를 입력해주세요</p>
+                  <input
+                    type="password"
+                    placeholder="비밀번호"
+                    value={deletePassword}
+                    onChange={e => setDeletePassword(e.target.value)}
+                    style={{ width: "100%", marginBottom: "10px" }}
+                  />
+                  <div style={{ textAlign: "right" }}>
+                    <button className="small-btn delete-confirm" onClick={handleDelete} style={{ marginRight: "10px" }}>
+                      탈퇴하기
+                    </button>
+                    <button className="small-btn" onClick={closeDeleteModal}>
+                      취소
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+
+
 
         {/* 지도/검색 모달 */}
         {showModal && (

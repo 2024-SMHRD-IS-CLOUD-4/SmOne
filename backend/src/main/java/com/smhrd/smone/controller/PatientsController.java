@@ -24,6 +24,8 @@ public class PatientsController {
     @Autowired
     private PatientsService patientsService;
 
+
+
     @Autowired
     private UserService userService; // 로그인 사용자 정보 조회용
 
@@ -43,7 +45,6 @@ public class PatientsController {
 
             System.out.println("받은 데이터(등록): " + patient);
 
-
             // (C) 본인 센터 ID 세팅
             String centerId = user.getCenterId();
             patient.setCenterId(centerId);
@@ -62,7 +63,7 @@ public class PatientsController {
 
     // [2] 환자 수정
     @PutMapping("/update/{pIdx}")
-    public ResponseEntity<?> updatePatient(@PathVariable("pIdx") Integer pIdx,
+    public ResponseEntity<?> updatePatient(@PathVariable Integer pIdx,
                                            @RequestBody Patients newData,
                                            HttpSession session) {
         try {
@@ -76,14 +77,11 @@ public class PatientsController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("존재하지 않는 사용자입니다.");
             }
 
-            System.out.println("받은 데이터(수정): " + newData);
-
-
             // (C) 본인 센터 ID
             String centerId = user.getCenterId();
 
             // (D) 업데이트
-            patientsService.updatePatientWithoutGeocording(centerId, pIdx, newData);
+            patientsService.updatePatientWithoutGeocoding(centerId, pIdx, newData);
 
             return ResponseEntity.ok("환자 정보가 수정되었습니다.");
 

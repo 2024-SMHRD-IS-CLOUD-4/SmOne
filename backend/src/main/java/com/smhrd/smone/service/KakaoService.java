@@ -3,6 +3,9 @@ package com.smhrd.smone.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import jakarta.annotation.PostConstruct;
+
 import java.util.Map;
 import org.springframework.core.ParameterizedTypeReference;
 
@@ -13,6 +16,7 @@ public class KakaoService {
 
     @Value("${kakao.api.key}")
     private String kakaoApiKey;
+    
 
     public KakaoService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl("https://dapi.kakao.com").build();
