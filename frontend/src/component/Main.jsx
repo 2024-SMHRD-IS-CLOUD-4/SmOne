@@ -13,6 +13,7 @@ import documentIcon from "./png/document.png"; // 추가
 import patientIcon from "./png/patientedit.png";
 import trashIcon from "./png/trash.png";
 
+
 function Main() {
   const navigate = useNavigate();
   const [patients, setPatients] = useState([]);

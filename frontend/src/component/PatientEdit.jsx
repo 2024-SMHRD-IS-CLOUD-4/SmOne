@@ -3,10 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import "./PatientEdit.css";
 import Menu from "./Menu"; // Menu 추가
+import checkmarkIcon from "./png/checkmark.png";
 
 function PatientEdit() {
   const { pIdx } = useParams(); // URL에서 pIdx추출
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [formData, setFormData] = useState({
     pName: "",
@@ -103,7 +106,7 @@ function PatientEdit() {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
-  
+
 
   // [2-1] 최대 글자수 채우면 다음 필드 포커스
   const handleNextFocus = (e, nextField) => {
@@ -158,33 +161,26 @@ function PatientEdit() {
   // [4] 수정 버튼 => PUT
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { birthPart1, birthPart2, phonePart1, phonePart2, phonePart3 } = formData;
+    const newBirth = `${formData.birthPart1}-${formData.birthPart2}`;
+    const newTel = `${formData.phonePart1}-${formData.phonePart2}-${formData.phonePart3}`;
+    const newPAdd = `${formData.postcode} ${formData.address} ${formData.detailAddress}`.trim();
 
-    const newBirth = `${birthPart1}-${birthPart2}`;
-    const newTel   = `${phonePart1}-${phonePart2}-${phonePart3}`;
-    const newPAdd  = `${formData.postcode} ${formData.address} ${formData.detailAddress}`.trim();
-
-    // 백엔드로 넘길 객체
     const sendData = {
       pName: formData.pName,
       gender: formData.gender,
       birth: newBirth,
       tel: newTel,
       pAdd: newPAdd,
-
-      // ⬇️ 프론트에서 구한 위도/경도도 함께 전송
-      pLat: formData.pLat,
-      pLng: formData.pLng,
     };
 
     try {
-      // ***중요***: 꼭 /update/${pIdx} 형태로 (PathVariable)
       await axios.put(`${process.env.REACT_APP_DB_URL}/patients/update/${pIdx}`, sendData);
-      alert("환자 정보가 수정되었습니다.");
-      navigate("/main");
+      setShowModal(true); // 모달 표시
+      setTimeout(() => setModalVisible(true), 10); // 부드러운 애니메이션 효과 추가
     } catch (err) {
       console.error("환자 수정 오류:", err);
-      alert("환자 정보 수정 중 오류가 발생했습니다.");
+      setShowModal(true); // 오류도 모달로 표시 가능
+      setTimeout(() => setModalVisible(true), 10);
     }
   };
 
@@ -345,11 +341,24 @@ function PatientEdit() {
             </div>
 
             <button type="submit" className="submit-button" >
-              환자 수정
+              환자 정보 수정
             </button>
           </div>
         </div>
       </form>
+      {showModal && (
+        <div className={`modal-overlay ${modalVisible ? "visible" : ""}`}>
+          <div className="modal-content">
+            <img src={checkmarkIcon} alt="Success" className="modal-icon" />
+            <p>환자 정보가 수정되었습니다.</p>
+            <button onClick={() => {
+              setModalVisible(false);
+              setTimeout(() => setShowModal(false), 300); // 애니메이션이 끝난 후 숨김
+              navigate("/main");
+            }}>확인</button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

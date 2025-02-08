@@ -766,3 +766,78 @@ html, body {
   width: 1.5rem;  /* 24px */
   height: 1.5rem;
 }
+/* 모달 배경 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+/* 모달이 활성화될 때 */
+.modal-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 모달 창 */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: 320px;
+  transform: scale(0.9);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+/* 모달이 활성화될 때 */
+.modal-overlay.visible .modal-content {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* 모달 버튼 */
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.modal-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease-in-out;
+}
+
+.modal-button.confirm {
+  background-color: #d9534f;
+  color: white;
+}
+
+.modal-button.confirm:hover {
+  background-color: #c9302c;
+}
+
+.modal-button.cancel {
+  background-color: #aaa;
+  color: white;
+}
+
+.modal-button.cancel:hover {
+  background-color: #888;
+}
