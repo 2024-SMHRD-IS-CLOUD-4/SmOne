@@ -22,6 +22,7 @@ function Result() {
   // 넘어온 state
   const patient = location.state?.patient || null;
   const [aiResult, setAiResult] = useState(location.state?.aiResult || "진단 결과 없음");
+  
 
     // 🔽🔽🔽 여기에 useEffect 추가 🔽🔽🔽
     useEffect(() => {
@@ -39,7 +40,8 @@ function Result() {
   console.log("📌 FastAPI에서 받아온 AI 진단 결과:", location.state?.aiResult);
   console.log("📌 Result 페이지에서 초기 aiResult 상태값:", aiResult);
 
-  const newlyUploaded = location.state?.newlyUploaded || [];
+  const { state } = location;
+  const { newlyUploaded } = state || { newlyUploaded: [] };
   // const bigFilename = location.state?.bigFilename || null;
   const fromHistory = location.state?.fromHistory || false;
   const preSelectedDate = location.state?.selectedDate || null;
@@ -129,6 +131,20 @@ function Result() {
     ctxRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
   };
 
+  const correctImageUrl = (url) => {
+    if (!url) return "";  // url이 없을 경우 빈 값 반환
+  
+    // URL이 이미 절대 경로일 경우 그대로 반환
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+  
+    // URL이 상대경로(h0027.png)일 경우, 클라우드 스토리지 주소를 붙여서 반환
+    return `https://kr.object.ncloudstorage.com/ilungview-bucket/${url}`;
+  };
+  
+
+
   // ---------------- 1) 마운트 시 유저정보, X-ray 날짜목록 불러오기 ----------------
   useEffect(() => {
     // A. 환자 유효성 체크
@@ -172,7 +188,7 @@ function Result() {
           const bigOne = res.data.find((x) => x.bigXray != null);
           if (bigOne) {
             setSelectedXray(bigOne);
-            setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${bigOne.bigXray}`);
+            setBigPreview(correctImageUrl(bigOne.bigXray));
           } else {
             setSelectedXray(res.data[0]);
             setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${res.data[0].imgPath}`);
@@ -314,19 +330,18 @@ function Result() {
   }, [map, fromHistory, selectedHospital]);
 
   // 썸네일 클릭
-  function handleThumbClick(x) {
-    setSelectedXray(x);
-    if (x.bigXray) {
-      setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${x.bigXray}`);
-    } else {
-      setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${x.imgPath}`);
-    }
-    // 썸네일 클릭 시에만 확대/이동 초기화
+  function handleThumbClick(imgPath) {
+    setBigPreview(correctImageUrl(imgPath)); // 올바른 경로 변환 후 적용
+    setSelectedXray(imgPath);
     setBaseScale(1);
     setZoom(1);
     setOffsetX(0);
     setOffsetY(0);
+    console.log("✅ bigPreview 이미지 경로:", bigPreview);
   }
+
+
+
 
   // 날짜 클릭
   function handleDateClick(d) {
@@ -591,6 +606,8 @@ function Result() {
               <button className="erase-button" onClick={clearCanvas}></button>
             </div>
           </div>
+
+           
           <div className="big-preview-box" style={{ position: "relative" }}
             onWheelCapture={handleWheelCapture}
             onMouseDown={handleMouseDown}
@@ -598,9 +615,12 @@ function Result() {
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
           >
+
+            {/* 이미지 크게 보기 */}
+            <div className="big-preview-box" style={{ position: "relative" }}>
             {bigPreview ? (
               <>
-                <img ref={bigImgRef} src={bigPreview} alt="bigXray" className="big-xray-image" />
+                <img ref={bigImgRef} src={bigPreview} alt="bigXray" className="big-xray-image" onError={() => console.log("⚠️ 이미지 로드 실패:", bigPreview)}/>
                 <canvas
                   ref={canvasRef}
                   className="drawing-canvas"
@@ -608,25 +628,26 @@ function Result() {
                   onMouseMove={draw}
                   onMouseUp={stopDrawing}
                   onMouseLeave={stopDrawing}
-                />
+                  />
               </>
             ) : (
               <div style={{ color: "#ccc" }}>X-ray가 없습니다.</div>
             )}
-          </div>
-
-          <div className="thumb-list">
-            {xrayList.map((x) => (
+            </div>
+            <div className="thumb-list">
+            {newlyUploaded.map((imgPath, index) => (
               <div
-                key={x.imgIdx}
+                key={index}
                 className="thumb-item"
-                onClick={() => handleThumbClick(x)}
+                onClick={() => handleThumbClick(imgPath)} // 클릭 시 해당 이미지를 bigPreview로 설정
               >
-                <img src={`${process.env.REACT_APP_DB_URL2}/images/${x.imgPath}`} alt="thumb" />
+              <img src={imgPath} alt={`Uploaded ${index + 1}`} />
               </div>
             ))}
+            </div>
           </div>
         </div>
+
 
         {/* 오른쪽 패널 */}
         <div className="result-right-panel">

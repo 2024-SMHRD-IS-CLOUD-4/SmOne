@@ -247,7 +247,7 @@ function Main() {
         navigate("/result", {
             state: {
                 patient: selectedPatient,
-                aiResult: fastApiResponse.data?.result?.diagnosis,   // FastAPI에서 받은 진단 결과
+                aiResult: diagnosisResult,   // FastAPI에서 받은 진단 결과
                 newlyUploaded: newImages.map((img) => img.file.name),
                 bigFilename,
                 fromHistory: false,
