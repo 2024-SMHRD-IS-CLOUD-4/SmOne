@@ -43,8 +43,11 @@ public class NaverS3Service {
 
         // S3에 파일 업로드
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata)
-        		.withCannedAcl(CannedAccessControlList.PublicRead));
+                .withCannedAcl(CannedAccessControlList.PublicRead));
 
+        // ✅ uploadFile 메서드 닫기
+        return generateFileUrl(fileName);
+    }
     private String generateFileUrl(String fileName) {
         // 파일의 공개 URL 생성
         return String.format("https://kr.object.ncloudstorage.com/%s/%s", bucketName, fileName);
