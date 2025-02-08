@@ -29,8 +29,9 @@ def get_image_path(p_idx):
         FROM XRAY_IMAGES
         WHERE P_IDX = %s
           AND IMG_PATH LIKE 'http%%'
-    """
-    
+        ORDER BY IMG_IDX DESC
+        LIMIT 1
+        """
 
     print(f"Executing query: {query} with P_IDX = {p_idx}")
 

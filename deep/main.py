@@ -83,11 +83,13 @@ def fetch_doctor_id():
 # CORS 설정 (필요한 도메인만 허용)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://223.130.157.164"],  #  실제 사용 환경에서는 특정 도메인으로 제한 권장
+    allow_origins=["http://223.130.157.164" , "http://localhost:3000" , "https://223.130.157.164:3000"],  #  실제 사용 환경에서는 특정 도메인으로 제한 권장
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],
 )
+
+
 
 # Pydantic 모델 정의
 class DiagnosisRequest(BaseModel):
