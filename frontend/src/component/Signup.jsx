@@ -3,8 +3,8 @@ import { KakaoMapContext } from "../App"; // 🔥 App.js의 Context 가져오기
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Signup.css";
-import visibleIcon from './png/001.png';
-import hiddenIcon from './png/002.png';
+import hiddenIcon from './png/001.png';
+import visibleIcon from './png/002.png';
 
 function Signup() {
   const navigate = useNavigate(KakaoMapContext);

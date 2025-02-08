@@ -139,7 +139,7 @@ const Findpw = () => {
         </div>
 
         {/* 메시지 */}
-        {message && <p style={{ color: "#ccc", marginTop: "16px", marginBottom: "-22px" }}>{message}</p>}
+        {message && <p style={{ color: "#ccc", margintop: "15px", marginBottom: "-18px"}}>{message}</p>}
 
         {/* 비밀번호 변경 이동 버튼 */}
         <button

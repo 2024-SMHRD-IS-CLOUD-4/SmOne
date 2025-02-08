@@ -229,8 +229,8 @@ input:focus {
 /* 👁 비밀번호 보기 아이콘 (입력 칸 내부 고정) */
 .toggle-password-btn {
   position: absolute;
-  right: 40px;
-  top: -123px;
+  right: 10px;
+  top: 245px;
   background: transparent;
   border: none;
   cursor: pointer;

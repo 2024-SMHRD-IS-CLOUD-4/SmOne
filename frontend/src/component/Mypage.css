@@ -151,7 +151,7 @@
 .mypage-btn-row {
   display: flex;
   justify-content: center;
-  gap: 2.5rem;                /* 40px → 2.5rem */
+  gap: 12.5rem;                /* 40px → 2.5rem */
   margin-top: 0.9375rem;        /* 15px → 0.9375rem */
 }
 
@@ -240,7 +240,7 @@
 .list-area {
   width: 18.75rem; /* 300px */
   padding: 0.625rem; /* 10px */
-  overflow-y: auto;
+  /* overflow-y: auto; */
   border-left: 0.0625rem solid #ccc; /* 1px */
 }
 

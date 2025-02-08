@@ -103,6 +103,7 @@ function PatientEdit() {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
+  
 
   // [2-1] 최대 글자수 채우면 다음 필드 포커스
   const handleNextFocus = (e, nextField) => {
@@ -203,7 +204,7 @@ function PatientEdit() {
           </button>
 
           <div className="form-wrapper">
-            <h1 className="patient-title1">환자 수정</h1>
+            <h1 className="patient-title1">환자 정보 수정</h1>
             <div className="name-and-gender-group">
               <div className="name-group">
                 <label>이름</label>
