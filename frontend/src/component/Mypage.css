@@ -1,48 +1,43 @@
-/* 반투명 박스(폼) */
 .mypage-container {
-  width: 28.125rem; /* 450px → 28.125rem */
-  height: 40.65rem; /* 620px → 38.75rem */
-  /* margin: 190px auto 0 auto;
-  margin-bottom: 100px; */
-  top: 50%; /* 변경 없음 */
-  left: 50%; /* 변경 없음 */
-  transform: translate(-50%, -50%); /* 변경 없음 */
+  width: 28.125rem;
+  height: 40.65rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 0.5rem; /* 8px → 0.5rem */
-  padding: 1.875rem; /* 30px → 1.875rem */
+  border-radius: 0.5rem;
+  padding: 1.875rem;
   color: #fff;
-  box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 2.0); /* 0, 4px, 10px → 0, 0.25rem, 0.625rem */
+  box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 2.0);
   text-align: center;
-  position: relative; /* 내부 요소 절대 위치 지정 가능하도록 설정 */
+  position: relative;
 }
 
 .flex-container {
   display: flex;
-  align-items: center; /* 세로 중앙 정렬 */
-  gap: 1.25rem; /* 20px → 1.25rem */
+  align-items: center;
+  gap: 1.25rem;
 }
 
 .input-group {
-  flex: 1; /* 동일한 비율로 너비 설정 */
+  flex: 1;
 }
 
 .role-group {
-  flex: 1; /* 동일한 비율로 너비 설정 */
+  flex: 1;
 }
 
-
-/* 마이페이지 컨테이너 내부 왼쪽 상단 버튼 */
 .back-btn {
   position: absolute;
-  top: 0.625rem; /* 10px → 0.625rem */
-  right: 0.625rem; /* 10px → 0.625rem */
-  padding: 0.375rem 0.625rem; /* 6px 10px → 0.375rem 0.625rem */
+  top: 0.625rem;
+  right: 0.625rem;
+  padding: 0.375rem 0.625rem;
   background-color: #333;
   color: white;
   border: none;
-  border-radius: 0.25rem; /* 4px → 0.25rem */
+  border-radius: 0.25rem;
   cursor: pointer;
-  font-size: 0.875rem; /* 14px → 0.875rem */
+  font-size: 0.875rem;
   transition: background 0.3s ease-in-out;
 }
 
@@ -50,92 +45,78 @@
   background-color: #666;
 }
 
-
 .mypage-title {
-  font-size: 2rem; /* 32px → 2rem */
-  margin-bottom: 1.875rem; /* 30px → 1.875rem */
-  /* margin-top: 20px; */
+  font-size: 2rem;
+  margin-bottom: 1.875rem;
   text-align: center;
   color: white;
 }
 
-/* 폼: 왼쪽 정렬 */
 .mypage-form {
   display: flex;
   flex-direction: column;
-  gap: 0.9375rem; /* 15px → 0.9375rem */
+  gap: 0.9375rem;
   text-align: left;
 }
 
-
 .mypage-form label {
   font-weight: bold;
-  font-size: 0.875rem; /* 14px → 0.875rem */
-  margin-bottom: 0.3125rem; /* 5px → 0.3125rem */
+  font-size: 0.875rem;
+  margin-bottom: 0.3125rem;
   display: block;
 }
 
-/* .mypage-form input {
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  box-sizing: border-box;
-} */
-
 .Mp_Uname {
-  padding: 0.625rem; /* 10px → 0.625rem */
+  padding: 0.625rem;
   border: none;
-  border-radius: 0.25rem; /* 4px → 0.25rem */
-  font-size: 0.875rem; /* 14px → 0.875rem */
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
   box-sizing: border-box;
-  width: 20.500rem; /* 290px → 18.125rem */
-  height: 2.75rem; /* 44px → 2.75rem */
-  margin-top: 0.9375rem; /* 15px → 0.9375rem */
+  width: 20.500rem;
+  height: 2.75rem;
+  margin-top: 0.9375rem;
 }
 
 .Mp_add {
-  padding: 0.625rem; /* 10px → 0.625rem */
+  padding: 0.625rem;
   border: none;
-  border-radius: 0.25rem; /* 4px → 0.25rem */
-  font-size: 0.875rem; /* 14px → 0.875rem */
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
   box-sizing: border-box;
-  height: 2.75rem; /* 44px → 2.75rem */
+  height: 2.75rem;
 }
 
 .Mp_centerId {
-  padding: 0.625rem;            /* 10px → 0.625rem */
+  padding: 0.625rem;
   border: none;
-  border-radius: 0.25rem;        /* 4px → 0.25rem */
-  font-size: 0.875rem;           /* 14px → 0.875rem */
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
   box-sizing: border-box;
-  width: 24.3125rem;            /* 389px → 24.3125rem */
-  height: 2.75rem;              /* 44px → 2.75rem */
+  width: 24.3125rem;
+  height: 2.75rem;
 }
 
 .Mp_email1,
 .Mp_email2 {
-  padding: 0.625rem;            /* 10px → 0.625rem */
+  padding: 0.625rem;
   border: none;
-  border-radius: 0.25rem;        /* 4px → 0.25rem */
-  font-size: 0.875rem;           /* 14px → 0.875rem */
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
   box-sizing: border-box;
-  width: 13.25rem;              /* 212px → 13.25rem */
-  height: 2.75rem;              /* 44px → 2.75rem */
+  width: 13.25rem;
+  height: 2.75rem;
 }
 
-/* 사용자 ID 영역 */
 .userid-box {
   background: #999;
   color: #000;
-  padding: 0.625rem;            /* 10px → 0.625rem */
-  border-radius: 0.25rem;        /* 4px → 0.25rem */
-  font-size: 0.875rem;           /* 14px → 0.875rem */
-  height: 1.5rem;               /* 24px → 1.5rem */
+  padding: 0.625rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  height: 1.5rem;
 }
 
-/* 플렉스 줄 */
-.flex-row5 select{
+.flex-row5 select {
   width: 100px;
   height: 44px;
   border: none;
@@ -147,26 +128,24 @@
   text-align: center;
 }
 
-/* 버튼 정렬 */
 .mypage-btn-row {
   display: flex;
   justify-content: center;
-  gap: 12.5rem;                /* 40px → 2.5rem */
-  margin-top: 0.9375rem;        /* 15px → 0.9375rem */
+  gap: 12.5rem;
+  margin-top: 0.9375rem;
 }
 
-/* 공통 버튼 */
 .action-btn,
 .search-btn {
-  padding: 0.625rem 0.875rem;   /* 10px 14px → 0.625rem 0.875rem */
+  padding: 0.625rem 0.875rem;
   border: none;
-  border-radius: 0.25rem;       /* 4px → 0.25rem */
+  border-radius: 0.25rem;
   background-color: #333;
   color: #fff;
-  font-size: 0.875rem;          /* 14px → 0.875rem */
+  font-size: 0.875rem;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
-  height: 2.8125rem;            /* 45px → 2.8125rem */
+  height: 2.8125rem;
   width: 115px;
 }
 
@@ -176,18 +155,17 @@
   background-color: #666;
 }
 
-/* 모달 공통 */
 .search-modal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 22.5rem;               /* 360px → 22.5rem */
-  height: 12.5rem;              /* 200px → 12.5rem */
+  width: 22.5rem;
+  height: 12.5rem;
   background-color: #fff;
   z-index: 9999;
-  border-radius: 0.625rem;      /* 10px → 0.625rem */
-  box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);  /* 0 4px 6px → 0 0.25rem 0.375rem */
+  border-radius: 0.625rem;
+  box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -196,30 +174,30 @@
 .modal-body1 {
   display: flex;
   flex-direction: column;
-  align-items: center;         /* 수평 중앙 정렬 */
-  justify-content: center;     /* 수직 중앙 정렬 */
-  text-align: center;          /* 텍스트 중앙 정렬 */
-  padding: 1.25rem;            /* 20px → 1.25rem */
-  width: 15.625rem;            /* 250px → 15.625rem */
-  margin-bottom: 0.625rem;      /* 10px → 0.625rem */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.25rem;
+  width: 15.625rem;
+  margin-bottom: 0.625rem;
 }
 
 .M_pw {
   width: 100%;
-  margin-bottom: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem;
 }
 
 .modal-header {
   position: relative;
   flex: 0 0 auto;
-  padding: 0.625rem; /* 10px */
-  border-bottom: 0.0625rem solid #ccc; /* 1px */
+  padding: 0.625rem;
+  border-bottom: 0.0625rem solid #ccc;
   background: #f5f5f5;
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: 1.25rem; /* 20px */
+  font-size: 1.25rem;
   color: #333;
 }
 
@@ -230,18 +208,15 @@
   background: #fff;
 }
 
-/* 지도 */
 .map-area {
   flex: 1;
   background: #f1f1f1;
 }
 
-/* 목록 */
 .list-area {
-  width: 18.75rem; /* 300px */
-  padding: 0.625rem; /* 10px */
-  /* overflow-y: auto; */
-  border-left: 0.0625rem solid #ccc; /* 1px */
+  width: 18.75rem;
+  padding: 0.625rem;
+  border-left: 0.0625rem solid #ccc;
 }
 
 .list-area ul {
@@ -251,7 +226,7 @@
 }
 
 .list-area li {
-  margin-bottom: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem;
   cursor: pointer;
   color: #333;
 }
@@ -268,59 +243,55 @@
 
 .list-area p {
   margin: 0;
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
   color: #666;
 }
 
 .action-btn {
-  width: 28.125rem; /* 450px */
+  width: 28.125rem;
 }
 
-/* 비밀번호 변경 버튼 */
 .password-btn {
-  padding: 0.625rem 0.875rem; /* 10px 14px */
+  padding: 0.625rem 0.875rem;
   border: none;
-  border-radius: 0.25rem; /* 4px */
+  border-radius: 0.25rem;
   background-color: #333;
   color: #fff;
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
-  height: 2.75rem; /* 35px */
-  width: 25rem; /* 400px */
+  height: 2.75rem;
+  width: 25rem;
 }
 
 .password-btn:hover {
   background-color: #666;
 }
 
-
 .delete-btn:hover {
   background-color: #b21f2d;
 }
 
-/* 🔹 모달이 활성화되었을 때 배경을 어둡게 처리하는 오버레이 */
 .modal-overlay {
   position: fixed;
-  top: -8.75rem; /* -140px */
-  left: -44.375rem; /* -710px */
+  top: -8.75rem;
+  left: -44.375rem;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 998;
 }
 
-/* 🔹 모달 자체는 최상위로 유지 */
 .search-modal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 22.5rem; /* 360px */
-  height: 12.5rem; /* 200px */
+  width: 22.5rem;
+  height: 12.5rem;
   background-color: #fff;
   z-index: 999;
-  border-radius: 0.625rem; /* 10px */
+  border-radius: 0.625rem;
   box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -328,52 +299,50 @@
 }
 
 .delete-delete-btn {
-  padding: 0.3125rem 0.625rem; /* 5px 10px */
+  padding: 0.3125rem 0.625rem;
   border: none;
-  border-radius: 0.25rem; /* 4px */
+  border-radius: 0.25rem;
   background-color: #dc3545;
   color: #fff;
-  font-size: 0.75rem; /* 12px */
+  font-size: 0.75rem;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
-  height: 1.875rem; /* 30px */
+  height: 1.875rem;
 }
 
 .delete-delete-btn:hover {
-  background-color: #b21f2d; /* 🔴 더 어두운 빨간색 */
+  background-color: #b21f2d;
 }
 
-/* 🔹 회원 탈퇴 모달 배경을 어둡게 하는 오버레이 */
 .modal-overlay {
   position: fixed;
   width: 100.2vw;
   height: 101.3vh;
-  background-color: rgba(0, 0, 0, 0.5); /* ✅ 배경 반투명 */
-  z-index: 998; /* 모달 아래에 위치 */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
 }
 
-/* 🔹 회원 탈퇴 모달 스타일 */
 .delete-modal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 22.5rem; /* 360px */
-  height: 12.5rem; /* 200px */
+  width: 22.5rem;
+  height: 12.5rem;
   background-color: #fff;
-  z-index: 999; /* 모달이 최상위에 위치 */
-  border-radius: 0.625rem; /* 10px */
+  z-index: 999;
+  border-radius: 0.625rem;
   box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
-/* 🔹 회원탈퇴 버튼 스타일 */
+
 .delete-btn {
   padding: 0.625rem 0.875rem;
   border: none;
   border-radius: 0.25rem;
-  background-color: #dc3545; /* 🔴 빨간색 */
+  background-color: #dc3545;
   color: #fff;
   font-size: 0.875rem;
   cursor: pointer;
@@ -383,12 +352,11 @@
 }
 
 .delete-btn:hover {
-  background-color: #b21f2d; /* 🔴 더 어두운 빨간색 */
+  background-color: #b21f2d;
 }
 
-/* 🔹 모달 내부 '탈퇴하기' 버튼 */
 .small-btn.delete-confirm {
-  background-color: #dc3545; /* 🔴 회원탈퇴 버튼과 동일한 색상 */
+  background-color: #dc3545;
   color: white;
   border: none;
   padding: 0.625rem 0.875rem;
@@ -396,17 +364,16 @@
   font-size: 0.875rem;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
-  height: 35px; /* ✅ 높이 조정 */
-  width: 90px; /* ✅ 너비 조정 */
+  height: 35px;
+  width: 90px;
 }
 
 .small-btn.delete-confirm:hover {
-  background-color: #b21f2d; /* 🔴 회원탈퇴 버튼과 동일한 호버 색상 */
+  background-color: #b21f2d;
 }
 
-/* 🔹 모달 내부 '취소' 버튼 */
 .small-btn.cancel-btn {
-  background-color: #333; /* ⚫ 어두운 회색 */
+  background-color: #333;
   color: white;
   border: none;
   padding: 0.625rem 0.875rem;
@@ -414,11 +381,10 @@
   font-size: 0.875rem;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
-  height: 35px; /* ✅ 높이 조정 */
-  width: 90px; /* ✅ 너비 조정 */
+  height: 35px;
+  width: 90px;
 }
 
 .small-btn.cancel-btn:hover {
-  background-color: #666; /* ⚫ 밝은 회색 */
+  background-color: #666;
 }
-

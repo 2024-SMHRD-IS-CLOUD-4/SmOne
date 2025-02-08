@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { KakaoMapContext } from "../App"; // 🔥 App.js의 Context 가져오기
+import { KakaoMapContext } from "../App";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Signup.css";
@@ -9,7 +9,6 @@ import visibleIcon from './png/002.png';
 function Signup() {
   const navigate = useNavigate(KakaoMapContext);
 
-  // 폼 입력 상태
   const [formData, setFormData] = useState({
     userId: "",
     userPw: "",
@@ -21,34 +20,22 @@ function Signup() {
     address: ""
   });
 
-  // 아이디 중복 여부
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [shake, setShake] = useState(false);
   const [idCheckMessage, setIdCheckMessage] = useState("");
-
-  // 기관 검색 모달 상태
   const [places, setPlaces] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [passwordMessage, setPasswordMessage] = useState("");
-
-  // 지도/마커를 제어하기 위한 ref/state
-  const [map, setMap] = useState(null);               // 지도 객체 보관
-  const [markers, setMarkers] = useState([]);         // 만들어진 마커들
-
-  // 사용자가 최종으로 선택한 장소 (리스트 클릭 시 세팅)
+  const [map, setMap] = useState(null);
+  const [markers, setMarkers] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
-
-  // 👁 비밀번호 표시 상태 추가
   const [showPassword, setShowPassword] = useState(false);
 
-  // 👁 비밀번호 표시 버튼 클릭 시 상태 변경
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-
-  // 입력 변경 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -57,8 +44,6 @@ function Signup() {
     }));
   };
 
-
-  // 아이디 중복 체크
   const handleDuplicateCheck = async () => {
     if (!formData.userId.trim()) {
       alert("아이디를 입력하세요.");
@@ -68,15 +53,15 @@ function Signup() {
       const res = await axios.get(
         `${process.env.REACT_APP_DB_URL}/users/check-duplicate/${formData.userId}`
       );
-      setIsDuplicate(res.data); // true면 중복, false면 사용 가능
+      setIsDuplicate(res.data);
       if (res.data) {
-        setIsDuplicate(true);  // ✅ 중복이면 상태 변경
-        setShake(true);  // 🚨 흔들림 효과 추가해야 하지만 누락됨!
+        setIsDuplicate(true);
+        setShake(true);
         setIdCheckMessage("중복된 아이디입니다람쥐.");
-        setTimeout(() => setShake(false), 500); // 0.5초 후 초기화
+        setTimeout(() => setShake(false), 500);
       } else {
         setIsDuplicate(false);
-        setIdCheckMessage(""); // ✅ 메시지 초기화
+        setIdCheckMessage("");
         alert("사용 가능한 아이디 입니다.");
       }
     } catch (error) {
@@ -85,14 +70,13 @@ function Signup() {
     }
   };
 
-  // 비밀번호 유효성 검사 함수
   const validatePassword = (password) => {
-    const hasLetter = /[a-zA-Z]/.test(password); // 영문 포함 여부
-    const isLongEnough = password.length >= 5; // 5글자 이상
+    const hasLetter = /[a-zA-Z]/.test(password);
+    const isLongEnough = password.length >= 5;
 
     if (!hasLetter || !isLongEnough) {
       setPasswordError(true);
-      setShake(true); // 🚨 흔들림 효과 추가
+      setShake(true);
       setPasswordMessage("비밀번호는 5자 이상이며 영문을 1글자 이상 포함해야 합니다.");
       return false;
     } else {
@@ -103,14 +87,12 @@ function Signup() {
     }
   };
 
-  // 비밀번호 입력 변경 핸들러
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
     setFormData({ ...formData, userPw: newPassword });
-    validatePassword(newPassword); // 입력 시마다 검증
+    validatePassword(newPassword);
   };
 
-  // 회원가입 제출
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -118,14 +100,11 @@ function Signup() {
       return;
     }
 
-    // (1) 아이디 중복 여부
     if (isDuplicate) {
-      // 중복 아이디이면 가입 불가
       alert("중복된 아이디는 사용할 수 없습니다.");
       return;
     }
 
-    // (2) 각 필드가 비었는지 체크
     if (!formData.userId.trim()) {
       alert("아이디를 입력하세요.");
       return;
@@ -155,13 +134,11 @@ function Signup() {
       return;
     }
 
-    // (3) 이메일 합치기
     const finalEmail = `${formData.emailId}@${formData.emailDomain}`;
 
-    // 서버로 전송할 객체
     const sendData = {
       ...formData,
-      email: finalEmail // 이메일 최종 문자열
+      email: finalEmail
     };
 
     console.log("회원가입 데이터:", sendData);
@@ -178,7 +155,6 @@ function Signup() {
     }
   };
 
-  // 기관명 검색 (카카오 지도)
   const handleSearchCenter = () => {
     if (!formData.centerId.trim()) {
       alert("기관명을 입력해주세요.");
@@ -195,14 +171,11 @@ function Signup() {
     });
   };
 
-  // 모달 열릴 때 / places 바뀔 때 => 지도 생성 & 마커 표시
   useEffect(() => {
-    // 모달이 열렸고, 검색 결과가 있을 때만 지도 생성
     if (showModal && places.length > 0) {
       const container = document.getElementById("map");
       if (!container) return;
 
-      // 지도 생성: 첫 검색 결과를 기준으로 초기 center 설정
       const mapOptions = {
         center: new window.kakao.maps.LatLng(places[0].y, places[0].x),
         level: 5
@@ -210,7 +183,6 @@ function Signup() {
       const createdMap = new window.kakao.maps.Map(container, mapOptions);
       setMap(createdMap);
 
-      // 마커들 생성
       const bounds = new window.kakao.maps.LatLngBounds();
       const tempMarkers = [];
 
@@ -222,7 +194,6 @@ function Signup() {
         marker.setMap(createdMap);
         bounds.extend(position);
 
-        // InfoWindow (마우스오버 시 표시)
         const infowindow = new window.kakao.maps.InfoWindow({
           content: `
           <div style="padding:4px;font-size:13px;color:#000;font-weight:bold;">
@@ -231,7 +202,6 @@ function Signup() {
         `,
         });
 
-        // 마커 호버 이벤트
         window.kakao.maps.event.addListener(marker, "mouseover", () => {
           infowindow.open(createdMap, marker);
         });
@@ -239,19 +209,15 @@ function Signup() {
           infowindow.close();
         });
 
-        // marker 배열에 push
         tempMarkers.push({ marker, infowindow, place });
       });
 
-      // 모든 마커가 보이도록 지도 범위 설정
       createdMap.setBounds(bounds);
 
-      // state에 저장 (나중에 리스트 클릭 시 참조)
       setMarkers(tempMarkers);
     }
   }, [showModal, places]);
 
-  // 모달 닫기
   const closeModal = () => {
     setShowModal(false);
     setPlaces([]);
@@ -260,59 +226,44 @@ function Signup() {
     setSelectedPlace(null);
   };
 
-  // 목록에서 특정 장소를 클릭하면 => 지도 이동 & 마커 InfoWindow 열기
   const handleListClick = (place) => {
     if (!map || !markers.length) return;
 
-    // 선택된 place 저장(완료시 사용)
     setSelectedPlace(place);
 
     map.setLevel(3);
-    // 지도 이동 (더 확대해서 보여주고 싶다면 level 조정)
     const moveLatLng = new window.kakao.maps.LatLng(place.y, place.x);
     panToWithOffset(map, moveLatLng, -150, 0);
 
 
-    // 해당 place의 마커를 찾아서 infowindow 열기
     markers.forEach(({ marker, infowindow, place: p }) => {
       if (p.id === place.id) {
-        // 해당 마커의 infowindow 열기
         infowindow.open(map, marker);
       } else {
-        // 나머지 마커 infowindow는 닫기
         infowindow.close();
       }
     });
   };
 
   function panToWithOffset(map, latlng, offsetX, offsetY) {
-    // (1) Projection 객체: 위/경도 → 화면 픽셀 좌표 변환
     const projection = map.getProjection();
-
-    // (2) 현재 latlng를 지도 픽셀 좌표로 변환
     const point = projection.pointFromCoords(latlng);
-
-    // (3) point에 오프셋 적용 (x·y 각각 더하기)
     const adjustedPoint = new window.kakao.maps.Point(
       point.x + offsetX,
       point.y + offsetY
     );
 
-    // (4) 다시 지도 좌표(latlng)로 역변환
     const newLatLng = projection.coordsFromPoint(adjustedPoint);
 
-    // (5) 지도 중심 이동
     map.setCenter(newLatLng);
   }
 
-  // “완료” 버튼 => 실제로 formData에 주소 반영 + 모달 닫기
   const handleComplete = () => {
     if (!selectedPlace) {
       alert("목록에서 장소를 먼저 선택하세요.");
       return;
     }
 
-    // 선택된 place로 기관명, address 업데이트
     setFormData((prev) => ({
       ...prev,
       centerId: selectedPlace.place_name,
@@ -325,13 +276,11 @@ function Signup() {
 
   return (
     <div className="signup-container">
-      {/* X 버튼을 컨테이너 안쪽 상단 오른쪽에 배치 */}
       <h1 className="signup-title">회원가입</h1>
       <button className="signup-close-btn" onClick={() => navigate("/")}>X</button>
 
       <form className="signup-form" onSubmit={handleSubmit}>
 
-        {/* 아이디 + 중복 버튼 */}
         <label>아이디</label>
         <div className="id-duplicate-group">
           <input
@@ -350,18 +299,16 @@ function Signup() {
           </button>
         </div>
 
-        {/* ✅ 중복 체크 결과 메시지 추가 */}
         {idCheckMessage && (
           <p className={isDuplicate ? "error-message1" : ""}>
             {idCheckMessage}
           </p>
         )}
 
-        {/* 비밀번호 */}
         <label>비밀번호</label>
         <div className={`pw-duplicate-group ${passwordError ? "shake" : ""}`}>
           <input
-            type={showPassword ? "text" : "password"} // 👁 클릭 시 보이기/숨기기
+            type={showPassword ? "text" : "password"}
             name="userPw"
             className={`userpw_join ${passwordError ? "error-border1" : ""}`}
             placeholder="비밀번호"
@@ -369,10 +316,9 @@ function Signup() {
             onChange={handlePasswordChange}
             required
           />
-          {/* 👁 비밀번호 보기 버튼 */}
           <button type="button" className="toggle-password-btn5" onClick={togglePasswordVisibility}>
             <img
-              src={showPassword ? visibleIcon : hiddenIcon} // 상태에 따라 아이콘 변경
+              src={showPassword ? visibleIcon : hiddenIcon}
               alt={showPassword ? "비밀번호 보임" : "비밀번호 숨김"}
               className="password-icon5"
             />
@@ -380,7 +326,6 @@ function Signup() {
         </div>
         {passwordMessage && <p className="password-error-message">{passwordMessage}</p>}
 
-        {/* 관리자명 */}
         <label>관리자명</label>
         <div className="my-duplicate-group">
           <input
@@ -393,8 +338,6 @@ function Signup() {
             required
           />
 
-          {/* 직업: 의사 / 관리자 */}
-
           <label>
             <select name="role"
               value={formData.role}
@@ -405,7 +348,6 @@ function Signup() {
             </select>
           </label>
         </div>
-        {/* 이메일: (이메일 아이디 + @ + 도메인) */}
         <label>이메일</label>
         <div className="flex-row">
           <input
@@ -433,7 +375,6 @@ function Signup() {
           />
         </div>
 
-        {/* 기관명 + 검색 버튼 */}
         <label>기관명</label>
         <div className="flex-row">
           <input
@@ -453,7 +394,6 @@ function Signup() {
           </button>
         </div>
 
-        {/* 주소 */}
         <div className="input-group">
           <label></label>
           <input
@@ -466,13 +406,11 @@ function Signup() {
           />
         </div>
 
-        {/* 제출 버튼 */}
         <button type="submit" className="submit-btn">
           회원가입
         </button>
       </form>
 
-      {/* 모달 */}
       {showModal && (
         <div className="search-modal1">
           <div className="modal-header">

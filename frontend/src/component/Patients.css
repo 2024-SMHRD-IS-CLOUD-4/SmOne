@@ -17,7 +17,7 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  padding: 6px 10px;
+  padding: 6px 11px;
   background-color: #333;
   color: white;
   border: none;
@@ -31,11 +31,6 @@
   background-color: #666;
 }
 
-/* .form-wrapper {
-    max-width: 500px;
-    width: 100%;
-  } */
-
 .title {
   align-items: center;
   font-size: 40px;
@@ -44,7 +39,6 @@
 }
 
 .patient-title {
-  /* align-items: center; */
   font-size: 32px;
   margin-bottom: 27px;
   margin-top: 3px;
@@ -54,30 +48,24 @@
 
 .name-and-gender-group {
   display: flex;
-  /* 한 줄로 배치 */
   align-items: center;
-  /* 세로 정렬 */
   gap: 20px;
-  /* 이름과 성별 버튼 사이 간격 */
   margin-bottom: 15px;
 }
 
 .name-group {
   display: flex;
   flex-direction: column;
-  /* 라벨과 입력 필드 세로 배치 */
 }
 
 .gender-group {
   display: flex;
   flex-direction: column;
-  /* 라벨과 버튼 세로 배치 */
 }
 
 .radio-group {
   display: flex;
   gap: 10px;
-  /* 성별 버튼 간격 */
   margin-top: 25px;
 }
 
@@ -96,7 +84,6 @@
 
 .patient-name {
   width: 308px;
-  /* 이름 입력 칸 넓이 */
   height: 20px;
   padding: 10px;
   border: 1px solid #ccc;
@@ -194,7 +181,6 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  /* 필드와 대시(-) 간격 */
   margin-bottom: 10px;
 }
 
@@ -218,19 +204,16 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  /* 필드와 대시(-) 간격 */
   margin-bottom: 15px;
 }
 
 .resident-number-box {
   width: 225px;
-  /* 필드 너비 */
   height: 20px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   text-align: center;
-  /* 숫자 가운데 정렬 */
 }
 
 .resident-number-dash {

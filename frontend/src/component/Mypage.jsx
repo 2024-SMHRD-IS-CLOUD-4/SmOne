@@ -3,19 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { KakaoMapContext } from "../App";
 import axios from "axios";
 import "./Mypage.css";
-import Menu from "./Menu"; // Menu.jsx 추가
+import Menu from "./Menu";
 
 function Mypage() {
   const navigate = useNavigate();
-  const kakaoMaps = useContext(KakaoMapContext); // ✅ Context에서 API 가져오기
-  // 이메일을 아이디/도메인으로 분리 예시
+  const kakaoMaps = useContext(KakaoMapContext);
   const [userData, setUserData] = useState({
     userId: "",
     userName: "",
     role: "",
     emailLocal: "",
     emailDomain: "",
-    centerId: "",  // 검색어(기관명)로도 사용
+    centerId: "",
     address: ""
   });
 
@@ -61,7 +60,6 @@ function Mypage() {
     setUserData(prev => ({ ...prev, [name]: value }));
   };
 
-  // 입력값 검증 (간단 예시)
   const validateInputs = () => {
     const { userName, role, emailLocal, emailDomain, centerId, address } = userData;
     if (!userName.trim() || !role.trim() || !emailLocal.trim() || !emailDomain.trim() || !centerId.trim() || !address.trim()) {
@@ -77,7 +75,6 @@ function Mypage() {
     return true;
   };
 
-  // 정보 수정
   const handleUpdate = async () => {
     if (!validateInputs()) return;
 
@@ -85,7 +82,7 @@ function Mypage() {
 
     const sendData = {
       ...userData,
-      email: fullEmail  // 최종 email만 합쳐서 백엔드 전달
+      email: fullEmail
     };
     try {
       await axios.put(`${process.env.REACT_APP_DB_URL}/users/update`, sendData, {
@@ -99,17 +96,14 @@ function Mypage() {
     }
   };
 
-  // X 버튼 동작
   const handleBackToMain = () => {
-    navigate("/main"); // ✅ 단순히 메인 페이지로 이동
+    navigate("/main");
   };
 
-  // 비밀번호 변경 페이지로 이동
   const handlePasswordChangePage = () => {
     navigate("/findpw");
   };
 
-  // 회원 탈퇴
   const handleDelete = async () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/delete`, {
@@ -131,14 +125,13 @@ function Mypage() {
     }
   };
 
-  // 기관명 검색
   const handleSearchCenter = () => {
     if (!userData.centerId.trim()) {
       alert("기관명을 입력하세요!");
       return;
     }
 
-    if (kakaoMaps) { // ✅ undefined 방지
+    if (kakaoMaps) {
       const ps = new kakaoMaps.services.Places();
       ps.keywordSearch(userData.centerId, (data, status) => {
         if (status === kakaoMaps.services.Status.OK) {
@@ -153,7 +146,6 @@ function Mypage() {
     }
   };
 
-  // 모달 뜨면 지도 초기화
   useEffect(() => {
     if (showModal) {
       const mapContainer = document.getElementById("map");
@@ -185,9 +177,9 @@ function Mypage() {
 
   return (
     <>
-      <Menu /> {/* Menu 추가 */}
+      <Menu />
       <div className="mypage-container">
-        <button className="back-btn" onClick={handleBackToMain}>X</button> {/* ✅ X 버튼 추가 */}
+        <button className="back-btn" onClick={handleBackToMain}>X</button>
         <h2 className="mypage-title">마이페이지</h2>
 
         <form className="mypage-form">
@@ -276,10 +268,9 @@ function Mypage() {
           </div>
         </form>
 
-        {/* 탈퇴 모달 */}
         {showDeleteModal && (
           <>
-            <div className="modal-overlay"></div> {/* ✅ 배경 어둡게 */}
+            <div className="modal-overlay"></div>
             <div className="delete-modal">
               <div className="modal-content">
                 <div className="modal-header">
@@ -310,7 +301,6 @@ function Mypage() {
 
 
 
-        {/* 지도/검색 모달 */}
         {showModal && (
           <div className="search-modal">
             <div className="modal-header">
@@ -325,11 +315,10 @@ function Mypage() {
                     <li
                       key={i}
                       onClick={() => {
-                        // ▼ place_name => centerId / address_name => address
                         setUserData(prev => ({
                           ...prev,
-                          centerId: place.place_name,    // 클릭 시 기관명에 결과명 반영
-                          address: place.address_name    // 주소 필드도 세팅
+                          centerId: place.place_name,
+                          address: place.address_name
                         }));
                         alert(`선택된 주소: ${place.address_name}`);
                         closeModal();
