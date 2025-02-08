@@ -2,7 +2,6 @@ package com.smhrd.smone.controller;
 
 import com.smhrd.smone.model.Patients;
 import com.smhrd.smone.model.User;
-import com.smhrd.smone.service.KakaoGeocodeService;
 import com.smhrd.smone.service.PatientsService;
 import com.smhrd.smone.service.UserService;
 
@@ -25,8 +24,7 @@ public class PatientsController {
     @Autowired
     private PatientsService patientsService;
 
-    @Autowired
-    private KakaoGeocodeService geoService;
+
 
     @Autowired
     private UserService userService; // 로그인 사용자 정보 조회용
@@ -47,19 +45,6 @@ public class PatientsController {
 
             System.out.println("받은 데이터(등록): " + patient);
 
-            // (B) 주소 전처리 + 지오코딩
-            String fullAddr = patient.getPAdd();
-            if (fullAddr != null && !fullAddr.isBlank()) {
-                String baseAddr = refineAddress(fullAddr);
-                if (baseAddr != null && !baseAddr.isBlank()) {
-                    Double[] latlng = geoService.getLatLngFromAddress(baseAddr);
-                    if (latlng != null) {
-                        patient.setPLat(latlng[0]);
-                        patient.setPLng(latlng[1]);
-                    }
-                }
-            }
-
             // (C) 본인 센터 ID 세팅
             String centerId = user.getCenterId();
             patient.setCenterId(centerId);
@@ -78,7 +63,7 @@ public class PatientsController {
 
     // [2] 환자 수정
     @PutMapping("/update/{pIdx}")
-    public ResponseEntity<?> updatePatient(@PathVariable("pIdx") Integer pIdx,
+    public ResponseEntity<?> updatePatient(@PathVariable Integer pIdx,
                                            @RequestBody Patients newData,
                                            HttpSession session) {
         try {
@@ -92,26 +77,11 @@ public class PatientsController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("존재하지 않는 사용자입니다.");
             }
 
-            System.out.println("받은 데이터(수정): " + newData);
-
-            // (B) 주소 전처리 + 지오코딩
-            String fullAddr = newData.getPAdd();
-            if (fullAddr != null && !fullAddr.isBlank()) {
-                String baseAddr = refineAddress(fullAddr);
-                if (baseAddr != null && !baseAddr.isBlank()) {
-                    Double[] latlng = geoService.getLatLngFromAddress(baseAddr);
-                    if (latlng != null) {
-                        newData.setPLat(latlng[0]);
-                        newData.setPLng(latlng[1]);
-                    }
-                }
-            }
-
             // (C) 본인 센터 ID
             String centerId = user.getCenterId();
 
             // (D) 업데이트
-            patientsService.updatePatient(centerId, pIdx, newData);
+            patientsService.updatePatientWithoutGeocoding(centerId, pIdx, newData);
 
             return ResponseEntity.ok("환자 정보가 수정되었습니다.");
 

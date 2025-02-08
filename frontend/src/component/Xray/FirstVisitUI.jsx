@@ -149,7 +149,7 @@ function FirstVisitUI({
                       <img
                         src={plusIcon}
                         alt="plus-icon"
-                        style={{ width: "60%", height: "60%" }}
+                        className="plus-icon"
                       />
                     </span>
                   </div>

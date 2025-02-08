@@ -5,13 +5,11 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.smhrd.smone.config.NaverCloudConfig;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -27,7 +25,7 @@ public class NaverS3Service {
 
         this.s3Client = AmazonS3ClientBuilder.standard()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(
-                        "https://kr.object.ncloudstorage.com",  // ✅ 엔드포인트 확인!
+                        "https://kr.object.ncloudstorage.com",
                         "kr-standard"
                 ))
                 .withCredentials(new AWSStaticCredentialsProvider(
@@ -48,12 +46,9 @@ public String uploadFile(MultipartFile file) throws IOException {
     metadata.setContentLength(file.getSize());
     metadata.setContentType(file.getContentType());
 
-    // S3에 파일 업로드
-    s3Client.putObject(bucketName, uniqueFileName, file.getInputStream(), metadata);
-
-    // 업로드된 파일의 URL 반환
-    return generateFileUrl(uniqueFileName);
-}
+        // S3에 파일 업로드
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata)
+        		.withCannedAcl(CannedAccessControlList.PublicRead));
 
 
 }

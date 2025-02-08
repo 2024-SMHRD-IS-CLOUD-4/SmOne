@@ -67,10 +67,6 @@ function PrintPage() {
         <div className="report-header">
           <h2>{centerId || "(기관명)"} 소견서</h2>
           <button className="printpage-close-btn" onClick={() => navigate(-1)}>X</button>
-          <p style={{ textAlign: "right", marginTop: "20px", marginBottom: "-15px", color: "gray" }}>
-            발행일자: {printDateStr}
-          </p>
-
         </div>
 
         <table className="grid-table">
@@ -106,15 +102,30 @@ function PrintPage() {
               <th>주소</th>
               <td colSpan="3" className="long-text">{patient?.pAdd || "N/A"}</td>
             </tr>
+
           </tbody>
         </table>
-
         <table className="grid-table">
-          {/* ✅ 세 번째 테이블: 질병분류, 처방인 성명, 근처병원, 치료소견 */}
           <tbody>
             <tr>
-              <th rowSpan="2" className="highlight-cell">치료소견</th>
-              <td colSpan="6" className="xray-cell">
+              <th className="highlight-cell">질병분류</th>
+              <td colSpan="4">{aiResult || "(진단없음)"}</td>
+            </tr>
+            <tr>
+              <th className="highlight-cell">처방인 성명</th>
+              <td colSpan="4">{userName || "(담당 의사)"}</td>
+            </tr>
+            <tr>
+              <th className="highlight-cell">근처 병원</th>
+              <td colSpan="4">
+                {selectedHospital
+                  ? `${selectedHospital.hosName} / ${selectedHospital.hosAdd}`
+                  : "(선택된 병원 없음)"}
+              </td>
+            </tr>
+            <tr>
+              <th colSpan="" className="highlight-cell">X-ray 사진</th>
+              <th colSpan="4" className="xray-cell">
                 {bigPreview ? (
                   <img
                     src={bigPreview}
@@ -124,10 +135,19 @@ function PrintPage() {
                 ) : (
                   <p>(X-ray 미리보기 없음)</p>
                 )}
-              </td>
+              </th>
             </tr>
           </tbody>
         </table>
+        <table className="grid-table">
+          {/* ✅ 세 번째 테이블: 질병분류, 처방인 성명, 근처병원, 치료소견 */}
+          <tbody>
+
+          </tbody>
+        </table>
+        <p className="print-date">
+          발행일자: {printDateStr}
+        </p>
 
       </div>
     </div>

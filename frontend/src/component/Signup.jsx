@@ -3,6 +3,8 @@ import { KakaoMapContext } from "../App"; // 🔥 App.js의 Context 가져오기
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Signup.css";
+import hiddenIcon from './png/001.png';
+import visibleIcon from './png/002.png';
 
 function Signup() {
   const navigate = useNavigate(KakaoMapContext);
@@ -37,6 +39,15 @@ function Signup() {
   // 사용자가 최종으로 선택한 장소 (리스트 클릭 시 세팅)
   const [selectedPlace, setSelectedPlace] = useState(null);
 
+  // 👁 비밀번호 표시 상태 추가
+  const [showPassword, setShowPassword] = useState(false);
+
+  // 👁 비밀번호 표시 버튼 클릭 시 상태 변경
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+
   // 입력 변경 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,8 +72,11 @@ function Signup() {
       if (res.data) {
         setIsDuplicate(true);  // ✅ 중복이면 상태 변경
         setShake(true);  // 🚨 흔들림 효과 추가해야 하지만 누락됨!
-        setIdCheckMessage("중복된 아이디입니다.");
+        setIdCheckMessage("중복된 아이디입니다람쥐.");
+        setTimeout(() => setShake(false), 500); // 0.5초 후 초기화
       } else {
+        setIsDuplicate(false);
+        setIdCheckMessage(""); // ✅ 메시지 초기화
         alert("사용 가능한 아이디 입니다.");
       }
     } catch (error) {
@@ -181,61 +195,61 @@ function Signup() {
     });
   };
 
-// 모달 열릴 때 / places 바뀔 때 => 지도 생성 & 마커 표시
-useEffect(() => {
-  // 모달이 열렸고, 검색 결과가 있을 때만 지도 생성
-  if (showModal && places.length > 0) {
-    const container = document.getElementById("map");
-    if (!container) return;
+  // 모달 열릴 때 / places 바뀔 때 => 지도 생성 & 마커 표시
+  useEffect(() => {
+    // 모달이 열렸고, 검색 결과가 있을 때만 지도 생성
+    if (showModal && places.length > 0) {
+      const container = document.getElementById("map");
+      if (!container) return;
 
-    // 지도 생성: 첫 검색 결과를 기준으로 초기 center 설정
-    const mapOptions = {
-      center: new window.kakao.maps.LatLng(places[0].y, places[0].x),
-      level: 5
-    };
-    const createdMap = new window.kakao.maps.Map(container, mapOptions);
-    setMap(createdMap);
+      // 지도 생성: 첫 검색 결과를 기준으로 초기 center 설정
+      const mapOptions = {
+        center: new window.kakao.maps.LatLng(places[0].y, places[0].x),
+        level: 5
+      };
+      const createdMap = new window.kakao.maps.Map(container, mapOptions);
+      setMap(createdMap);
 
-    // 마커들 생성
-    const bounds = new window.kakao.maps.LatLngBounds();
-    const tempMarkers = [];
+      // 마커들 생성
+      const bounds = new window.kakao.maps.LatLngBounds();
+      const tempMarkers = [];
 
-    places.forEach((place) => {
-      const position = new window.kakao.maps.LatLng(place.y, place.x);
-      const marker = new window.kakao.maps.Marker({
-        position,
-      });
-      marker.setMap(createdMap);
-      bounds.extend(position);
+      places.forEach((place) => {
+        const position = new window.kakao.maps.LatLng(place.y, place.x);
+        const marker = new window.kakao.maps.Marker({
+          position,
+        });
+        marker.setMap(createdMap);
+        bounds.extend(position);
 
-      // InfoWindow (마우스오버 시 표시)
-      const infowindow = new window.kakao.maps.InfoWindow({
-        content: `
+        // InfoWindow (마우스오버 시 표시)
+        const infowindow = new window.kakao.maps.InfoWindow({
+          content: `
           <div style="padding:4px;font-size:13px;color:#000;font-weight:bold;">
             ${place.place_name}
           </div>
         `,
+        });
+
+        // 마커 호버 이벤트
+        window.kakao.maps.event.addListener(marker, "mouseover", () => {
+          infowindow.open(createdMap, marker);
+        });
+        window.kakao.maps.event.addListener(marker, "mouseout", () => {
+          infowindow.close();
+        });
+
+        // marker 배열에 push
+        tempMarkers.push({ marker, infowindow, place });
       });
 
-      // 마커 호버 이벤트
-      window.kakao.maps.event.addListener(marker, "mouseover", () => {
-        infowindow.open(createdMap, marker);
-      });
-      window.kakao.maps.event.addListener(marker, "mouseout", () => {
-        infowindow.close();
-      });
+      // 모든 마커가 보이도록 지도 범위 설정
+      createdMap.setBounds(bounds);
 
-      // marker 배열에 push
-      tempMarkers.push({ marker, infowindow, place });
-    });
-
-    // 모든 마커가 보이도록 지도 범위 설정
-    createdMap.setBounds(bounds);
-
-    // state에 저장 (나중에 리스트 클릭 시 참조)
-    setMarkers(tempMarkers);
-  }
-}, [showModal, places]);
+      // state에 저장 (나중에 리스트 클릭 시 참조)
+      setMarkers(tempMarkers);
+    }
+  }, [showModal, places]);
 
   // 모달 닫기
   const closeModal = () => {
@@ -246,68 +260,68 @@ useEffect(() => {
     setSelectedPlace(null);
   };
 
-    // 목록에서 특정 장소를 클릭하면 => 지도 이동 & 마커 InfoWindow 열기
-    const handleListClick = (place) => {
-      if (!map || !markers.length) return;
-  
-      // 선택된 place 저장(완료시 사용)
-      setSelectedPlace(place);
-  
-      map.setLevel(3);
-      // 지도 이동 (더 확대해서 보여주고 싶다면 level 조정)
-      const moveLatLng = new window.kakao.maps.LatLng(place.y, place.x);
-      panToWithOffset(map, moveLatLng, -150, 0); 
-      
-  
-      // 해당 place의 마커를 찾아서 infowindow 열기
-      markers.forEach(({ marker, infowindow, place: p }) => {
-        if (p.id === place.id) {
-          // 해당 마커의 infowindow 열기
-          infowindow.open(map, marker);
-        } else {
-          // 나머지 마커 infowindow는 닫기
-          infowindow.close();
-        }
-      });
-    };
-  
-    function panToWithOffset(map, latlng, offsetX, offsetY) {
-      // (1) Projection 객체: 위/경도 → 화면 픽셀 좌표 변환
-      const projection = map.getProjection();
-    
-      // (2) 현재 latlng를 지도 픽셀 좌표로 변환
-      const point = projection.pointFromCoords(latlng);
-    
-      // (3) point에 오프셋 적용 (x·y 각각 더하기)
-      const adjustedPoint = new window.kakao.maps.Point(
-        point.x + offsetX,
-        point.y + offsetY
-      );
-    
-      // (4) 다시 지도 좌표(latlng)로 역변환
-      const newLatLng = projection.coordsFromPoint(adjustedPoint);
-    
-      // (5) 지도 중심 이동
-      map.setCenter(newLatLng);
-    }
-  
-    // “완료” 버튼 => 실제로 formData에 주소 반영 + 모달 닫기
-    const handleComplete = () => {
-      if (!selectedPlace) {
-        alert("목록에서 장소를 먼저 선택하세요.");
-        return;
+  // 목록에서 특정 장소를 클릭하면 => 지도 이동 & 마커 InfoWindow 열기
+  const handleListClick = (place) => {
+    if (!map || !markers.length) return;
+
+    // 선택된 place 저장(완료시 사용)
+    setSelectedPlace(place);
+
+    map.setLevel(3);
+    // 지도 이동 (더 확대해서 보여주고 싶다면 level 조정)
+    const moveLatLng = new window.kakao.maps.LatLng(place.y, place.x);
+    panToWithOffset(map, moveLatLng, -150, 0);
+
+
+    // 해당 place의 마커를 찾아서 infowindow 열기
+    markers.forEach(({ marker, infowindow, place: p }) => {
+      if (p.id === place.id) {
+        // 해당 마커의 infowindow 열기
+        infowindow.open(map, marker);
+      } else {
+        // 나머지 마커 infowindow는 닫기
+        infowindow.close();
       }
-  
-      // 선택된 place로 기관명, address 업데이트
-      setFormData((prev) => ({
-        ...prev,
-        centerId: selectedPlace.place_name,
-        address: selectedPlace.address_name
-      }));
-  
-      alert(`선택된 주소: ${selectedPlace.address_name}`);
-      closeModal();
-    };
+    });
+  };
+
+  function panToWithOffset(map, latlng, offsetX, offsetY) {
+    // (1) Projection 객체: 위/경도 → 화면 픽셀 좌표 변환
+    const projection = map.getProjection();
+
+    // (2) 현재 latlng를 지도 픽셀 좌표로 변환
+    const point = projection.pointFromCoords(latlng);
+
+    // (3) point에 오프셋 적용 (x·y 각각 더하기)
+    const adjustedPoint = new window.kakao.maps.Point(
+      point.x + offsetX,
+      point.y + offsetY
+    );
+
+    // (4) 다시 지도 좌표(latlng)로 역변환
+    const newLatLng = projection.coordsFromPoint(adjustedPoint);
+
+    // (5) 지도 중심 이동
+    map.setCenter(newLatLng);
+  }
+
+  // “완료” 버튼 => 실제로 formData에 주소 반영 + 모달 닫기
+  const handleComplete = () => {
+    if (!selectedPlace) {
+      alert("목록에서 장소를 먼저 선택하세요.");
+      return;
+    }
+
+    // 선택된 place로 기관명, address 업데이트
+    setFormData((prev) => ({
+      ...prev,
+      centerId: selectedPlace.place_name,
+      address: selectedPlace.address_name
+    }));
+
+    alert(`선택된 주소: ${selectedPlace.address_name}`);
+    closeModal();
+  };
 
   return (
     <div className="signup-container">
@@ -323,8 +337,7 @@ useEffect(() => {
           <input
             type="text"
             name="userId"
-            className={`userid_join ${shake ? "shake" : ""} ${isDuplicate ? "error-border1" : idCheckMessage ? "success-border1" : ""
-              }`}
+            className={`userid_join ${shake ? "shake" : ""} ${isDuplicate ? "error-border1" : ""}`}
             placeholder="아이디"
             value={formData.userId}
             onChange={handleChange}
@@ -339,7 +352,7 @@ useEffect(() => {
 
         {/* ✅ 중복 체크 결과 메시지 추가 */}
         {idCheckMessage && (
-          <p className={isDuplicate ? "error-message1" : "success-message1"}>
+          <p className={isDuplicate ? "error-message1" : ""}>
             {idCheckMessage}
           </p>
         )}
@@ -348,7 +361,7 @@ useEffect(() => {
         <label>비밀번호</label>
         <div className={`pw-duplicate-group ${passwordError ? "shake" : ""}`}>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"} // 👁 클릭 시 보이기/숨기기
             name="userPw"
             className={`userpw_join ${passwordError ? "error-border1" : ""}`}
             placeholder="비밀번호"
@@ -356,6 +369,14 @@ useEffect(() => {
             onChange={handlePasswordChange}
             required
           />
+          {/* 👁 비밀번호 보기 버튼 */}
+          <button type="button" className="toggle-password-btn5" onClick={togglePasswordVisibility}>
+            <img
+              src={showPassword ? visibleIcon : hiddenIcon} // 상태에 따라 아이콘 변경
+              alt={showPassword ? "비밀번호 보임" : "비밀번호 숨김"}
+              className="password-icon5"
+            />
+          </button>
         </div>
         {passwordMessage && <p className="password-error-message">{passwordMessage}</p>}
 
@@ -404,7 +425,7 @@ useEffect(() => {
             type="text"
             name="emailDomain"
             className="email-domain-part"
-            placeholder="(예 : gmail.com)"
+            placeholder="예 : gmail.com"
             value={formData.emailDomain}
             onChange={handleChange}
             style={{ flex: 1 }}

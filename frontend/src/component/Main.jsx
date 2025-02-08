@@ -10,6 +10,8 @@ import SecondVisitUI from "./Xray/SecondVisitUI";
 import stethoscopeIcon from "./png/stethoscope.png";
 import magnifyingGlassIcon from "./png/magnifying-glass.png";
 import documentIcon from "./png/document.png"; // 추가
+import patientIcon from "./png/patientedit.png";
+import trashIcon from "./png/trash.png";
 
 function Main() {
   const navigate = useNavigate();
@@ -64,8 +66,6 @@ function Main() {
     }
   };
 
-
-
   // 환자 목록 불러오기
   useEffect(() => {
     axios
@@ -96,6 +96,14 @@ function Main() {
     };
   },);
 
+  // 이미지 미리보기
+  useEffect(() => {
+    if (oldImages.length > 0) {
+      setOldBigPreview(oldImages[0]?.imgPath || null);
+    } else {
+      setOldBigPreview(null);
+    }
+  }, [oldImages]);
   // 검색
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -182,7 +190,13 @@ function Main() {
         alert("등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.");
         return;
     }
-
+    navigate("/loading", {
+      state: {
+        patient: selectedPatient,
+        newlyUploaded: newImages.map((img) => img.file.name),
+        bigFilename: selectedNewImage.file.name,
+      },
+    });
     try {
         // 1) 📌 Java 서버에 X-ray 업로드
         const formData = new FormData();
@@ -281,7 +295,6 @@ function Main() {
     setNewImages(data.newImages || []);
     setSelectedNewImage(data.selectedNewImage || null);
     setNewBigPreview(data.newBigPreview || null);
-
 
     // 날짜별 X-ray 다시 로드
     if (data.selectedDate) {
@@ -455,7 +468,6 @@ function Main() {
     }
   }
 
-
   // Edit / Delete
   const handleEditPatient = (thePatient) => {
     navigate(`/patients/edit/${thePatient.pIdx}`);
@@ -615,7 +627,6 @@ function Main() {
             )}
           </div>
 
-
           {selectedPatient && (
             <div className="patient-detail">
               <h2 style={{ marginLeft: 10 }}>환자 정보</h2>
@@ -648,8 +659,12 @@ function Main() {
               </table>
 
               <div className="patient-detail-actions">
-                <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>수정</button>
-                <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>삭제</button>
+                <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>
+                  <img src={patientIcon} alt="수정" className="edit-icon" />
+                </button>
+                <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>
+                  <img src={trashIcon} alt="삭제" className="trash-icon" />
+                </button>
               </div>
             </div>
           )}

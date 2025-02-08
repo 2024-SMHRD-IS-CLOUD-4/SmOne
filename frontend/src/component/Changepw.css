@@ -11,6 +11,7 @@
   padding: 30px 25px;
   color: #fff;
   text-align: center;
+  transition: height 0.2s ease-in-out; /* ✅ 부드러운 높이 변경 */
 }
 
 .changepw-form {
@@ -74,7 +75,7 @@
 h1 {
   color: #ffffff;
   font-size: 32px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 /* form {
@@ -131,7 +132,7 @@ input:focus {
 }
   /* 비밀번호 변경 버튼 */
   .changepw_btn {
-    margin-top: 10px;
+    margin-top: 35px;
     padding: 12px;
     border: none;
     border-radius: 4px;
@@ -166,3 +167,103 @@ input:focus {
   .changepw-close-btn:hover {
     background-color: #666;
   }
+
+  /* 흔들림 애니메이션 */
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* 흔들림 효과 */
+.shake {
+  animation: shake 0.3s ease-in-out;
+}
+
+/* 오류 메시지 스타일 */
+.password-error-message {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 5px;
+}
+
+/* 오류 입력 필드 스타일 */
+.error-border1 {
+  border: 2px solid red !important;
+  transition: border 0.2s ease-in-out;
+}
+
+/* 비밀번호 입력 필드 컨테이너 */
+.password-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+/* 비밀번호 입력 필드 */
+.changepw-pw1,
+.changepw-pw2 {
+  width: 100%;
+  padding-right: 40px; /* 👁 아이콘 공간 확보 */
+  padding-left: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 44px;
+}
+
+/* 👁 비밀번호 보기 아이콘 (입력 칸 내부 고정) */
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  top: 245px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+/* 👁 비밀번호 보기 아이콘 (입력 칸 내부 위치) */
+.password-icon {
+  position: absolute;
+  right: 10px;
+  width: 25px;
+  height: 15px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+/* 새 비밀번호 입력 필드 아이콘 */
+.password-icon-pw3 {
+  top: -230px; /* 입력 칸 내부 정렬 */
+  right: 0px;
+}
+
+/* 새 비밀번호 확인 입력 필드 아이콘 */
+.password-icon-pw4 {
+  right: 23px;
+}
+
+/* 👁 아이콘 호버 효과 */
+.password-icon:hover {
+  opacity: 0.7;
+}
