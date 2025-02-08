@@ -51,7 +51,7 @@ function SecondVisitUI({
 
   const handleOldThumbClick = (item) => {
     setSelectedOldImage(item);
-    setOldBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${item.imgPath}`);
+    setOldBigPreview(item.imgPath);
     setOldBaseScale(1);
     setOldZoom(1);
     setOldOffsetX(0);

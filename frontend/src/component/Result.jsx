@@ -21,7 +21,7 @@ function Result() {
 
   // 넘어온 state
   const patient = location.state?.patient || null;
-  const [aiResult, setAiResult] = useState(location.state?.aiResult || "정상");
+  const [aiResult, setAiResult] = useState(location.state?.aiResult || "결과를 불러오는 중...");
   const newlyUploaded = location.state?.newlyUploaded || [];
   // const bigFilename = location.state?.bigFilename || null;
   const fromHistory = location.state?.fromHistory || false;
