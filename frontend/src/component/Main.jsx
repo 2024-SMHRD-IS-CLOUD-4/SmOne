@@ -234,13 +234,20 @@ function Main() {
           }
       );
 
+
+
         console.log("FastAPI 진단 결과:", fastApiResponse.data);
+        console.log("📌 FastAPI에서 받은 진단 결과:", fastApiResponse.data.diagnosis);
+
+         // 🔥 여기서 `result` 객체를 명확하게 가져옴
+         const diagnosisResult = fastApiResponse.data?.result?.diagnosis || "진단 실패";
+         console.log("📌 FastAPI에서 받은 진단 결과:", diagnosisResult);
 
         // 3) 📌 결과 페이지로 이동
         navigate("/result", {
             state: {
                 patient: selectedPatient,
-                aiResult: fastApiResponse.data.diagnosis,  // FastAPI에서 받은 진단 결과
+                aiResult: fastApiResponse.data?.result?.diagnosis,   // FastAPI에서 받은 진단 결과
                 newlyUploaded: newImages.map((img) => img.file.name),
                 bigFilename,
                 fromHistory: false,

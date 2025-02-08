@@ -21,7 +21,24 @@ function Result() {
 
   // 넘어온 state
   const patient = location.state?.patient || null;
-  const [aiResult, setAiResult] = useState(location.state?.aiResult || "결과를 불러오는 중...");
+  const [aiResult, setAiResult] = useState(location.state?.aiResult || "진단 결과 없음");
+
+    // 🔽🔽🔽 여기에 useEffect 추가 🔽🔽🔽
+    useEffect(() => {
+      console.log("📌 Result 페이지에서 location.state.aiResult:", location.state?.aiResult);
+      
+      if (location.state?.aiResult) {
+        console.log("📌 AI 진단 결과 업데이트됨:", location.state.aiResult);
+        setAiResult(location.state.aiResult);
+      } else {
+        console.warn("⚠️ AI 진단 결과가 undefined로 들어옴!");
+      }
+    }, [location.state?.aiResult]);
+
+  
+  console.log("📌 FastAPI에서 받아온 AI 진단 결과:", location.state?.aiResult);
+  console.log("📌 Result 페이지에서 초기 aiResult 상태값:", aiResult);
+
   const newlyUploaded = location.state?.newlyUploaded || [];
   // const bigFilename = location.state?.bigFilename || null;
   const fromHistory = location.state?.fromHistory || false;
@@ -78,6 +95,8 @@ function Result() {
       ctx.lineWidth = lineWidth;
     }
   }, [color, bigPreview]);
+
+  
 
   // ✅ 색상 및 굵기 변경 시 기존 그림을 유지하며 새로운 설정 적용
   useEffect(() => {
