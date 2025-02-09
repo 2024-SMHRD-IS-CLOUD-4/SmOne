@@ -352,3 +352,10 @@
   margin-top: 15px;
   margin-bottom: -15px;
 }
+/* ✅ 메인화면 버튼 아이콘 스타일 */
+.home-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 3px;
+  vertical-align: middle;
+}

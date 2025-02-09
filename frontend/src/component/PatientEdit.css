@@ -390,6 +390,9 @@
 }
 .edit-modal-content p {
   margin-bottom: 20px;
+  font-weight: bold; /* 글씨를 굵게 표시 */
+  font-size: 16px; /* 글씨 크기 조정 */
+  color: black; /* 가독성을 위한 검정색 적용 */
 }
 
 .edit-modal-content button {

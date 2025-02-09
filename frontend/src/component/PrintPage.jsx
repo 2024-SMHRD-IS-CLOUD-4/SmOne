@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./PrintPage.css";
 import printerImg from "./png/printerimg.png";
+import houseIcon from "./png/house.png";
 
 function generateDocNo() {
   const now = new Date();
@@ -48,7 +49,10 @@ function PrintPage() {
       <div className="print-topbar">
         <h2> </h2>
         <div className="print_header">
-          <button className="print_btn1" onClick={handleBack}>메인 페이지로</button>
+          <button className="print_btn1" onClick={handleBack}>
+            <img src={houseIcon} alt="홈" className="home-icon" /> {/* ✅ 홈 아이콘 추가 */}
+            메인화면
+          </button>
           <button className="print_btn2" onClick={handlePrint}>
             <img src={printerImg} alt="프린터 아이콘" className="printer-icon" />
             인쇄하기
