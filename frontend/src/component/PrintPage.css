@@ -227,13 +227,18 @@
   height: 500px;
   text-align: center;
   vertical-align: middle;
+  position: relative;
 }
 
 .xray-cell img {
+  max-width: 100%;
+  max-height: 100%;
+  /* position: absolute;
   display: block;
-  margin: 0 auto;
-  width: 500px;
-  height: 300px;
+  margin: 10px 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
 }
 
 .diagnosis-cell {

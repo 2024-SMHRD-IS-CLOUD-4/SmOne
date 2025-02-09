@@ -12,6 +12,7 @@ import magnifyingGlassIcon from "./png/magnifying-glass.png";
 import documentIcon from "./png/document.png"; // 추가
 import patientIcon from "./png/patientedit.png";
 import trashIcon from "./png/trash.png";
+import warningIcon from "./png/warning.png"; // 경고 아이콘 추가
 
 
 function Main() {
@@ -55,6 +56,13 @@ function Main() {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [hideSearchBar, setHideSearchBar] = useState(false);
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_DB_URL}/patients`)
+      .then(res => setPatients(res.data))
+      .catch(err => console.error(err));
+  }, []);
   const toggleSearchBar = () => {
     if (isSearchVisible) {
       setHideSearchBar(true); // 먼저 fadeOut 애니메이션 실행
@@ -509,7 +517,32 @@ function Main() {
       * 최대5장, 현재 {newImages.length}장
     </div>
   );
+  // 삭제 모달 열기
+  const openDeleteModal = () => {
+    if (!selectedPatient) return;
+    setShowDeleteModal(true);
+    setTimeout(() => setModalVisible(true), 10); // 애니메이션 적용
+  };
 
+  // 삭제 실행
+  const handleDeleteConfirm = async () => {
+    if (!selectedPatient) return;
+
+    try {
+      await axios.delete(`${process.env.REACT_APP_DB_URL}/patients/${selectedPatient.pIdx}`);
+      setPatients(prev => prev.filter(p => p.pIdx !== selectedPatient.pIdx));
+      setSelectedPatient(null);
+      closeDeleteModal();
+    } catch (err) {
+      console.error("삭제 실패:", err);
+    }
+  };
+
+  // 모달 닫기
+  const closeDeleteModal = () => {
+    setModalVisible(false);
+    setTimeout(() => setShowDeleteModal(false), 300); // 애니메이션이 끝난 후 숨김
+  };
   return (
     <div className="main-container" style={{ overflow: "auto" }}>
       <Menu /> {/* Menu.jsx를 왼쪽에 배치 */}
@@ -665,9 +698,21 @@ function Main() {
                 <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>
                   <img src={patientIcon} alt="수정" className="edit-icon" />
                 </button>
-                <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>
+                <button className="delete-button" onClick={openDeleteModal}>
                   <img src={trashIcon} alt="삭제" className="trash-icon" />
                 </button>
+              </div>
+            </div>
+          )}
+          {showDeleteModal && (
+            <div className={`modal-overlay ${modalVisible ? "visible" : ""}`}>
+              <div className="modal-content">
+                <img src={warningIcon} alt="경고" className="warning-icon" /> {/* 경고 아이콘 추가 */}
+                <p>정말 [{selectedPatient?.pName}] 환자를 삭제하시겠습니까?</p>
+                <div className="modal-buttons">
+                  <button className="modal-button confirm" onClick={handleDeleteConfirm}>삭제</button>
+                  <button className="modal-button cancel" onClick={closeDeleteModal}>취소</button>
+                </div>
               </div>
             </div>
           )}

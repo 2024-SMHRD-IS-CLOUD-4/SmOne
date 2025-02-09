@@ -121,7 +121,6 @@ function PrintPage() {
                   <img
                     src={bigPreview}
                     alt="X-ray"
-                    style={{ width: "300px", height: "auto", display: "block", margin: "10px 0" }}
                   />
                 ) : (
                   <p>(X-ray 미리보기 없음)</p>
