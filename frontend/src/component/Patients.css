@@ -231,3 +231,72 @@
   margin-bottom: 12px;
   display: block;
 }
+/* ✅ 환자 등록 완료 모달 오버레이 */
+.patient-success-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ 환자 등록 완료 모달 */
+.patient-success-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 350px;
+  opacity: 0;
+  animation: patient-modal-fade-in 0.3s ease-in-out forwards;
+}
+
+/* ✅ 체크마크 아이콘 스타일 */
+.patient-success-icon {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 50x; /* 아이콘과 텍스트 간격 */
+  margin-top: 10px;
+}
+
+/* ✅ 환자 등록 완료 텍스트 */
+.patient-success-modal p {
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+/* ✅ 모달 닫기 버튼 */
+.patient-success-modal button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #333;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.patient-success-modal button:hover {
+  background-color: #666;
+}
+
+/* ✅ 모달 애니메이션 */
+@keyframes patient-modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

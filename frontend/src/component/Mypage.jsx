@@ -4,6 +4,8 @@ import { KakaoMapContext } from "../App";
 import axios from "axios";
 import "./Mypage.css";
 import Menu from "./Menu";
+import warningIcon from "./png/warning.png";
+import checkmarkIcon from "./png/checkmark.png";
 
 function Mypage() {
   const navigate = useNavigate();
@@ -22,7 +24,19 @@ function Mypage() {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState("");
+  const [myShowDeleteModal, setMyShowDeleteModal] = useState(false);
+  const [myDeletePassword, setMyDeletePassword] = useState("");
+  const [myModalClosing, setMyModalClosing] = useState(false); // ✅ 모달 닫기 애니메이션 상태 추가
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // ✅ 수정 완료 모달 상태 추가
 
+  const closeMyDeleteModal = () => {
+    setMyModalClosing(true); // ✅ 애니메이션 적용
+    setTimeout(() => {
+      setMyShowDeleteModal(false);
+      setMyModalClosing(false);
+      setMyDeletePassword("");
+    }, 300); // ✅ 애니메이션 지속 시간 (0.3s) 후 상태 변경
+  };
   useEffect(() => {
 
     const storedUserId = sessionStorage.getItem("userId");
@@ -79,22 +93,43 @@ function Mypage() {
     if (!validateInputs()) return;
 
     const fullEmail = `${userData.emailLocal}@${userData.emailDomain}`;
-
     const sendData = {
       ...userData,
       email: fullEmail
     };
+
     try {
       await axios.put(`${process.env.REACT_APP_DB_URL}/users/update`, sendData, {
         headers: { "Content-Type": "application/json" }
       });
-      alert("정보가 수정되었습니다.");
-      navigate("/main");
+
+      setShowSuccessModal(true); // ✅ 모달 표시
+      setTimeout(() => {
+        setShowSuccessModal(false); // ✅ 3초 후 자동 닫힘
+        navigate("/main");
+      }, 3000);
     } catch (err) {
       console.error(err);
       alert("정보 수정에 실패했습니다.");
     }
   };
+
+  // ✅ 모달 수동 닫기 함수
+  const closeSuccessModal = () => {
+    setShowSuccessModal(false);
+    navigate("/main");
+  };
+
+  {
+    showSuccessModal && (
+      <div className="my-success-modal-overlay" onClick={closeSuccessModal}>
+        <div className="my-success-modal">
+          <p>정보가 수정되었습니다.</p>
+          <button onClick={closeSuccessModal}>확인</button>
+        </div>
+      </div>
+    )
+  }
 
   const handleBackToMain = () => {
     navigate("/main");
@@ -270,36 +305,43 @@ function Mypage() {
 
         {showDeleteModal && (
           <>
-            <div className="modal-overlay"></div>
-            <div className="delete-modal">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h2>회원 탈퇴</h2>
-                </div>
-                <div className="modal-body" style={{ flexDirection: "column", padding: "20px" }}>
-                  <p>비밀번호를 입력해주세요</p>
-                  <input
-                    type="password"
-                    placeholder="비밀번호"
-                    value={deletePassword}
-                    onChange={e => setDeletePassword(e.target.value)}
-                    style={{ width: "100%", marginBottom: "10px" }}
-                  />
-                  <div style={{ textAlign: "right" }}>
-                    <button className="small-btn delete-confirm" onClick={handleDelete} style={{ marginRight: "10px" }}>
-                      탈퇴하기
-                    </button>
-                    <button className="small-btn" onClick={closeDeleteModal}>
-                      취소
-                    </button>
-                  </div>
+            <div className="my-modal-overlay" onClick={closeDeleteModal}></div>
+            <div className="my-delete-modal">
+              <div className="my-modal-header">
+
+              </div>
+              <div className="my-modal-body">
+                <img src={warningIcon} alt="경고" className="my-warning-icon" /> {/* ✅ 경고 아이콘 추가 */}
+                <p>탈퇴하시려면 비밀번호를 입력해주세요</p>
+                <input
+                  type="password"
+                  placeholder="비밀번호"
+                  value={deletePassword}
+                  onChange={e => setDeletePassword(e.target.value)}
+                />
+                <div>
+                  <button className="my-small-btn my-delete-confirm" onClick={handleDelete}>
+                    탈퇴하기
+                  </button>
+                  <button className="my-small-btn my-cancel-btn" onClick={closeDeleteModal}>
+                    취소
+                  </button>
                 </div>
               </div>
             </div>
           </>
         )}
 
-
+        {/* ✅ 수정 완료 모달 */}
+        {showSuccessModal && (
+          <div className="my-success-modal-overlay" onClick={closeSuccessModal}>
+            <div className="my-success-modal">
+              <img src={checkmarkIcon} alt="완료" className="my-success-icon" /> {/* ✅ 아이콘 추가 */}
+              <p>회원정보가 수정되었습니다.</p>
+              <button onClick={closeSuccessModal}>확인</button>
+            </div>
+          </div>
+        )}
 
         {showModal && (
           <div className="search-modal">

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Patients.css";
 import Menu from "./Menu";
+import checkmarkIcon from "./png/checkmark.png";
 
 function Patients() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function Patients() {
     address: "",
     detailAddress: "",
     pAdd: "",
-    
+
     pLat: null,
     pLng: null,
   });
@@ -26,7 +27,7 @@ function Patients() {
   const handleChange = (e) => {
     const { name, value, maxLength } = e.target;
     if (
-      ["birthPart1","birthPart2","phonePart1","phonePart2","phonePart3"].includes(name)
+      ["birthPart1", "birthPart2", "phonePart1", "phonePart2", "phonePart3"].includes(name)
     ) {
       const onlyNums = value.replace(/\D/g, "");
       setFormData(prev => ({
@@ -62,7 +63,7 @@ function Patients() {
         geocoder.addressSearch(baseAddr, (result, status) => {
           if (status === window.daum.maps.services.Status.OK) {
             const { x, y } = result[0];
-            console.log("브라우저 지오코딩:", {x, y});
+            console.log("브라우저 지오코딩:", { x, y });
 
             setFormData(prev => ({
               ...prev,
@@ -82,11 +83,13 @@ function Patients() {
     }).open();
   };
 
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // ✅ 환자 등록 완료 모달 상태 추가
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newBirth = `${formData.birthPart1}-${formData.birthPart2}`;
-    const newTel   = `${formData.phonePart1}-${formData.phonePart2}-${formData.phonePart3}`;
-    const newPAdd  = `${formData.postcode} ${formData.address} ${formData.detailAddress}`.trim();
+    const newTel = `${formData.phonePart1}-${formData.phonePart2}-${formData.phonePart3}`;
+    const newPAdd = `${formData.postcode} ${formData.address} ${formData.detailAddress}`.trim();
 
     const sendData = {
       pName: formData.pName,
@@ -104,8 +107,11 @@ function Patients() {
         sendData
       );
       if (res.status === 200) {
-        alert("환자 등록 완료");
-        navigate("/main");
+        setShowSuccessModal(true); // ✅ 모달 표시
+        setTimeout(() => {
+          setShowSuccessModal(false); // ✅ 3초 후 자동 닫힘
+          navigate("/main");
+        }, 3000);
       }
     } catch (err) {
       console.error(err);
@@ -113,6 +119,11 @@ function Patients() {
     }
   };
 
+  // ✅ 모달 수동 닫기 함수
+  const closeSuccessModal = () => {
+    setShowSuccessModal(false);
+    navigate("/main");
+  };
   return (
     <form onSubmit={handleSubmit}>
       <Menu />
@@ -261,13 +272,23 @@ function Patients() {
               }
             />
           </div>
-
           <button type="submit" className="submit-button">
             환자 등록
           </button>
         </div>
       </div>
+      {showSuccessModal && (
+        <div className="patient-success-modal-overlay" onClick={closeSuccessModal}>
+          <div className="patient-success-modal">
+            <img src={checkmarkIcon} alt="완료" className="patient-success-icon" /> {/* ✅ 체크마크 아이콘 추가 */}
+            <p>환자 등록이 완료되었습니다.</p>
+            <button onClick={closeSuccessModal}>확인</button>
+          </div>
+        </div>
+      )}
+
     </form>
+
   );
 }
 

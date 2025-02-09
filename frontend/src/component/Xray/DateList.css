@@ -137,7 +137,6 @@
 .date-pagination {
   display: flex;
   justify-content: center;
-  gap: 5px;
 }
 
 .date-pagination button {
