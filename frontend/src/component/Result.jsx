@@ -643,19 +643,37 @@ function Result() {
             )}
             </div>
             <div className="thumb-list">
-            {newlyUploaded.map((imgPath, index) => (
-              <div
-                key={index}
-                className="thumb-item"
-                onClick={() => handleThumbClick(imgPath)} // 클릭 시 해당 이미지를 bigPreview로 설정
-              >
-              <img src={imgPath} alt={`Uploaded ${index + 1}`} />
-              </div>
-            ))}
+              {fromHistory
+                ? xrayList.map((xray, index) => (
+                    <div
+                      key={index}
+                      className="thumb-item"
+                      onClick={() => handleThumbClick(xray.imgPath)} // X-ray 클릭 시 bigPreview 변경
+                    >
+                      <img
+                        src={correctImageUrl(xray.imgPath)}
+                        alt={`X-ray ${index + 1}`}
+                        onError={() => console.log(`⚠️ X-ray 로드 실패: ${xray.imgPath}`)}
+                      />
+                    </div>
+                  ))
+                : newlyUploaded.map((imgPath, index) => (
+                    <div
+                      key={index}
+                      className="thumb-item"
+                      onClick={() => handleThumbClick(imgPath)}
+                    >
+                      <img
+                        src={correctImageUrl(imgPath)}
+                        alt={`Uploaded ${index + 1}`}
+                        onError={() => console.log(`⚠️ Uploaded 이미지 로드 실패: ${imgPath}`)}
+                      />
+                    </div>
+                  ))}
             </div>
+
           </div>
         </div>
-
 
         {/* 오른쪽 패널 */}
         <div className="result-right-panel">
