@@ -183,15 +183,18 @@ function Result() {
     axios
       .get(`${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
       .then((res) => {
+        console.log("✅ 불러온 X-ray 목록:", res.data); // 확인용 로그 추가
         setXrayList(res.data);
+        
         if (res.data.length > 0) {
-          const bigOne = res.data.find((x) => x.bigXray != null);
+
           if (bigOne) {
-            setSelectedXray(bigOne);
-            setBigPreview(correctImageUrl(bigOne.bigXray));
+            const bigOne = res.data.find((x) => x.bigXray != null);
+            setSelectedXray(bigOne || res.data[0]);
+            setBigPreview(correctImageUrl((bigOne || res.data[0]).imgPath));
           } else {
             setSelectedXray(res.data[0]);
-            setBigPreview(`${process.env.REACT_APP_DB_URL2}/images/${res.data[0].imgPath}`);
+            setBigPreview(correctImageUrl(res.data[0].imgPath));
           }
         } else {
           setXrayList([]);
@@ -200,6 +203,7 @@ function Result() {
         }
       })
       .catch((e) => console.error(e));
+      
 
     // (B) 이전결과 모드 => diagnosis_result + hospital
     if (fromHistory) {
