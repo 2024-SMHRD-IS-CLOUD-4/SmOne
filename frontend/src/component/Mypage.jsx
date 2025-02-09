@@ -3,19 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { KakaoMapContext } from "../App";
 import axios from "axios";
 import "./Mypage.css";
-import Menu from "./Menu"; // Menu.jsx 추가
+import Menu from "./Menu";
+import warningIcon from "./png/warning.png";
+import checkmarkIcon from "./png/checkmark.png";
 
 function Mypage() {
   const navigate = useNavigate();
-  const kakaoMaps = useContext(KakaoMapContext); // ✅ Context에서 API 가져오기
-  // 이메일을 아이디/도메인으로 분리 예시
+  const kakaoMaps = useContext(KakaoMapContext);
   const [userData, setUserData] = useState({
     userId: "",
     userName: "",
     role: "",
     emailLocal: "",
     emailDomain: "",
-    centerId: "",  // 검색어(기관명)로도 사용
+    centerId: "",
     address: ""
   });
 
@@ -23,7 +24,19 @@ function Mypage() {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState("");
+  const [myShowDeleteModal, setMyShowDeleteModal] = useState(false);
+  const [myDeletePassword, setMyDeletePassword] = useState("");
+  const [myModalClosing, setMyModalClosing] = useState(false); // ✅ 모달 닫기 애니메이션 상태 추가
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // ✅ 수정 완료 모달 상태 추가
 
+  const closeMyDeleteModal = () => {
+    setMyModalClosing(true); // ✅ 애니메이션 적용
+    setTimeout(() => {
+      setMyShowDeleteModal(false);
+      setMyModalClosing(false);
+      setMyDeletePassword("");
+    }, 300); // ✅ 애니메이션 지속 시간 (0.3s) 후 상태 변경
+  };
   useEffect(() => {
 
     const storedUserId = sessionStorage.getItem("userId");
@@ -61,7 +74,6 @@ function Mypage() {
     setUserData(prev => ({ ...prev, [name]: value }));
   };
 
-  // 입력값 검증 (간단 예시)
   const validateInputs = () => {
     const { userName, role, emailLocal, emailDomain, centerId, address } = userData;
     if (!userName.trim() || !role.trim() || !emailLocal.trim() || !emailDomain.trim() || !centerId.trim() || !address.trim()) {
@@ -77,39 +89,56 @@ function Mypage() {
     return true;
   };
 
-  // 정보 수정
   const handleUpdate = async () => {
     if (!validateInputs()) return;
 
     const fullEmail = `${userData.emailLocal}@${userData.emailDomain}`;
-
     const sendData = {
       ...userData,
-      email: fullEmail  // 최종 email만 합쳐서 백엔드 전달
+      email: fullEmail
     };
+
     try {
       await axios.put(`${process.env.REACT_APP_DB_URL}/users/update`, sendData, {
         headers: { "Content-Type": "application/json" }
       });
-      alert("정보가 수정되었습니다.");
-      navigate("/main");
+
+      setShowSuccessModal(true); // ✅ 모달 표시
+      setTimeout(() => {
+        setShowSuccessModal(false); // ✅ 3초 후 자동 닫힘
+        navigate("/main");
+      }, 3000);
     } catch (err) {
       console.error(err);
       alert("정보 수정에 실패했습니다.");
     }
   };
 
-  // X 버튼 동작
-  const handleBackToMain = () => {
-    navigate("/main"); // ✅ 단순히 메인 페이지로 이동
+  // ✅ 모달 수동 닫기 함수
+  const closeSuccessModal = () => {
+    setShowSuccessModal(false);
+    navigate("/main");
   };
 
-  // 비밀번호 변경 페이지로 이동
+  {
+    showSuccessModal && (
+      <div className="my-success-modal-overlay" onClick={closeSuccessModal}>
+        <div className="my-success-modal">
+          <p>정보가 수정되었습니다.</p>
+          <button onClick={closeSuccessModal}>확인</button>
+        </div>
+      </div>
+    )
+  }
+
+  const handleBackToMain = () => {
+    navigate("/main");
+  };
+
   const handlePasswordChangePage = () => {
     navigate("/findpw");
   };
 
-  // 회원 탈퇴
   const handleDelete = async () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/delete`, {
@@ -131,14 +160,13 @@ function Mypage() {
     }
   };
 
-  // 기관명 검색
   const handleSearchCenter = () => {
     if (!userData.centerId.trim()) {
       alert("기관명을 입력하세요!");
       return;
     }
 
-    if (kakaoMaps) { // ✅ undefined 방지
+    if (kakaoMaps) {
       const ps = new kakaoMaps.services.Places();
       ps.keywordSearch(userData.centerId, (data, status) => {
         if (status === kakaoMaps.services.Status.OK) {
@@ -153,7 +181,6 @@ function Mypage() {
     }
   };
 
-  // 모달 뜨면 지도 초기화
   useEffect(() => {
     if (showModal) {
       const mapContainer = document.getElementById("map");
@@ -185,9 +212,9 @@ function Mypage() {
 
   return (
     <>
-      <Menu /> {/* Menu 추가 */}
+      <Menu />
       <div className="mypage-container">
-        <button className="back-btn" onClick={handleBackToMain}>X</button> {/* ✅ X 버튼 추가 */}
+        <button className="back-btn" onClick={handleBackToMain}>X</button>
         <h2 className="mypage-title">마이페이지</h2>
 
         <form className="mypage-form">
@@ -276,41 +303,46 @@ function Mypage() {
           </div>
         </form>
 
-        {/* 탈퇴 모달 */}
         {showDeleteModal && (
           <>
-            <div className="modal-overlay"></div> {/* ✅ 배경 어둡게 */}
-            <div className="delete-modal">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h2>회원 탈퇴</h2>
-                </div>
-                <div className="modal-body" style={{ flexDirection: "column", padding: "20px" }}>
-                  <p>비밀번호를 입력해주세요</p>
-                  <input
-                    type="password"
-                    placeholder="비밀번호"
-                    value={deletePassword}
-                    onChange={e => setDeletePassword(e.target.value)}
-                    style={{ width: "100%", marginBottom: "10px" }}
-                  />
-                  <div style={{ textAlign: "right" }}>
-                    <button className="small-btn delete-confirm" onClick={handleDelete} style={{ marginRight: "10px" }}>
-                      탈퇴하기
-                    </button>
-                    <button className="small-btn" onClick={closeDeleteModal}>
-                      취소
-                    </button>
-                  </div>
+            <div className="my-modal-overlay" onClick={closeDeleteModal}></div>
+            <div className="my-delete-modal">
+              <div className="my-modal-header">
+
+              </div>
+              <div className="my-modal-body">
+                <img src={warningIcon} alt="경고" className="my-warning-icon" /> {/* ✅ 경고 아이콘 추가 */}
+                <p>탈퇴하시려면 비밀번호를 입력해주세요</p>
+                <input
+                  type="password"
+                  placeholder="비밀번호"
+                  value={deletePassword}
+                  onChange={e => setDeletePassword(e.target.value)}
+                />
+                <div>
+                  <button className="my-small-btn my-delete-confirm" onClick={handleDelete}>
+                    탈퇴하기
+                  </button>
+                  <button className="my-small-btn my-cancel-btn" onClick={closeDeleteModal}>
+                    취소
+                  </button>
                 </div>
               </div>
             </div>
           </>
         )}
 
+        {/* ✅ 수정 완료 모달 */}
+        {showSuccessModal && (
+          <div className="my-success-modal-overlay" onClick={closeSuccessModal}>
+            <div className="my-success-modal">
+              <img src={checkmarkIcon} alt="완료" className="my-success-icon" /> {/* ✅ 아이콘 추가 */}
+              <p>회원정보가 수정되었습니다.</p>
+              <button onClick={closeSuccessModal}>확인</button>
+            </div>
+          </div>
+        )}
 
-
-        {/* 지도/검색 모달 */}
         {showModal && (
           <div className="search-modal">
             <div className="modal-header">
@@ -325,11 +357,10 @@ function Mypage() {
                     <li
                       key={i}
                       onClick={() => {
-                        // ▼ place_name => centerId / address_name => address
                         setUserData(prev => ({
                           ...prev,
-                          centerId: place.place_name,    // 클릭 시 기관명에 결과명 반영
-                          address: place.address_name    // 주소 필드도 세팅
+                          centerId: place.place_name,
+                          address: place.address_name
                         }));
                         alert(`선택된 주소: ${place.address_name}`);
                         closeModal();

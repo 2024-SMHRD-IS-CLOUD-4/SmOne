@@ -15,7 +15,7 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  padding: 6px 10px;
+  padding: 6px 11px;
   background-color: #333;
   color: white;
   border: none;
@@ -29,27 +29,19 @@
   background-color: #666;
 }
 
-
 .video-background {
   position: fixed;
-  /* 화면에 고정 */
   top: 0;
   left: 0;
   width: 100%;
-  /* 화면 너비를 채움 */
   height: 100%;
-  /* 화면 높이를 채움 */
   object-fit: cover;
-  /* 화면 크기에 맞게 비율 유지하며 채움 */
   z-index: -1;
-  /* 콘텐츠 뒤로 배치 */
 }
 
-/* 헤더 */
 .header {
   display: flex;
   justify-content: space-between;
-  /* 좌우로 분리 */
   align-items: center;
   padding: 10px 20px;
   color: white;
@@ -60,19 +52,14 @@
   width: 200px;
   height: 200px;
   margin-top: 50px;
-
 }
 
 .logo-container {
   display: flex;
   align-items: center;
-  /* 로고와 버튼 세로 중앙 정렬 */
   gap: 10px;
-  /* 로고와 스마트 버튼 간격 */
-
 }
 
-/* 스마트인재개발원 버튼 */
 .smart-button {
   background: transparent;
   color: white;
@@ -82,7 +69,6 @@
   font-size: 20px;
   cursor: pointer;
   align-self: center;
-  /* Center the button horizontally */
 }
 
 .no-results {
@@ -105,7 +91,6 @@
   width: 1379px;
 }
 
-/* 비디오 배경 */
 .video-background {
   position: fixed;
   top: 0;
@@ -116,18 +101,13 @@
   z-index: -1;
 }
 
-/* 폼 래퍼 */
 .form-wrapper {
-  /* background: rgba(255, 255, 255, 0.8); */
-  /* padding: 10px; */
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 1;
   margin-left: 10px;
-  /* width: 400px; */
 }
 
-/* 제목 스타일 */
 .title {
   font-size: 24px;
   font-weight: bold;
@@ -135,7 +115,6 @@
   margin-bottom: 20px;
 }
 
-/* 버튼 */
 .submit-button {
   width: 450px;
   padding: 15px;
@@ -146,11 +125,6 @@
   border-radius: 4px;
   margin-top: 20px;
 }
-
-/* .form-wrapper {
-  max-width: 500px;
-  width: 100%;
-} */
 
 .title {
   align-items: center;
@@ -170,18 +144,14 @@
 
 .name-and-gender-group {
   display: flex;
-  /* 한 줄로 배치 */
   align-items: center;
-  /* 세로 정렬 */
   gap: 20px;
-  /* 이름과 성별 버튼 사이 간격 */
   margin-bottom: 15px;
 }
 
 .name-group {
   display: flex;
   flex-direction: column;
-  /* 라벨과 입력 필드 세로 배치 */
 }
 
 .gender-group {
@@ -193,10 +163,8 @@
 .radio-group {
   display: flex;
   gap: 10px;
-  /* 성별 버튼 간격 */
 }
 
-/* 남/여 버튼 기본 스타일 */
 .radio {
   background-color: #333;
   color: #fff;
@@ -206,18 +174,15 @@
   transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
 }
 
-/* 남/여 버튼 호버 효과 */
 .radio:hover {
-  background-color: #555; /* 밝은 회색으로 변경 */
-  transform: scale(1.05); /* 약간 확대 효과 */
+  background-color: #555;
+  transform: scale(1.05);
 }
 
-/* 선택된 상태의 버튼 */
 .radio.selected {
   background-color: #777;
   border: 2px solid #fff;
 }
-
 
 .radio.selected {
   background-color: #555;
@@ -226,7 +191,6 @@
 
 .patient-name {
   width: 288px;
-  /* 이름 입력 칸 넓이 */
   height: 24px;
   padding: 10px;
   border: 1px solid #ccc;
@@ -361,18 +325,15 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  /* 필드와 대시(-) 간격 */
 }
 
 .resident-number-box {
   width: 195px;
-  /* 필드 너비 */
   height: 24px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   text-align: center;
-  /* 숫자 가운데 정렬 */
 }
 
 .resident-number-dash {
@@ -380,6 +341,7 @@
   font-weight: bold;
   color: #ffffff;
 }
+
 .address-group1 label {
   display: block;
   margin-bottom: 15px; /* ✅ 기존보다 15px 여백 추가 */
@@ -408,28 +370,29 @@
 }
 
 /* 모달 창 */
-.modal-content {
+.edit-modal-content {
   background: white;
   padding: 20px;
   border-radius: 8px;
   text-align: center;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  width: 300px;
+  width: 320px;
   transform: scale(0.9);
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
   opacity: 0;
+  height: 220px;
 }
 
 /* 모달 활성화 시 애니메이션 */
-.modal-overlay.visible .modal-content {
+.modal-overlay.visible .edit-modal-content {
   transform: scale(1);
   opacity: 1;
 }
-.modal-content p {
+.edit-modal-content p {
   margin-bottom: 20px;
 }
 
-.modal-content button {
+.edit-modal-content button {
   padding: 8px 12px;
   background: #333;
   color: white;
@@ -438,13 +401,13 @@
   cursor: pointer;
 }
 
-.modal-content button:hover {
+.edit-modal-content button:hover {
   background: #555555;
 }
 .modal-icon {
-  width: 150px;
-  height: 150px;
-  margin-bottom: 45px;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 30px;
 }
 /* 모달이 부드럽게 나타나는 애니메이션 */
 @keyframes fadeIn {
@@ -461,3 +424,4 @@
 .modal-overlay.fade-in {
   animation: fadeIn 0.3s ease-in-out;
 }
+

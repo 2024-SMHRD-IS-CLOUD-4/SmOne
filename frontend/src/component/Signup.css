@@ -1,6 +1,4 @@
-/* src/component/Signup.css */
 
-/* 반투명 박스 */
 .signup-container {
   position: relative;
     width: 450px;
@@ -75,7 +73,6 @@
   background-color: #555;
 }
 
-/* 모달 */
 .search-modal1 {
   position: fixed;
   top: 50%;
@@ -247,7 +244,6 @@ transition: background 0.3s ease-in-out;
   height: 44px;
 }
 
-/* 비밀번호 입력 필드 스타일 */
 .password-container {
   display: flex;
   align-items: center;
@@ -266,7 +262,6 @@ transition: background 0.3s ease-in-out;
   padding-right: 45px;
 }
 
-/* 👁 비밀번호 보기 버튼 */
 .toggle-password-btn5 {
   position: absolute;
   right: 40px;
@@ -282,13 +277,12 @@ transition: background 0.3s ease-in-out;
   opacity: 0.7;
 }
 
-/* 👁 아이콘 스타일 */
 .password-icon5 {
-  width: 24px; /* 아이콘 크기 */
+  width: 24px;
   height: 15px;
   margin-top: 8px;
   opacity: 0.5;
-  transition: opacity 0.3s ease; /* 부드러운 전환 효과 */
+  transition: opacity 0.3s ease;
 }
 
 .join_address {
@@ -375,18 +369,18 @@ transition: background 0.3s ease-in-out;
   width: 345px;
   height: 44px;
 }
-/* X 버튼 (닫기 버튼) */
+
 .signup-close-btn {
   position: absolute;
-  top: 0.625rem; /* 10px */
-  right: 0.625rem; /* 10px */
-  padding: 0.375rem 0.625rem; /* 6px 10px */
+  top: 0.625rem;
+  right: 0.625rem;
+  padding: 0.375rem 0.625rem;
   background-color: #333;
   color: white;
   border: none;
-  border-radius: 0.25rem; /* 4px */
+  border-radius: 0.25rem;
   cursor: pointer;
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
   transition: background 0.3s ease-in-out;
 }
 
@@ -399,7 +393,6 @@ transition: background 0.3s ease-in-out;
   transition: border 0.2s ease-in-out;
 }
 
-/* 흔들림 애니메이션 */
 @keyframes shake {
   0% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
@@ -408,20 +401,16 @@ transition: background 0.3s ease-in-out;
   100% { transform: translateX(0); }
 }
 
-/* 🚨 흔들림 적용 */
 .shake {
   animation: shake 0.3s ease-in-out;
 }
 
-/* 중복된 아이디일 경우 빨간색 메시지 */
 .error-message1 {
   color: red;
   font-size: 14px;
   text-align: center;
 }
 
-
-/* 비밀번호 오류 메시지 */
 .password-error-message {
   color: red;
   font-size: 14px;
@@ -429,7 +418,6 @@ transition: background 0.3s ease-in-out;
   margin-top: 5px;
 }
 
-/* 흔들림 효과 */
 .shake {
   animation: shake 0.3s ease-in-out;
 }

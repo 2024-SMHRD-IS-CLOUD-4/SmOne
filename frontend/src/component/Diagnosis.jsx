@@ -15,7 +15,6 @@ function Diagnosis() {
   return (
     <div className="diagnosis-body">
       <div className="diagnosis-container">
-        {/* 움직이는 배경 비디오 */}
         <video className="video-background" autoPlay muted loop>
           <source src="video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
@@ -37,7 +36,6 @@ function Diagnosis() {
 
             <table className="grid-table">
               <tbody>
-                {/* 첫 번째 줄 */}
                 <tr>
                   <th className="highlight-cell">교부년월일 및 번호</th>
                   <td colSpan="2">{docNo}</td>
@@ -46,7 +44,6 @@ function Diagnosis() {
                   <td colSpan="2">{centerId || "(기관명)"}</td>
                 </tr>
 
-                {/* 두 번째 줄 */}
                 <tr>
                   <td rowSpan="2" className="merged-cell highlight-cell">환자</td>
                   <th>성명</th>
@@ -55,7 +52,6 @@ function Diagnosis() {
                   <td colSpan="2">{userEmail || "(기관 이메일)"}</td>
                 </tr>
 
-                {/* 세 번째 줄 */}
                 <tr>
                   <th>주민등록번호</th>
                   <td>{patient?.birth || "N/A"}</td>
@@ -63,7 +59,6 @@ function Diagnosis() {
                   <td colSpan="2">{patient?.pAdd || "N/A"}</td>
                 </tr>
 
-                {/* 네 번째 줄 */}
                 <tr>
                   <th className="highlight-cell">질병분류</th>
                   <td colSpan="2">{aiResult || "(진단없음)"}</td>
@@ -71,7 +66,6 @@ function Diagnosis() {
                   <td colSpan="2">{userName || "(담당 의사)"}</td>
                 </tr>
 
-                {/* 다섯 번째 줄 (X-ray) */}
                 <tr>
                   <th rowSpan="2" className="highlight-cell">치료소견</th>
                   <td colSpan="6" className="xray-cell">
@@ -87,14 +81,12 @@ function Diagnosis() {
                   </td>
                 </tr>
 
-                {/* 여섯 번째 줄 (진단내용 및 진단 이유) */}
                 <tr>
                   <td colSpan="6" className="diagnosis-cell">
                     진단내용 및 진단을 내린 대략적인 이유
                   </td>
                 </tr>
 
-                {/* 일곱 번째 줄 */}
                 <tr>
                   <th rowSpan="2" className="highlight-cell">근처병원</th>
                   <td colSpan="2">{selectedHospital
@@ -105,7 +97,6 @@ function Diagnosis() {
                     : "(선택된 병원 없음)"}</td>
                 </tr>
 
-                {/* 여덟 번째 줄 */}
                 <tr>
                   <td colSpan="2">{selectedHospital
                     ? `${selectedHospital.hosName}`

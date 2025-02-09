@@ -2,7 +2,6 @@ body {
     background-color: #292929;
   }
   
-/* 로딩 화면의 배경 설정 */
 .loading-container {
     position: absolute;
     top: 0;
@@ -15,8 +14,6 @@ body {
     justify-content: center;
     background-color: #000
   }
-  
-  
   
   .circle-container {
     width: 400px;
