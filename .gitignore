@@ -11,3 +11,6 @@ __pycache__/
 
 **/.fastapi.log
 **/.app.log
+
+fastapi.log
+app.log
