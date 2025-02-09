@@ -44,7 +44,7 @@ def java_login(request: LoginRequest):
     Java 서버에 로그인 요청을 보냄
     """
     try:
-        login_to_java(request.user_id, request.user_pw)  # ������ 실제 입력값으로 로그인
+        login_to_java(request.user_id, request.user_pw)  
         response_data = {"message": "Java 로그인 성공", "user_id": request.user_id}
         return JSONResponse(content=response_data, media_type="application/json; charset=utf-8")
     except Exception as e:
@@ -83,7 +83,7 @@ def fetch_doctor_id():
 # CORS 설정 (필요한 도메인만 허용)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://223.130.157.164" , "http://localhost:3000" , "https://223.130.157.164:3000"],  #  실제 사용 환경에서는 특정 도메인으로 제한 권장
+    allow_origins=["http://223.130.157.164" , "http://localhost:3000" , "https://223.130.157.164:3000"], 
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],

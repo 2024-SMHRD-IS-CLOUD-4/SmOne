@@ -1,5 +1,33 @@
 nohup: ignoring input
-INFO:     Started server process [9810]
+INFO:     Started server process [2427]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     59.0.214.190:57299 - "OPTIONS /diagnose/ HTTP/1.1" 200 OK
+진단 요청 받음: {'p_idx': 66, 'doctor_id': '1'}
+Using doctor_id: 1, P_IDX: 66
+Executing query: 
+        SELECT IMG_PATH
+        FROM XRAY_IMAGES
+        WHERE P_IDX = %s
+          AND IMG_PATH LIKE 'http%%'
+        ORDER BY IMG_IDX DESC
+        LIMIT 1
+         with P_IDX = 66
+Executing query: 
+        SELECT IMG_PATH
+        FROM XRAY_IMAGES
+        WHERE P_IDX = %s
+          AND IMG_PATH LIKE 'http%%'
+        ORDER BY IMG_IDX DESC
+        LIMIT 1
+         with P_IDX = 66
+이미지 경로 : https://kr.object.ncloudstorage.com/ilungview-bucket/MCUCXR_0061_0.png
+Raw output: [0.681405   0.02800962 0.40345246 0.01365346]
+Predicted label: TB, Confidence: 0.6814
+결과 : TB
+✅ IMG_IDX: 435 (P_IDX=66)
+Saving result: IMG_IDX=435, DIAGNOSIS=TB, DOCTOR_ID=1, P_IDX=66
+진단 결과가 성공적으로 DB에 저장되었습니다.
+Database updated successfully
+INFO:     59.0.214.190:57300 - "POST /diagnose/ HTTP/1.1" 200 OK

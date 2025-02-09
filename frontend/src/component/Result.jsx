@@ -188,8 +188,8 @@ function Result() {
         
         if (res.data.length > 0) {
 
+          const bigOne = res.data.find((x) => x.bigXray != null);
           if (bigOne) {
-            const bigOne = res.data.find((x) => x.bigXray != null);
             setSelectedXray(bigOne || res.data[0]);
             setBigPreview(correctImageUrl((bigOne || res.data[0]).imgPath));
           } else {
@@ -624,7 +624,11 @@ function Result() {
             <div className="big-preview-box" style={{ position: "relative" }}>
             {bigPreview ? (
               <>
-                <img ref={bigImgRef} src={bigPreview} alt="bigXray" className="big-xray-image" onError={() => console.log("⚠️ 이미지 로드 실패:", bigPreview)}/>
+                <img ref={bigImgRef} 
+                src={bigPreview} 
+                alt="bigXray" 
+                className="big-xray-image" 
+                onError={() => console.log("⚠️ 이미지 로드 실패:", bigPreview)}/>
                 <canvas
                   ref={canvasRef}
                   className="drawing-canvas"
