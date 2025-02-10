@@ -197,8 +197,8 @@ function FirstVisitUI({
                     style={{
                       position: "absolute",
                       top: 0,
-                      right: 2,
-                      width: "10px",
+                      right: 0,
+                      width: "14px",
                       background: "rgba(255,0,0,0.7)",
                       border: "none",
                       color: "#fff",

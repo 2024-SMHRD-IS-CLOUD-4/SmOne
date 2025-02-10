@@ -366,8 +366,8 @@ function SecondVisitUI({
                     style={{
                       position: "absolute",
                       top: 0,
-                      right: 2,
-                      width: "10px", /* 기존보다 5px 넓게 설정 */
+                      right: 0,
+                      width: "14px", /* 기존보다 5px 넓게 설정 */
                       background: "rgba(255,0,0,0.7)",
                       border: "none",
                       color: "#fff",
