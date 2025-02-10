@@ -146,7 +146,7 @@ function Mypage() {
         password: deletePassword
       });
       if (response.status === 200) {
-        alert("회원 탈퇴 성공!");
+        setShowDeleteModal(false);
         sessionStorage.clear();
         navigate("/");
       }
