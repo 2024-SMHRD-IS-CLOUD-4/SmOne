@@ -1,14 +1,14 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // useNavigate 임포트
+import { useNavigate } from "react-router-dom";
 import "./Diagnosis.css";
 
 function Diagnosis() {
-  const navigate = useNavigate(); // 네비게이터 훅
+  const navigate = useNavigate();
   const handlePrint = () => {
     window.print();
   };
   const handleCancel = () => {
-    navigate(-1); // 취소 시 Result 화면으로 이동
+    navigate(-1);
   };
 
 

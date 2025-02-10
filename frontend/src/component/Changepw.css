@@ -215,6 +215,14 @@ input:focus {
   height: 44px;
 }
 
+.password-match-message {
+  text-align: center;
+  font-size: 14px;
+  color: #ccc;
+  margin-top: 5px;
+  display: block;
+}
+
 .toggle-password-btn {
   position: absolute;
   right: 10px;
