@@ -11,6 +11,7 @@ function PatientEdit() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalHiding, setModalHiding] = useState(false); // ✅ 숨김 애니메이션 상태 추가
 
   const [formData, setFormData] = useState({
     pName: "",
@@ -164,15 +165,35 @@ function PatientEdit() {
 
     try {
       await axios.put(`${process.env.REACT_APP_DB_URL}/patients/update/${pIdx}`, sendData);
-      setShowModal(true); // 모달 표시
-      setTimeout(() => setModalVisible(true), 10); // 부드러운 애니메이션 효과 추가
+      setShowModal(true); // ✅ 모달 표시
+      setTimeout(() => setModalVisible(true), 10); // ✅ 애니메이션 효과 추가
+
+      // ✅ 1.5초 후 자동으로 모달 닫기
+      setTimeout(() => {
+        closeModal();
+      }, 1500);
+
     } catch (err) {
       console.error("환자 수정 오류:", err);
-      setShowModal(true); // 오류도 모달로 표시 가능
+      setShowModal(true);
       setTimeout(() => setModalVisible(true), 10);
+
+      // ✅ 1.5초 후 자동으로 모달 닫기 (에러 메시지 포함)
+      setTimeout(() => {
+        closeModal();
+      }, 1500);
     }
   };
-
+  // ✅ 모달 수동 닫기 함수
+  const closeModal = () => {
+    setModalHiding(true); // ✅ 숨김 애니메이션 적용
+    setTimeout(() => {
+      setShowModal(false);
+      setModalVisible(false);
+      setModalHiding(false);
+      navigate("/main");
+    }, 300); // ✅ 애니메이션 지속 시간 후 제거
+  };
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -335,18 +356,15 @@ function PatientEdit() {
         </div>
       </form>
       {showModal && (
-        <div className={`modal-overlay ${modalVisible ? "visible" : ""}`}>
+        <div className={`modal-overlay ${modalVisible ? "visible" : ""} ${modalHiding ? "hide" : ""}`}>
           <div className="edit-modal-content">
             <img src={checkmarkIcon} alt="Success" className="modal-icon" />
             <p>환자 정보가 수정되었습니다.</p>
-            <button onClick={() => {
-              setModalVisible(false);
-              setTimeout(() => setShowModal(false), 300); // 애니메이션이 끝난 후 숨김
-              navigate("/main");
-            }}>확인</button>
           </div>
         </div>
       )}
+
+
     </>
   );
 }

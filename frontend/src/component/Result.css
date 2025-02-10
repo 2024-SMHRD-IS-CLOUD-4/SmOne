@@ -341,7 +341,7 @@
 .thumb-item {
   width: 5rem;
   height: 5rem;
-  border: 0.125rem dashed #666;
+  border: 0.125rem solid #666;
   cursor: pointer;
 }
 
@@ -502,4 +502,222 @@
   height: 1.5625rem;
   margin-right: 0.5rem; /* 8px */
 }
+/* ✅ 병원 선택 요청 모달 오버레이 */
+.hospital-warning-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+/* ✅ 병원 선택 요청 모달 */
+.hospital-warning-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 350px;
+  opacity: 0;
+  transform: scale(0.8);
+  animation: hospital-modal-fade-in 0.3s ease-in-out forwards;
+}
+/* ✅ 모달이 사라질 때 애니메이션 */
+.hospital-warning-modal.hide {
+  animation: hospital-modal-fade-out 0.3s ease-in-out forwards;
+}
+/* ✅ 경고 아이콘 스타일 */
+.hospital-warning-icon {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+/* ✅ 모달 텍스트 */
+.hospital-warning-modal p {
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* ✅ 모달 애니메이션 */
+@keyframes hospital-modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* ✅ 모달이 사라질 때 애니메이션 */
+@keyframes hospital-modal-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+/* ✅ 진단 저장 요청 모달 오버레이 */
+.save-warning-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ 병원 저장 요청 모달 */
+.save-warning-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 350px;
+  opacity: 0;
+  transform: scale(0.8);
+  animation: save-modal-fade-in 0.3s ease-in-out forwards;
+}
+
+/* ✅ 모달이 사라질 때 애니메이션 */
+.save-warning-modal.hide {
+  animation: save-modal-fade-out 0.3s ease-in-out forwards;
+}
+
+/* ✅ 경고 아이콘 스타일 */
+.save-warning-icon {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+/* ✅ 모달 텍스트 */
+.save-warning-modal p {
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* ✅ 모달 닫기 버튼 */
+.save-warning-modal button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #d9534f;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.save-warning-modal button:hover {
+  background-color: #c9302c;
+}
+
+/* ✅ 모달 애니메이션 */
+@keyframes save-modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* ✅ 모달이 사라질 때 애니메이션 */
+@keyframes save-modal-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+/* ✅ 진단 결과 저장 완료 모달 오버레이 */
+.diagnosis-success-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ 진단 결과 저장 완료 모달 */
+.diagnosis-success-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 350px;
+  opacity: 0;
+  animation: diagnosis-success-fade-in 0.3s ease-in-out forwards;
+}
+/* ✅ 모달이 사라질 때 애니메이션 */
+.diagnosis-success-modal.hide {
+  animation: diagnosis-success-fade-out 0.3s ease-in-out forwards;
+}
+/* ✅ 체크 아이콘 스타일 */
+.diagnosis-success-icon {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+/* ✅ 모달 텍스트 */
+.diagnosis-success-modal p {
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+
+/* ✅ 모달 애니메이션 */
+@keyframes diagnosis-success-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* ✅ 모달이 사라질 때 애니메이션 */
+@keyframes diagnosis-success-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}

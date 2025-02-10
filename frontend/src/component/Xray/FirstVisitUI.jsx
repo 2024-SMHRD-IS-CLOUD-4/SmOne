@@ -115,7 +115,7 @@ function FirstVisitUI({
             />
           ) : (
             <div style={{ marginTop: "250px", color: "#999", textAlign: "center" }}>
-              밑의 아이콘을 클릭하여 사진을 등록해주세요
+              밑의 아이콘을 클릭하여 X-ray를 등록해주세요
             </div>
           )}
         </div>

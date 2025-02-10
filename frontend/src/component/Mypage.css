@@ -462,6 +462,30 @@
   justify-content: center;
 }
 
+/* ✅ 수정 완료 모달이 나타날 때 애니메이션 */
+@keyframes my-success-modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ✅ 수정 완료 모달이 사라질 때 애니메이션 */
+@keyframes my-success-modal-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
 /* ✅ 수정 완료 모달 */
 .my-success-modal {
   background: white;
@@ -471,23 +495,12 @@
   text-align: center;
   width: 350px;
   opacity: 0;
-  animation: my-modal-fade-in 0.3s ease-in-out forwards;
+  animation: my-success-modal-fade-in 0.3s ease-in-out forwards;
 }
 
-/* ✅ 모달 닫기 버튼 */
-.my-success-modal button {
-  margin-top: 15px;
-  padding: 10px 20px;
-  border: none;
-  background-color: #333;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.my-success-modal button:hover {
-  background-color: #666;
+/* ✅ 모달이 닫힐 때 (JS에서 hide 클래스 추가) */
+.my-success-modal.hide {
+  animation: my-success-modal-fade-out 0.3s ease-in-out forwards;
 }
 /* ✅ 체크마크 아이콘 스타일 */
 .my-success-icon {

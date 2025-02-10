@@ -84,7 +84,7 @@ function Patients() {
   };
 
   const [showSuccessModal, setShowSuccessModal] = useState(false); // ✅ 환자 등록 완료 모달 상태 추가
-
+  const [hideSuccessModal, setHideSuccessModal] = useState(false); // ✅ 숨김 애니메이션 상태 추가
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newBirth = `${formData.birthPart1}-${formData.birthPart2}`;
@@ -108,10 +108,15 @@ function Patients() {
       );
       if (res.status === 200) {
         setShowSuccessModal(true); // ✅ 모달 표시
+
         setTimeout(() => {
-          setShowSuccessModal(false); // ✅ 3초 후 자동 닫힘
-          navigate("/main");
-        }, 3000);
+          setHideSuccessModal(true); // ✅ 숨김 애니메이션 적용
+          setTimeout(() => {
+            navigate("/main"); // ✅ 모달이 사라진 후 페이지 이동
+            setShowSuccessModal(false);
+            setHideSuccessModal(false);
+          }, 300); // ✅ 애니메이션 지속 시간 후 제거
+        }, 1500); // ✅ 1.5초 후 모달 숨김 시작
       }
     } catch (err) {
       console.error(err);
@@ -121,8 +126,12 @@ function Patients() {
 
   // ✅ 모달 수동 닫기 함수
   const closeSuccessModal = () => {
-    setShowSuccessModal(false);
-    navigate("/main");
+    setHideSuccessModal(true); // ✅ 숨김 애니메이션 적용
+    setTimeout(() => {
+      navigate("/main"); // ✅ 모달이 사라진 후 페이지 이동
+      setShowSuccessModal(false);
+      setHideSuccessModal(false);
+    }, 300);
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -279,13 +288,13 @@ function Patients() {
       </div>
       {showSuccessModal && (
         <div className="patient-success-modal-overlay" onClick={closeSuccessModal}>
-          <div className="patient-success-modal">
+          <div className={`patient-success-modal ${hideSuccessModal ? "hide" : ""}`}>
             <img src={checkmarkIcon} alt="완료" className="patient-success-icon" /> {/* ✅ 체크마크 아이콘 추가 */}
             <p>환자 등록이 완료되었습니다.</p>
-            <button onClick={closeSuccessModal}>확인</button>
           </div>
         </div>
       )}
+
 
     </form>
 

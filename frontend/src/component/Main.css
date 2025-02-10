@@ -953,6 +953,53 @@ html, body {
   background-color: #c9302c;
 }
 
+/* ✅ 과거 진단 모달이 나타날 때 애니메이션 */
+@keyframes past-diagnosis-modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ✅ 과거 진단 모달이 사라질 때 애니메이션 */
+@keyframes past-diagnosis-modal-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* ✅ 과거 진단 모달 */
+.past-diagnosis-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 350px;
+  opacity: 0;
+  animation: past-diagnosis-modal-fade-in 0.3s ease-in-out forwards;
+}
+
+/* ✅ 모달이 닫힐 때 (JS에서 hide 클래스 추가) */
+.past-diagnosis-modal.hide {
+  animation: past-diagnosis-modal-fade-out 0.3s ease-in-out forwards;
+}
+/* ✅ 과거 진단 모달 텍스트 스타일 */
+.past-diagnosis-modal p {
+  font-weight: bold; /* ✅ 텍스트 볼드 적용 */
+  color: black;
+  font-size: 16px;
+  margin-top: 5px;
+}
 
 /* ✅ 모달 애니메이션 */
 @keyframes diagnosis-modal-fade-in {
@@ -979,7 +1026,7 @@ html, body {
   justify-content: center;
 }
 
-/* ✅ 진단 불가 모달 */
+/* ✅ 진단하기 모달 */
 .diagnosis-warning-modal {
   background: white;
   padding: 20px;
@@ -989,6 +1036,11 @@ html, body {
   width: 350px;
   opacity: 0;
   animation: diagnosis-modal-fade-in 0.3s ease-in-out forwards;
+}
+
+/* ✅ 모달이 닫힐 때 (JS에서 hide 클래스 추가) */
+.diagnosis-warning-modal.hide {
+  animation: diagnosis-modal-fade-out 0.3s ease-in-out forwards;
 }
 
 /* ✅ 경고 아이콘 스타일 */
@@ -1031,6 +1083,16 @@ html, body {
   to {
     opacity: 1;
     transform: scale(1);
+  } 
+}
+@keyframes diagnosis-modal-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
   }
 }
 /* ✅ 과거 진단 기록 없음 모달 오버레이 */
@@ -1046,7 +1108,6 @@ html, body {
   align-items: center;
   justify-content: center;
 }
-
 /* ✅ 과거 진단 기록 없음 모달 */
 .no-history-modal {
   background: white;
@@ -1059,6 +1120,10 @@ html, body {
   animation: no-history-modal-fade-in 0.3s ease-in-out forwards;
 }
 
+/* ✅ 모달이 닫힐 때 (JS에서 hide 클래스 추가) */
+.no-history-modal.hide {
+  animation: no-history-modal-fade-out 0.3s ease-in-out forwards;
+}
 /* ✅ 경고 아이콘 스타일 */
 .no-history-icon {
   width: 120px;
@@ -1092,6 +1157,104 @@ html, body {
 
 /* ✅ 모달 애니메이션 */
 @keyframes no-history-modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* ✅ 과거 진단 기록 없음 모달이 사라질 때 애니메이션 */
+@keyframes no-history-modal-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+/* ✅ 이미지 삭제 확인 모달 오버레이 */
+.image-delete-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ 이미지 삭제 확인 모달 */
+.image-delete-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 350px;
+  opacity: 0;
+  animation: image-delete-modal-fade-in 0.3s ease-in-out forwards;
+}
+
+/* ✅ 경고 아이콘 스타일 */
+.image-delete-icon {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 10px;
+}
+
+/* ✅ 모달 텍스트 */
+.image-delete-modal p {
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* ✅ 모달 버튼 컨테이너 */
+.image-delete-modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+}
+
+/* ✅ 모달 버튼 스타일 */
+.image-delete-modal button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease-in-out;
+}
+
+.image-delete-modal .confirm {
+  background-color: #d9534f;
+  color: white;
+}
+
+.image-delete-modal .confirm:hover {
+  background-color: #c9302c;
+}
+
+.image-delete-modal .cancel {
+  background-color: #aaa;
+  color: white;
+}
+
+.image-delete-modal .cancel:hover {
+  background-color: #888;
+}
+
+/* ✅ 모달 애니메이션 */
+@keyframes image-delete-modal-fade-in {
   from {
     opacity: 0;
     transform: scale(0.8);
