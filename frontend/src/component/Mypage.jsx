@@ -24,19 +24,9 @@ function Mypage() {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState("");
-  const [myShowDeleteModal, setMyShowDeleteModal] = useState(false);
-  const [myDeletePassword, setMyDeletePassword] = useState("");
-  const [myModalClosing, setMyModalClosing] = useState(false); // ✅ 모달 닫기 애니메이션 상태 추가
   const [showSuccessModal, setShowSuccessModal] = useState(false); // ✅ 수정 완료 모달 상태 추가
-
-  const closeMyDeleteModal = () => {
-    setMyModalClosing(true); // ✅ 애니메이션 적용
-    setTimeout(() => {
-      setMyShowDeleteModal(false);
-      setMyModalClosing(false);
-      setMyDeletePassword("");
-    }, 300); // ✅ 애니메이션 지속 시간 (0.3s) 후 상태 변경
-  };
+  const [hideSuccessModal, setHideSuccessModal] = useState(false); // ✅ 숨김 애니메이션 상태 추가
+  const [hideDeleteModal, setHideDeleteModal] = useState(false);
   useEffect(() => {
 
     const storedUserId = sessionStorage.getItem("userId");
@@ -104,32 +94,52 @@ function Mypage() {
       });
 
       setShowSuccessModal(true); // ✅ 모달 표시
+
       setTimeout(() => {
-        setShowSuccessModal(false); // ✅ 3초 후 자동 닫힘
-        navigate("/main");
-      }, 3000);
+        setHideSuccessModal(true); // ✅ 숨김 애니메이션 적용
+        setTimeout(() => {
+          setShowSuccessModal(false); // ✅ 모달 완전히 제거
+          setHideSuccessModal(false);
+          navigate("/main");
+        }, 300); // ✅ 애니메이션 지속 시간 후 제거
+      }, 1500); // ✅ 1.5초 후 자동으로 사라짐
+
     } catch (err) {
       console.error(err);
       alert("정보 수정에 실패했습니다.");
     }
   };
+  const handleDeleteAccount = async () => {
+    try {
+      await axios.delete(`${process.env.REACT_APP_DB_URL}/users/delete`, {
+        headers: { "Content-Type": "application/json" }
+      });
 
+      setShowDeleteModal(true); // ✅ 모달 표시
+
+      setTimeout(() => {
+        setHideDeleteModal(true); // ✅ 숨김 애니메이션 적용
+        setTimeout(() => {
+          setShowDeleteModal(false); // ✅ 모달 완전히 제거
+          setHideDeleteModal(false);
+          navigate("/"); // ✅ 메인 페이지로 이동
+        }, 300); // ✅ 애니메이션 지속 시간 후 제거
+      }, 1500); // ✅ 1.5초 후 모달 숨김 시작
+
+    } catch (err) {
+      console.error(err);
+      alert("회원탈퇴에 실패했습니다.");
+    }
+  };
   // ✅ 모달 수동 닫기 함수
   const closeSuccessModal = () => {
-    setShowSuccessModal(false);
-    navigate("/main");
+    setHideSuccessModal(true); // ✅ 숨김 애니메이션 적용
+    setTimeout(() => {
+      setShowSuccessModal(false);
+      setHideSuccessModal(false);
+      navigate("/main");
+    }, 300);
   };
-
-  {
-    showSuccessModal && (
-      <div className="my-success-modal-overlay" onClick={closeSuccessModal}>
-        <div className="my-success-modal">
-          <p>정보가 수정되었습니다.</p>
-          <button onClick={closeSuccessModal}>확인</button>
-        </div>
-      </div>
-    )
-  }
 
   const handleBackToMain = () => {
     navigate("/main");
@@ -302,11 +312,10 @@ function Mypage() {
             </button>
           </div>
         </form>
-
         {showDeleteModal && (
           <>
             <div className="my-modal-overlay" onClick={closeDeleteModal}></div>
-            <div className="my-delete-modal">
+            <div className={`my-delete-modal ${hideDeleteModal ? "hide" : ""}`}>
               <div className="my-modal-header">
 
               </div>
@@ -335,13 +344,13 @@ function Mypage() {
         {/* ✅ 수정 완료 모달 */}
         {showSuccessModal && (
           <div className="my-success-modal-overlay" onClick={closeSuccessModal}>
-            <div className="my-success-modal">
-              <img src={checkmarkIcon} alt="완료" className="my-success-icon" /> {/* ✅ 아이콘 추가 */}
+            <div className={`my-success-modal ${hideSuccessModal ? "hide" : ""}`}>
+              <img src={checkmarkIcon} alt="완료" className="my-success-icon" /> {/* ✅ 체크 아이콘 추가 */}
               <p>회원정보가 수정되었습니다.</p>
-              <button onClick={closeSuccessModal}>확인</button>
             </div>
           </div>
         )}
+
 
         {showModal && (
           <div className="search-modal">

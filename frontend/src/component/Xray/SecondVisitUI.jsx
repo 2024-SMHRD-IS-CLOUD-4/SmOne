@@ -189,7 +189,7 @@ function SecondVisitUI({
     <div className="xray-flex" style={{ position: "relative" }}>
       {/* 과거 X-ray */}
       <div className="xray-subpanel2">
-        <h4 style={{ marginTop: 0 }}>{oldXrayTitle}</h4>
+        <h4 style={{ marginBottom: "10px", marginTop: "-10px" }}>{oldXrayTitle}</h4>
         <div
           style={{
             width: `${previewBoxWidth}px`,
@@ -258,7 +258,7 @@ function SecondVisitUI({
 
       {/* 신규 X-ray */}
       <div className="xray-subpanel2">
-        <h4 style={{ marginTop: 0 }}>신규 X-ray 등록</h4>
+        <h4 style={{ marginBottom: "10px", marginTop: "-10px" }}>신규 X-ray 등록</h4>
         <div
           style={{
             width: `${previewBoxWidth}px`,
@@ -286,7 +286,7 @@ function SecondVisitUI({
             />
           ) : (
             <div style={{ color: "#999", marginTop: "250px" }}>
-              밑의 아이콘을 클릭하여 사진을 등록해주세요
+              밑의 아이콘을 클릭하여 X-ray를 등록해주세요
             </div>
           )}
         </div>
