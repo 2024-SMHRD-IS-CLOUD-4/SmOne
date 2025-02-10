@@ -1,23 +1,21 @@
 import React, { useState } from "react";
 import "./Menu.css";
-import axios from "axios"; // axios 추가
+import axios from "axios";
 import { IonIcon } from "@ionic/react";
 import { useNavigate } from "react-router-dom";
 import {
   homeOutline,
   personOutline,
-  // settingsOutline,
-  // lockClosedOutline,
   logOutOutline,
 } from "ionicons/icons";
-import patientIcon from "./png/patient.png"; // Patient 아이콘 이미지 import
-import teamLogo from "./png/teamlogo.png"; // 팀 로고 추가
+import patientIcon from "./png/patient.png";
+import teamLogo from "./png/teamlogo.png";
 
 const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
-  const userId = sessionStorage.getItem("userId"); // 사용자 아이디 가져오기
+  const userId = sessionStorage.getItem("userId");
 
 
   const menuItems = [
@@ -28,7 +26,7 @@ const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
   ];
 
   const handleClick = (event, index) => {
-    event.preventDefault(); // URL에 # 추가 방지
+    event.preventDefault();
     setActiveIndex(index);
     if (menuItems[index].title === "메인화면") {
       if (onHomeClick) onHomeClick();
@@ -66,11 +64,9 @@ const Menu = ({ onMypageClick, onPatientClick, onHomeClick }) => {
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
       >
-        {/* 팀 로고 추가 */}
         <div className={`team-logo-container ${isExpanded ? "expanded" : ""}`}>
           <img src={teamLogo} alt="Team Logo" className="team-logo" />
         </div>
-        {/* 사용자 환영 메시지 - 메뉴 확장 시에만 표시 */}
         {isExpanded && (
           <div className="welcome-message">
             {userId}님 환영합니다.

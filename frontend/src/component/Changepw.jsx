@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "./Changepw.css";
-import hiddenIcon from './png/001.png'; // 비밀번호 숨길 때
-import visibleIcon from './png/002.png'; // 비밀번호 보일 때
-
-
-
+import hiddenIcon from './png/001.png';
+import visibleIcon from './png/002.png';
 
 const Changepw = () => {
     const [formData, setFormData] = useState({
@@ -15,21 +12,17 @@ const Changepw = () => {
         confirmNewPassword: '',
     });
 
-    const [passwordError, setPasswordError] = useState(false); // 비밀번호 오류 상태
-    const [passwordMessage, setPasswordMessage] = useState(""); // 비밀번호 오류 메시지
-    const [shake, setShake] = useState(false); // 흔들림 애니메이션
-    const [passwordMatchMessage, setPasswordMatchMessage] = useState(""); // 비밀번호 일치 메시지
-    const [isConfirmTouched, setIsConfirmTouched] = useState(false); // 새 비밀번호 확인 입력 여부
-    const [containerHeight, setContainerHeight] = useState("450px"); // 기본 높이
-
-    const [showPassword, setShowPassword] = useState(false); // 비밀번호 표시 상태
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // 비밀번호 확인 표시 상태
-    const [passwordIconTop, setPasswordIconTop] = useState("95px"); // 기본 높이
-
-
+    const [passwordError, setPasswordError] = useState(false);
+    const [passwordMessage, setPasswordMessage] = useState("");
+    const [shake, setShake] = useState(false);
+    const [passwordMatchMessage, setPasswordMatchMessage] = useState("");
+    const [isConfirmTouched, setIsConfirmTouched] = useState(false);
+    const [containerHeight, setContainerHeight] = useState("450px");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [passwordIconTop, setPasswordIconTop] = useState("95px");
     const navigate = useNavigate();
 
-    // 👁 비밀번호 보기 버튼 클릭 시 상태 변경
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
@@ -38,17 +31,16 @@ const Changepw = () => {
         setShowConfirmPassword(!showConfirmPassword);
     };
 
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
 
         if (name === "newPassword") {
-            validatePassword(value); // 비밀번호 유효성 검사
+            validatePassword(value);
         }
 
         if (name === "confirmNewPassword") {
-            setIsConfirmTouched(true); // 새 비밀번호 확인 칸이 입력됨을 표시
+            setIsConfirmTouched(true);
         }
 
         if (name === 'confirmNewPassword' || name === 'newPassword') {
@@ -64,7 +56,6 @@ const Changepw = () => {
         e.preventDefault();
         const { userId, newPassword, confirmNewPassword } = formData;
 
-        // 입력값 검증
         if (!userId || !newPassword || !confirmNewPassword) {
             alert('모든 필드를 입력해주세요.');
             return;
@@ -83,7 +74,7 @@ const Changepw = () => {
 
             if (response.status === 200) {
                 alert('비밀번호 변경이 완료되었습니다.');
-                navigate('/'); // 로그인 페이지로 이동
+                navigate('/');
             }
         } catch (error) {
             console.error('비밀번호 변경 실패:', error);
@@ -92,14 +83,14 @@ const Changepw = () => {
     };
 
     const validatePassword = (password) => {
-        const hasLetter = /[a-zA-Z]/.test(password); // 영문 포함 여부
-        const isValidLength = password.length >= 5 && password.length <= 12; // 길이 조건
+        const hasLetter = /[a-zA-Z]/.test(password);
+        const isValidLength = password.length >= 5 && password.length <= 12;
 
         if (!hasLetter || !isValidLength) {
             setPasswordError(true);
-            setShake(true); // 흔들림 효과
+            setShake(true);
             setPasswordMessage("비밀번호는 영문 포함 5~12자여야 합니다.");
-            setTimeout(() => setShake(false), 500); // 흔들림 초기화
+            setTimeout(() => setShake(false), 500);
             return false;
         }
 
@@ -110,27 +101,27 @@ const Changepw = () => {
 
     useEffect(() => {
         if (passwordMessage && passwordMatchMessage) {
-            setContainerHeight("500px"); // ✅ 두 메시지가 동시에 표시될 때
+            setContainerHeight("500px");
         } else {
-            setContainerHeight("450px"); // ✅ 하나만 표시되거나 없을 때
+            setContainerHeight("450px");
         }
     }, [passwordMessage, passwordMatchMessage]);
 
     useEffect(() => {
         if (passwordMessage) {
-          setPasswordIconTop("132px"); // 🔺 비밀번호 오류 메시지가 있을 때
+          setPasswordIconTop("132px");
         } else {
-          setPasswordIconTop("95px"); // 🔻 비밀번호 오류 메시지가 없을 때
+          setPasswordIconTop("95px");
         }
-      }, [passwordMessage]); // passwordMessage 상태 변경 시 실행
+      }, [passwordMessage]);
 
       useEffect(() => {
         if (passwordMessage) {
-          setContainerHeight("470px"); // 🔺 비밀번호 오류 메시지가 있을 때
+          setContainerHeight("470px");
         } else {
-          setContainerHeight("450px"); // 🔻 비밀번호 오류 메시지가 없을 때
+          setContainerHeight("450px");
         }
-      }, [passwordMessage]); // passwordMessage 상태 변경 시 실행
+      }, [passwordMessage]);
 
 
     return (
@@ -161,7 +152,6 @@ const Changepw = () => {
                             onChange={handleChange}
                             required
                         />
-                        {/* 👁 비밀번호 보기 버튼 */}
                         <button type="button" className="toggle-password-btn" onClick={togglePasswordVisibility}>
                             <img
                                 src={showPassword ? visibleIcon : hiddenIcon}
@@ -182,16 +172,16 @@ const Changepw = () => {
                         value={formData.confirmNewPassword}
                         onChange={handleChange}
                         required
-                        onBlur={() => setIsConfirmTouched(true)} // 포커스를 잃으면 입력된 것으로 처리
+                        onBlur={() => setIsConfirmTouched(true)}
                     />
-                    {/* 👁 비밀번호 확인 보기 버튼 */}
+
                     <button type="button" className="toggle-password-btn" onClick={toggleConfirmPasswordVisibility}>
                         <img
                             src={showConfirmPassword ? visibleIcon : hiddenIcon}
                             alt={showConfirmPassword ? "비밀번호 보임" : "비밀번호 숨김"}
                             className="password-icon password-icon-pw4"
                             onClick={toggleConfirmPasswordVisibility}
-                            style={{ top: passwordIconTop }} // 🔥 동적으로 위치 변경
+                            style={{ top: passwordIconTop }}
                         />
                     </button>
                     <div>

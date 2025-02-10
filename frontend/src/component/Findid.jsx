@@ -14,13 +14,11 @@ const Findid = () => {
   const [foundUserId, setFoundUserId] = useState("");
   const navigate = useNavigate();
 
-  // 입력값 변경 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // 아이디 찾기 요청
   const handleFindId = async () => {
     if (!formData.centerId.trim()) {
       alert("기관명을 입력해주세요.");
@@ -35,7 +33,6 @@ const Findid = () => {
       return;
     }
 
-    // 이메일 합치기
     const finalEmail = `${formData.emailId}@${formData.emailDomain}`;
     const sendData = {
       centerId: formData.centerId,
@@ -64,7 +61,6 @@ const Findid = () => {
     }
   };
 
-  // 확인 버튼 -> 로그인 페이지
   const handleConfirm = () => {
     navigate("/");
   };
@@ -72,13 +68,11 @@ const Findid = () => {
   return (
     <div className={`findid-container ${foundUserId ? "expanded" : ""}`}>
       <div className="findid_header">
-      {/* X 버튼을 컨테이너 안쪽 상단 오른쪽에 배치 */}
       <h1 className="findid-title">아이디 찾기</h1>
       <button className="findid-close-btn" onClick={() => navigate("/")}>X</button>
       </div>
       
       <div className="findid-form">
-        {/* 기관명/직책 */}
         <label>기관명 / 직책</label>
         <div className="flex-row">
           <input
@@ -101,7 +95,6 @@ const Findid = () => {
           </select>
         </div>
 
-        {/* 관리자명 */}
         <label>관리자명</label>
         <input
           type="text"
@@ -113,7 +106,6 @@ const Findid = () => {
           required
         />
 
-        {/* 이메일 */}
         <label>이메일 입력</label>
         <div className="flex-row">
           <input
@@ -137,7 +129,6 @@ const Findid = () => {
           />
         </div>
 
-        {/* 아이디 찾기 버튼 */}
         <button className="findid-btn" onClick={handleFindId}>
           아이디 찾기
         </button>

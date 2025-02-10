@@ -12,6 +12,8 @@ import magnifyingGlassIcon from "./png/magnifying-glass.png";
 import documentIcon from "./png/document.png"; // 추가
 import patientIcon from "./png/patientedit.png";
 import trashIcon from "./png/trash.png";
+import warningIcon from "./png/warning.png"; // 경고 아이콘 추가
+import yellowwarningIcon from "./png/yellowwarning.png";
 
 function Main() {
   const navigate = useNavigate();
@@ -54,6 +56,17 @@ function Main() {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [hideSearchBar, setHideSearchBar] = useState(false);
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [showDiagnosisWarningModal, setShowDiagnosisWarningModal] = useState(false); // ✅ 진단 불가 모달 상태 추가
+  const [showNoHistoryModal, setShowNoHistoryModal] = useState(false); // ✅ 과거 진단 기록 없음 모달 상태 추가
+
+
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_DB_URL}/patients`)
+      .then(res => setPatients(res.data))
+      .catch(err => console.error(err));
+  }, []);
   const toggleSearchBar = () => {
     if (isSearchVisible) {
       setHideSearchBar(true); // 먼저 fadeOut 애니메이션 실행
@@ -65,7 +78,7 @@ function Main() {
       setIsSearchVisible(true);
     }
   };
-
+  const [showWarningModal, setShowWarningModal] = useState(false); // ✅ 환자 선택 요청 모달 상태 추가const [showWarningModal, setShowWarningModal] = useState(false); // ✅ 환자 선택 요청 모달 상태 추가
   // 환자 목록 불러오기
   useEffect(() => {
     axios
@@ -179,12 +192,18 @@ function Main() {
   // [진단하기]
   async function handleDiagnose() {
     if (!selectedPatient) {
-        alert("환자를 먼저 선택하세요.");
-        return;
+      setShowWarningModal(true); // ✅ 모달 표시
+      setTimeout(() => {
+        setShowWarningModal(false); // ✅ 3초 후 자동 닫힘
+      }, 3000);
+      return;
     }
     if (newImages.length === 0) {
-        alert("신규 X-ray가 없습니다. (진단 불가)");
-        return;
+      setShowDiagnosisWarningModal(true); // ✅ 진단 불가 모달 표시
+      setTimeout(() => {
+        setShowDiagnosisWarningModal(false); // ✅ 3초 후 자동 닫힘
+      }, 3000);
+      return;
     }
     if (!selectedNewImage) {
         alert("등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.");
@@ -205,10 +224,15 @@ function Main() {
         const bigFilename = selectedNewImage.file.name;
         formData.append("bigFilename", bigFilename);
 
-        await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-            withCredentials: true
-        });
+
+        // await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, formData, {
+        //     headers: { "Content-Type": "multipart/form-data" },
+        //     withCredentials: true
+        // });
+      const response = await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
 
         console.log("X-ray 업로드 완료 ✅");
 
@@ -231,24 +255,44 @@ function Main() {
             },
         });
 
+      const imgPaths = response.data.map((item) => item.imgPath);
+
+      // 3) 결과 페이지 이동
+      navigate("/result", {
+        state: {
+          patient: selectedPatient,
+          aiResult,
+          newlyUploaded: imgPaths,
+          bigFilename,
+          fromHistory: false,
+        },
+      });
     } catch (e) {
         console.error(e);
         alert("진단 과정에서 오류가 발생했습니다.");
     }
-}
-
+  }
+  // ✅ 모달 수동 닫기 함수
+  const closeDiagnosisWarningModal = () => {
+    setShowDiagnosisWarningModal(false);
+  };
   // ========== "이전 결과 보기" ==========
   function handleViewOldResult() {
     if (!selectedPatient) {
-      alert("환자를 먼저 선택하세요.");
+      setShowWarningModal(true); // ✅ 모달 표시
+      setTimeout(() => {
+        setShowWarningModal(false); // ✅ 3초 후 자동 닫힘
+      }, 3000);
       return;
     }
     if (!selectedDate) {
-      alert("진단 날짜를 선택해주세요.");
+      setShowNoHistoryModal(true); // ✅ 과거 진단 기록 없음 모달 표시
+      setTimeout(() => {
+        setShowNoHistoryModal(false); // ✅ 3초 후 자동 닫힘
+      }, 3000);
       return;
     }
 
-    // 과거결과 모드
     navigate("/result", {
       state: {
         patient: selectedPatient,
@@ -260,6 +304,15 @@ function Main() {
       },
     });
   }
+
+  // ✅ 모달 수동 닫기 함수
+  const closeWarningModal = () => {
+    setShowWarningModal(false);
+  };
+  // ✅ 모달 수동 닫기 함수
+  const closeNoHistoryModal = () => {
+    setShowNoHistoryModal(false);
+  };
   // const handleLogoClick = () => {
   //   setSelectedPatient(null);
   //   setOldImages([]);
@@ -327,6 +380,21 @@ function Main() {
 
   // 환자 클릭
   async function handlePatientClick(pt) {
+
+    if (selectedPatient && selectedPatient.pIdx === pt.pIdx) {
+      // ✅ 같은 환자를 다시 클릭하면 초기화
+      setSelectedPatient(null);
+      setDiagDates([]);
+      setSelectedDate(null);
+      setOldImages([]);
+      setSelectedOldImage(null);
+      setOldBigPreview(null);
+      setNewImages([]);
+      setSelectedNewImage(null);
+      setNewBigPreview(null);
+      return;
+    }
+
     // 기존 환자 상태 캐시
     if (selectedPatient) {
       storeCurrentPatientStateToCache(selectedPatient.pIdx);
@@ -428,7 +496,10 @@ function Main() {
   // 신규 사진 등록(파일 선택)
   function handleNewPhotoRegister() {
     if (!selectedPatient) {
-      window.alert("환자를 먼저 선택하세요.");
+      setShowWarningModal(true); // ✅ 모달 표시
+      setTimeout(() => {
+        setShowWarningModal(false); // ✅ 3초 후 자동 닫힘
+      }, 3000);
       return;
     }
     if (newImages.length >= 5) {
@@ -506,7 +577,32 @@ function Main() {
       * 최대5장, 현재 {newImages.length}장
     </div>
   );
+  // 삭제 모달 열기
+  const openDeleteModal = () => {
+    if (!selectedPatient) return;
+    setShowDeleteModal(true);
+    setTimeout(() => setModalVisible(true), 10); // 애니메이션 적용
+  };
 
+  // 삭제 실행
+  const handleDeleteConfirm = async () => {
+    if (!selectedPatient) return;
+
+    try {
+      await axios.delete(`${process.env.REACT_APP_DB_URL}/patients/${selectedPatient.pIdx}`);
+      setPatients(prev => prev.filter(p => p.pIdx !== selectedPatient.pIdx));
+      setSelectedPatient(null);
+      closeDeleteModal();
+    } catch (err) {
+      console.error("삭제 실패:", err);
+    }
+  };
+
+  // 모달 닫기
+  const closeDeleteModal = () => {
+    setModalVisible(false);
+    setTimeout(() => setShowDeleteModal(false), 300); // 애니메이션이 끝난 후 숨김
+  };
   return (
     <div className="main-container" style={{ overflow: "auto" }}>
       <Menu /> {/* Menu.jsx를 왼쪽에 배치 */}
@@ -547,18 +643,53 @@ function Main() {
               <img src={documentIcon} alt="과거 진단 아이콘" className="document-icon" />
               과거 진단 보기
             </button>
-
+            {showWarningModal && (
+              <div className="patient-warning-modal-overlay" onClick={closeWarningModal}>
+                <div className="patient-warning-modal">
+                  <img src={yellowwarningIcon} alt="경고" className="patient-warning-icon" /> {/* ✅ 경고 아이콘 추가 */}
+                  <p>환자를 선택해주세요.</p>
+                  <button onClick={closeWarningModal}>확인</button>
+                </div>
+              </div>
+            )}
             {/* 진단하기 버튼 */}
             <button className="diagnose-top-btn" onClick={handleDiagnose} disabled={newImages.length > 0 && !selectedNewImage}>
               <img src={stethoscopeIcon} alt="진단 아이콘" className="stethoscope-icon" />
               진단하기
             </button>
           </div>
+          {showWarningModal && (
+            <div className="patient-warning-modal-overlay" onClick={closeWarningModal}>
+              <div className="patient-warning-modal">
+                <img src={yellowwarningIcon} alt="경고" className="patient-warning-icon" /> {/* ✅ 경고 아이콘 추가 */}
+                <p>환자를 선택해주세요.</p>
+                <button onClick={closeWarningModal}>확인</button>
+              </div>
+            </div>
+          )}
+          {showDiagnosisWarningModal && (
+            <div className="diagnosis-warning-modal-overlay" onClick={closeDiagnosisWarningModal}>
+              <div className="diagnosis-warning-modal">
+                <img src={yellowwarningIcon} alt="경고" className="diagnosis-warning-icon" /> {/* ✅ 경고 아이콘 추가 */}
+                <p>X-ray를 등록해주세요</p>
+                <button onClick={closeDiagnosisWarningModal}>확인</button>
+              </div>
+            </div>
+          )}
+          {showNoHistoryModal && (
+            <div className="no-history-modal-overlay" onClick={closeNoHistoryModal}>
+              <div className="no-history-modal">
+                <img src={yellowwarningIcon} alt="경고" className="no-history-icon" /> {/* ✅ 경고 아이콘 추가 */}
+                <p>과거 진단 기록이 없습니다.</p>
+                <button onClick={closeNoHistoryModal}>확인</button>
+              </div>
+            </div>
+          )}
 
           {/* 🟡 메시지: 버튼 아래 배치 */}
           {newImages.length > 0 && !selectedNewImage && (
             <p style={{ color: "yellow", fontSize: "14px" }}>
-              등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.
+              등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다
             </p>
           )}
         </div>
@@ -662,9 +793,21 @@ function Main() {
                 <button className="btn" onClick={() => handleEditPatient(selectedPatient)}>
                   <img src={patientIcon} alt="수정" className="edit-icon" />
                 </button>
-                <button className="btn" onClick={() => handleDeletePatient(selectedPatient)}>
+                <button className="delete-button" onClick={openDeleteModal}>
                   <img src={trashIcon} alt="삭제" className="trash-icon" />
                 </button>
+              </div>
+            </div>
+          )}
+          {showDeleteModal && (
+            <div className={`modal-overlay ${modalVisible ? "visible" : ""}`}>
+              <div className="modal-content">
+                <img src={warningIcon} alt="경고" className="warning-icon" /> {/* 경고 아이콘 추가 */}
+                <p>정말 [{selectedPatient?.pName}] 환자를 삭제하시겠습니까?</p>
+                <div className="modal-buttons">
+                  <button className="modal-button confirm" onClick={handleDeleteConfirm}>삭제</button>
+                  <button className="modal-button cancel" onClick={closeDeleteModal}>취소</button>
+                </div>
               </div>
             </div>
           )}

@@ -16,15 +16,12 @@ const Findpw = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  // 입력 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // 인증번호 전송
   const handleSendCode = async () => {
-    // 이메일 합치기
     const finalEmail = `${formData.emailId}@${formData.emailDomain}`;
     if (!formData.userId.trim()) {
       alert("아이디를 입력하세요.");
@@ -46,9 +43,7 @@ const Findpw = () => {
     }
   };
 
-  // 인증번호 확인
   const handleVerifyCode = async () => {
-    // 아이디, 인증번호가 비었는지 체크
     if (!formData.userId.trim()) {
       alert("아이디를 입력하세요.");
       return;
@@ -71,7 +66,6 @@ const Findpw = () => {
     }
   };
 
-  // 비밀번호 변경 페이지로 이동
   const handleNavigateToChangePw = () => {
     if (isCodeVerified) {
       navigate("/changepw");
@@ -82,12 +76,10 @@ const Findpw = () => {
 
   return (
     <div className="findpw-container">
-      {/* X 버튼을 컨테이너 안쪽 상단 오른쪽에 배치 */}
       <button className="findpw-close-btn" onClick={() => navigate(-1)}>X</button>
       <h1 className="findpw-title">본인 인증</h1>
 
       <div className="findpw-form">
-        {/* 아이디 */}
         <label>아이디</label>
         <input
           type="text"
@@ -97,7 +89,6 @@ const Findpw = () => {
           onChange={handleChange}
         />
 
-        {/* 이메일 */}
         <label>이메일</label>
         <div className="flex-row3">
           <input
@@ -122,7 +113,6 @@ const Findpw = () => {
           </button>
         </div>
 
-        {/* 인증번호 입력 */}
         <label>인증번호 입력</label>
         <div className="flex-row">
           <input
@@ -138,10 +128,8 @@ const Findpw = () => {
           </button>
         </div>
 
-        {/* 메시지 */}
         {message && <p style={{ color: "#ccc", margintop: "15px", marginBottom: "-18px"}}>{message}</p>}
 
-        {/* 비밀번호 변경 이동 버튼 */}
         <button
           className="findpw-btn"
           onClick={handleNavigateToChangePw}

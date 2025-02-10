@@ -9,9 +9,9 @@ const Loading = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/result", { state: location.state });
-    }, 3000); // 3초 후 이동
+    }, 3000);
 
-    return () => clearTimeout(timer); // 클린업 함수
+    return () => clearTimeout(timer);
   }, [navigate, location.state]);
 
   return (

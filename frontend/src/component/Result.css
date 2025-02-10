@@ -1,4 +1,3 @@
-/* src/component/Result.css */
 .result-container {
   position: relative;
   width: 100%;
@@ -9,183 +8,181 @@
 }
 
 .result-topbar {
-  height: 2.5rem; /* 40px */
+  height: 2.5rem;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2.5rem; /* 40px */
+  padding: 0 2.5rem;
   box-sizing: border-box;
-  margin-top: 0.625rem; /* 10px */
+  margin-top: 0.625rem;
 }
 
 .result-main {
   flex: 1;
   display: flex;
-  margin-left: 3.125rem; /* 50px */
+  margin-left: 3.125rem;
   overflow: auto;
 }
 
 .result-main::-webkit-scrollbar {
-  width: 0.5rem; /* 8px */
+  width: 0.5rem;
 }
 
 .result-main::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 0.375rem; /* 6px */
+  border-radius: 0.375rem;
 }
 
 .result-main::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.719);
-  border-radius: 0.375rem; /* 6px */
+  border-radius: 0.375rem;
   background-clip: padding-box;
-  border: 0.125rem solid transparent; /* 2px */
+  border: 0.125rem solid transparent;
 }
 
 .result-main::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.966); /* 마우스 올리면 더 밝게 */
+  background: rgba(255, 255, 255, 0.966);
 }
 
-/* 왼쪽 패널 */
 .result-left-panel {
-  width: 21.875rem; /* 350px */
+  width: 21.875rem;
   background: rgba(0, 0, 0, 0.3);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  padding: 0.625rem; /* 10px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  padding: 0.625rem;
   color: #fff;
-  height: 50.3125rem; /* 805px */
-  border-radius: 0.5rem; /* 8px */
-  margin-top: 1.25rem; /* 20px */
-  margin-left: 1.25rem; /* 20px */
+  height: 50.3125rem;
+  border-radius: 0.5rem;
+  margin-top: 1.25rem;
+  margin-left: 1.25rem;
 }
 
 .result-patient-detail, .result-date-list {
   background: rgba(0, 0, 0, 0.5);
-  padding: 0.625rem; /* 10px */
-  margin-bottom: 0.625rem; /* 10px */
-  border-radius: 0.375rem; /* 6px */
+  padding: 0.625rem;
+  margin-bottom: 0.625rem;
+  border-radius: 0.375rem;
   color: #fff;
 }
 
 .patient-info-box {
   color: #fff;
-  margin-top: 0.3125rem; /* 5px */
-  margin-bottom: 0.3125rem; /* 5px */
+  margin-top: 0.3125rem;
+  margin-bottom: 0.3125rem;
 }
 
 .result-left-panel h2 {
-  margin-top: 0.3125rem; /* 5px */
-  margin-bottom: 0.3125rem; /* 5px */
-  margin-left: 0.625rem; /* 10px */
+  margin-top: 0.3125rem;
+  margin-bottom: 0.3125rem;
+  margin-left: 0.625rem;
 }
 
-/* 수정된 CSS - flex-shrink를 0으로 설정하여 원래 너비 유지 */
 .result-left-panel,
 .result-center-panel,
 .result-right-panel {
-  flex-shrink: 0; /* 수정된 부분: 아이템 축소 방지 */
+  flex-shrink: 0;
 }
 
 .result-right-panel2 {
   background: rgba(0, 0, 0, 0.6);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  border-radius: 0.375rem; /* 6px */
-  padding: 0.625rem; /* 10px */
-  margin-bottom: 0.625rem; /* 10px */
-  height: 5.75rem; /* 300px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  padding: 0.625rem;
+  margin-bottom: 0.625rem;
+  height: 5.75rem;
 }
 
 .result-right-panel3 {
   position: relative;
   display: grid;
   grid-template-rows: 1fr auto;
-  height: 5.75rem; /* 295px */
+  height: 5.75rem;
   background: rgba(0, 0, 0, 0.6);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  border-radius: 0.375rem; /* 6px */
-  padding: 0.625rem; /* 10px */
-  margin-bottom: 0.625rem; /* 10px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  padding: 0.625rem;
+  margin-bottom: 0.625rem;
 }
 
 .result-right-panel h2 {
-  margin-top: 0.3125rem; /* 5px */
-  margin-bottom: 0.3125rem; /* 5px */
+  margin-top: 0.3125rem;
+  margin-bottom: 0.3125rem;
 }
 
 .patient-info-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-radius: 0.375rem; /* 6px */
+  border-radius: 0.375rem;
   overflow: hidden;
 }
 
 .patient-info-table th {
   background-color: rgba(0, 0, 0, 0.8);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  padding: 0.625rem; /* 10px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  padding: 0.625rem;
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 4.375rem; /* 70px */
+  width: 4.375rem;
 }
 
 .patient-info-table td {
   background-color: rgba(0, 0, 0, 0.6);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  padding: 0.625rem; /* 10px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  padding: 0.625rem;
   color: #fff;
   text-overflow: ellipsis;
-  max-width: 7.5rem; /* 120px */
+  max-width: 7.5rem;
 }
 
 .patient-info-table thead tr:first-child th:first-child {
-  border-top-left-radius: 0.375rem; /* 6px */
+  border-top-left-radius: 0.375rem;
 }
 
 .patient-info-table thead tr:first-child th:last-child {
-  border-top-right-radius: 0.375rem; /* 6px */
+  border-top-right-radius: 0.375rem;
 }
 
 .patient-info-table tbody tr:last-child td:first-child {
-  border-bottom-left-radius: 0.375rem; /* 6px */
+  border-bottom-left-radius: 0.375rem;
 }
 
 .patient-info-table tbody tr:last-child td:last-child {
-  border-bottom-right-radius: 0.375rem; /* 6px */
+  border-bottom-right-radius: 0.375rem;
 }
 
 .result_btn1,
 .result_btn2 {
   display: flex;
-  align-items: center; /* 아이콘과 텍스트 세로 정렬 */
+  align-items: center;
   justify-content: center;
-  gap: 0.375rem; /* 6px */
-  padding: 0.625rem 0.9375rem; /* 10px 15px */
+  gap: 0.375rem;
+  padding: 0.625rem 0.9375rem;
   border: none;
-  border-radius: 0.375rem; /* 6px */
+  border-radius: 0.375rem;
   background: #fff;
   color: black;
-  font-size: 1rem; /* 16px */
+  font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
 }
 
 .result-btn1 {
-  margin-right: 0.625rem; /* 10px */
+  margin-right: 0.625rem;
 }
 
 .result_btn2 {
-  margin-left: 0.625rem; /* 10px */
-  margin-right: 2.5rem; /* 40px */
+  margin-left: 0.625rem;
+  margin-right: 2.5rem;
 }
 
 .Stethoscope-Icon1 {
-  width: 1.25rem; /* 20px */
+  width: 1.25rem;
   height: 1.25rem;
-  margin-right: 0.625rem; /* 10px */
+  margin-right: 0.625rem;
 }
 
 .result_btn1:hover,
@@ -200,16 +197,16 @@
 }
 
 .result-center-panel {
-  width: 58.625rem; /* 938px */
-  height: 51.8125rem; /* 829px */
+  width: 58.625rem;
+  height: 51.8125rem;
   background: rgba(0, 0, 0, 0.3);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  border-radius: 0.5rem; /* 8px */
-  padding: 0.625rem; /* 10px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.625rem;
   box-sizing: border-box;
   color: #fff;
-  margin-top: 1.25rem; /* 20px */
-  margin-left: 1.25rem; /* 20px */
+  margin-top: 1.25rem;
+  margin-left: 1.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -217,39 +214,38 @@
 }
 
 .date-list-box {
-  position: relative; /* 패널 내부에서 위치 조정 */
+  position: relative;
   background: rgba(0, 0, 0, 0.6);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  border-radius: 0.375rem; /* 6px */
-  padding: 0.625rem; /* 10px */
-  margin-bottom: 0.625rem; /* 10px */
-  margin-top: 0.625rem; /* 10px */
-  height: 11.875rem; /* 190px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  padding: 0.625rem;
+  margin-bottom: 0.625rem;
+  margin-top: 0.625rem;
+  height: 11.875rem;
   overflow-y: auto;
   text-align: center;
 }
 
 .date-list-box::-webkit-scrollbar {
-  width: 0.5rem; /* 8px */
+  width: 0.5rem;
 }
 
 .date-list-box::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 0.375rem; /* 6px */
+  border-radius: 0.375rem;
 }
 
 .date-list-box::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.719);
-  border-radius: 0.375rem; /* 6px */
+  border-radius: 0.375rem;
   background-clip: padding-box;
-  border: 0.125rem solid transparent; /* 2px */
+  border: 0.125rem solid transparent;
 }
 
 .date-list-box::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.966);
 }
 
-/* ✅ 비디오 스타일 추가 */
 .date-list-video {
   position: absolute;
   top: 0;
@@ -264,61 +260,61 @@
 .ai-result-box {
   position: relative;
   background: rgba(0, 0, 0, 0.6);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  border-radius: 0.375rem; /* 6px */
-  padding: 0.625rem; /* 10px */
-  margin-bottom: 0.625rem; /* 10px */
-  margin-top: 0.625rem; /* 10px */
-  height: 11.5625rem; /* 185px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  padding: 0.625rem;
+  margin-bottom: 0.625rem;
+  margin-top: 0.625rem;
+  height: 11.5625rem;
 }
 
 .video-container {
-  position: relative; /* ✅ 텍스트 위치 기준점 */
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
 }
 
-  .ai-result-video {
-    width: 100%;
-    height: auto; /* 자동 높이 조정 */
-    max-height: 185px; /* ai-result-box 높이와 일치 */
-    object-fit: contain; /* 비율 유지하며 영상 크기 조정 */
-    opacity: 0.5;
-  }
+.ai-result-video {
+  width: 100%;
+  height: auto;
+  max-height: 185px;
+  object-fit: contain;
+  opacity: 0.5;
+}
 
-  .ai-result-text {
-    position: absolute; /* ✅ 영상 위에 고정 */
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* ✅ 중앙 정렬 */
-  }
+.ai-result-text {
+  position: absolute;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 .result-right-panel {
-  width: 25rem; /* 400px */
+  width: 25rem;
   background: rgba(0, 0, 0, 0.3);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  padding: 0.625rem; /* 10px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  padding: 0.625rem;
   color: #fff;
-  height: 50.3125rem; /* 805px */
-  border-radius: 0.5rem; /* 8px */
-  margin-top: 1.25rem; /* 20px */
-  margin-left: 1.25rem; /* 20px */
+  height: 50.3125rem;
+  border-radius: 0.5rem;
+  margin-top: 1.25rem;
+  margin-left: 1.25rem;
 }
 
 .result-xray-area {
   flex: 2 1;
   width: 96%;
-  height: 51.8125rem; /* 829px */
+  height: 51.8125rem;
   background: rgba(0, 0, 0, 0.3);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  border-radius: 0.5rem; /* 8px */
-  padding: 0.625rem; /* 10px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.625rem;
   box-sizing: border-box;
   color: #fff;
 }
@@ -327,25 +323,25 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  width: 35.625rem; /* 570px */
-  height: 35.625rem; /* 570px */
-  border: 0.0625rem solid rgb(153, 153, 153); /* 1px */
-  margin-bottom: 0.9375rem; /* 15px */
+  width: 35.625rem;
+  height: 35.625rem;
+  border: 0.0625rem solid rgb(153, 153, 153);
+  margin-bottom: 0.9375rem;
   overflow: hidden;
   position: relative;
 }
 
 .thumb-list {
   display: flex;
-  gap: 0.625rem; /* 10px */
+  gap: 0.625rem;
   flex-wrap: wrap;
-  margin-top: 0.625rem; /* 10px */
+  margin-top: 0.625rem;
 }
 
 .thumb-item {
-  width: 5rem; /* 80px */
-  height: 5rem; /* 80px */
-  border: 0.125rem dashed #666; /* 2px */
+  width: 5rem;
+  height: 5rem;
+  border: 0.125rem dashed #666;
   cursor: pointer;
 }
 
@@ -358,92 +354,90 @@
 .result-diagnosis-area {
   flex: 1;
   background: rgba(0, 0, 0, 0.5);
-  padding: 0.625rem; /* 10px */
-  border-radius: 0.375rem; /* 6px */
+  padding: 0.625rem;
+  border-radius: 0.375rem;
   color: #fff;
   overflow-y: auto;
 }
 
 .result_hospital {
   background: rgba(0, 0, 0, 0.6);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  border-radius: 0.375rem; /* 6px */
-  padding: 0.625rem; /* 10px */
-  margin-bottom: 0.625rem; /* 10px */
-  height: 18.4375rem; /* 295px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  padding: 0.625rem;
+  margin-bottom: 0.625rem;
+  height: 18.4375rem;
   overflow-y: auto;
-  margin-top: 0.625rem; /* 10px */
+  margin-top: 0.625rem;
 }
 
 .result_hospital div {
-  margin-bottom: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem;
   cursor: pointer;
 }
 
-/* 스크롤 바 전체 스타일 */
 .result_hospital::-webkit-scrollbar {
-  width: 0.5rem; /* 8px */
+  width: 0.5rem;
 }
 
 .result_hospital::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 0.375rem; /* 6px */
+  border-radius: 0.375rem;
 }
 
 .result_hospital::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.719);
-  border-radius: 0.375rem; /* 6px */
+  border-radius: 0.375rem;
   background-clip: padding-box;
-  border: 0.125rem solid transparent; /* 2px */
+  border: 0.125rem solid transparent;
 }
 
-/* ✅ 스크롤 바 호버 효과 */
 .result_hospital::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.966); /* 마우스 올리면 더 밝게 */
+  background: rgba(255, 255, 255, 0.966);
 }
 
 .hospital-map1 {
   background: rgba(0, 0, 0, 0.6);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  border-radius: 0.375rem; /* 6px */
-  padding: 0.625rem; /* 10px */
-  margin-bottom: 0.625rem; /* 10px */
-  height: 36.1875rem; /* 355px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  padding: 0.625rem;
+  margin-bottom: 0.625rem;
+  height: 36.1875rem;
 }
 
 .hospital-map2 {
   background: rgba(0, 0, 0, 0.6);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px */
-  border-radius: 0.375rem; /* 6px */
-  padding: 0.625rem; /* 10px */
-  margin-bottom: 0.625rem; /* 10px */
-  height: 22.1875rem; /* 355px */
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  padding: 0.625rem;
+  margin-bottom: 0.625rem;
+  height: 22.1875rem;
 }
 
 .map-check {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.9375rem; /* 15px */
-  padding: 0 0.625rem; /* 10px */
+  margin-bottom: 0.9375rem;
+  padding: 0 0.625rem;
 }
 
 .hospital-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.625rem; /* 10px */
-  padding: 0 0.625rem; /* 10px */
+  margin-bottom: 0.625rem;
+  padding: 0 0.625rem;
 }
 
 .save-diagnosis-btn {
-  padding: 0.5rem 0.75rem; /* 8px 12px */
+  padding: 0.5rem 0.75rem;
   background: #ffffff;
   color: black;
   border: none;
-  border-radius: 0.375rem; /* 6px */
+  border-radius: 0.375rem;
   cursor: pointer;
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
   margin-left: auto;
   font-weight: bold;
   transition: background 0.3s ease-in-out;
@@ -456,24 +450,24 @@
 .drawing-tools-container {
   display: flex;
   align-items: center;
-  gap: 0.3125rem; /* 5px */
+  gap: 0.3125rem;
   background: rgba(0, 0, 0, 0.5);
-  padding: 0.3125rem; /* 5px */
-  border-radius: 0.5rem; /* 8px */
-  margin-bottom: 0.625rem; /* 10px */
+  padding: 0.3125rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.625rem;
   width: fit-content;
 }
 
 .drawing-tools {
   display: flex;
   align-items: center;
-  gap: 0.625rem; /* 10px */
+  gap: 0.625rem;
 }
 
 .color-picker,
 .line-width-slider {
-  border-radius: 0.25rem; /* 4px */
-  border: 0.0625rem solid #ddd; /* 1px */
+  border-radius: 0.25rem;
+  border: 0.0625rem solid #ddd;
   background: white;
   cursor: pointer;
 }
@@ -492,8 +486,8 @@
   background: none;
   border: none;
   cursor: pointer;
-  width: 2rem; /* 32px */
-  height: 2rem; /* 32px */
+  width: 2rem;
+  height: 2rem;
   background-image: url('./png/eraser.png');
   background-size: cover;
   background-position: center;
@@ -504,7 +498,8 @@
 }
 
 .print-icon {
-  width: 1.5625rem; /* 25px */
+  width: 1.5625rem;
   height: 1.5625rem;
   margin-right: 0.5rem; /* 8px */
 }
+

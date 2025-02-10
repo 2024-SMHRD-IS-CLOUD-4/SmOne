@@ -639,7 +639,7 @@ html, body {
   margin-left: 0.3125rem; /* 5px */
   transition: background 0.3s ease-in-out;
   font-weight: bold;
-  margin-right: 3px;
+  margin-right: 6px;
 }
 
 .patient-detail-actions .btn:hover {
@@ -765,4 +765,339 @@ html, body {
 .trash-icon {
   width: 1.5rem;  /* 24px */
   height: 1.5rem;
+}
+/* 모달 배경 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+/* 모달이 활성화될 때 */
+.modal-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 모달 창 */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: 350px;
+  transform: scale(0.9);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+/* 모달이 활성화될 때 */
+.modal-overlay.visible .modal-content {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* 모달 버튼 */
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.modal-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease-in-out;
+}
+
+.modal-button.confirm {
+  background-color: #d9534f;
+  color: white;
+}
+
+.modal-button.confirm:hover {
+  background-color: #c9302c;
+}
+
+.modal-button.cancel {
+  background-color: #aaa;
+  color: white;
+}
+
+.modal-button.cancel:hover {
+  background-color: #888;
+}
+/* 모달 창 내부 텍스트 스타일 */
+.modal-content p {
+  color: black; /* 글씨 색상을 검정색으로 변경 */
+  font-size: 16px;
+  font-weight: bold;
+}
+/* 수정 버튼 스타일 (기존) */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem; /* 40px */
+  height: 2.5rem;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.375rem; /* 6px */
+  background-color: #444;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.btn:hover {
+  background-color: #666;
+}
+
+/* 삭제 버튼도 수정 버튼과 동일한 스타일 적용 */
+.delete-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem; /* 40px */
+  height: 2.5rem;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.375rem; /* 6px */
+  background-color: #444; /* 수정 버튼과 동일한 배경색 */
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.delete-button:hover {
+  background-color: #666; /* 호버 시 색상 변경 */
+}
+
+/* 쓰레기통 아이콘 크기 */
+.trash-icon {
+  width: 1.5rem;  /* 24px */
+  height: 1.5rem;
+}
+/* 경고 아이콘 스타일 */
+.warning-icon {
+  width: 150px; /* 아이콘 크기 */
+  height: 150px;
+  margin-bottom: 20px; /* 아이콘과 텍스트 간격 */
+}
+/* ✅ 환자 선택 요청 모달 오버레이 */
+.patient-warning-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ 환자 선택 요청 모달 */
+.patient-warning-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 300px;
+  opacity: 0;
+  animation: patient-modal-fade-in 0.3s ease-in-out forwards;
+}
+
+/* ✅ 경고 아이콘 스타일 */
+.patient-warning-icon {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+/* ✅ 모달 텍스트 */
+.patient-warning-modal p {
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* ✅ 모달 닫기 버튼 */
+.patient-warning-modal button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #d9534f;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.patient-warning-modal button:hover {
+  background-color: #c9302c;
+}
+
+
+/* ✅ 모달 애니메이션 */
+@keyframes diagnosis-modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* ✅ 진단 불가 모달 오버레이 */
+.diagnosis-warning-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ 진단 불가 모달 */
+.diagnosis-warning-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 350px;
+  opacity: 0;
+  animation: diagnosis-modal-fade-in 0.3s ease-in-out forwards;
+}
+
+/* ✅ 경고 아이콘 스타일 */
+.diagnosis-warning-icon {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+/* ✅ 모달 텍스트 */
+.diagnosis-warning-modal p {
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* ✅ 모달 닫기 버튼 */
+.diagnosis-warning-modal button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #d9534f;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.diagnosis-warning-modal button:hover {
+  background-color: #c9302c;
+}
+
+/* ✅ 모달 애니메이션 */
+@keyframes diagnosis-modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* ✅ 과거 진단 기록 없음 모달 오버레이 */
+.no-history-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ 과거 진단 기록 없음 모달 */
+.no-history-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 350px;
+  opacity: 0;
+  animation: no-history-modal-fade-in 0.3s ease-in-out forwards;
+}
+
+/* ✅ 경고 아이콘 스타일 */
+.no-history-icon {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+/* ✅ 모달 텍스트 */
+.no-history-modal p {
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* ✅ 모달 닫기 버튼 */
+.no-history-modal button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #d9534f;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.no-history-modal button:hover {
+  background-color: #c9302c;
+}
+
+/* ✅ 모달 애니메이션 */
+@keyframes no-history-modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
