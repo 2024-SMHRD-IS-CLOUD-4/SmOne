@@ -424,9 +424,7 @@
   }
 }
 
-.modal-overlay.fade-in {
-  animation: fadeIn 0.3s ease-in-out;
-}
+
 /* ✅ 모달이 사라질 때 애니메이션 */
 @keyframes fadeOut {
   from {
@@ -443,12 +441,10 @@
 .modal-overlay.visible {
   opacity: 1;
   visibility: visible;
-  animation: fadeIn 0.3s ease-in-out;
 }
 
 /* ✅ 모달이 사라질 때 적용되는 클래스 */
 .modal-overlay.hide {
-  animation: fadeOut 0.3s ease-in-out;
   opacity: 0;
   visibility: hidden;
 }

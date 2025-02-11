@@ -215,7 +215,7 @@ function Main() {
       }, 3000);
       return;
     }
-    
+
     if (!selectedNewImage) {
       alert("등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.");
       return;
@@ -694,10 +694,11 @@ function Main() {
             <div className="diagnosis-warning-modal-overlay" onClick={closeDiagnosisWarningModal}>
               <div className={`diagnosis-warning-modal ${hideDiagnosisWarningModal ? "hide" : ""}`}>
                 <img src={yellowwarningIcon} alt="경고" className="diagnosis-warning-icon" /> {/* ✅ 경고 아이콘 추가 */}
-                <p>환자를 선택해주세요.</p>
+                <p>X-ray 사진을 등록해주세요.</p> {/* ✅ 텍스트 변경 */}
               </div>
             </div>
           )}
+
           {showNoHistoryModal && (
             <div className="no-history-modal-overlay" onClick={closeNoHistoryModal}>
               <div className={`no-history-modal ${hideNoHistoryModal ? "hide" : ""}`}>

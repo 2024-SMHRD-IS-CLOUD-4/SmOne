@@ -393,8 +393,26 @@ function Result() {
     navigate("/main");
   }
 
-  // [★] 출력하기: PrintPage.jsx로 데이터 전달
   function handlePrint() {
+    if (fromHistory) {
+      // ✅ 과거 진단 보기에서 넘어온 경우 즉시 출력 화면으로 이동
+      navigate("/print", {
+        state: {
+          patient,
+          aiResult,
+          bigPreview,
+          selectedHospital,
+          centerId: loginUser?.centerId,
+          userName: loginUser?.userName,
+          userEmail: loginUser?.email,
+          userAddress: loginUser?.address,
+          diagDate: selectedDate,
+        },
+      });
+      return;
+    }
+
+    // ✅ 새 진단 모드에서는 기존 동작 유지 (진단 저장 후 출력 가능)
     if (!hasSaved) {
       setShowSaveWarningModal(true); // ✅ 모달 표시
       setTimeout(() => {
@@ -406,27 +424,24 @@ function Result() {
       }, 1500); // ✅ 1.5초 후 모달 숨김 시작
       return;
     }
+
     if (!loginUser) {
       alert("로그인 사용자 정보를 가져오지 못했습니다.");
       return;
     }
-    // 병원 객체
-    const hospitalToSend = fromHistory
-      ? selectedHospital // 과거 모드: 이미 DB조회한 병원
-      : selectedHospital || null;
 
     navigate("/print", {
       state: {
         patient,
         aiResult,
         bigPreview,
-        selectedHospital: hospitalToSend, // 병원객체
+        selectedHospital,
         centerId: loginUser.centerId,
         userName: loginUser.userName,
         userEmail: loginUser.email,
         userAddress: loginUser.address,
-        diagDate: selectedDate
-      }
+        diagDate: selectedDate,
+      },
     });
   }
   //------------------------------------------------
