@@ -363,9 +363,25 @@ function Result() {
       alert("가까운 병원 중 하나를 선택해주세요!");
       return;
     }
+  
     const userId = sessionStorage.getItem("userId") || "testDoctor";
     try {
-      // 새로 업로드된 X-ray와 매칭
+      // 1. FastAPI로 진단 요청
+      const fastApiResponse = await axios.post(
+        "http://223.130.157.164:8000/diagnose/",
+        { 
+          p_idx: patient.pIdx, 
+          doctor_id: userId 
+        }
+      );
+  
+      // FastAPI에서 받은 진단 결과
+      const diagnosisResult = fastApiResponse.data.result;
+      console.log("📌 FastAPI 진단 결과:", diagnosisResult);
+  
+      setAiResult(diagnosisResult); // AI 진단 결과 상태 업데이트
+  
+      // 2. 새로 업로드된 X-ray와 매칭
       const matched = xrayList.filter(x =>
         newlyUploaded.some(orig => x.imgPath.includes(orig))
       );
@@ -373,19 +389,21 @@ function Result() {
         alert("업로드된 X-ray와 매칭된 이미지가 없습니다.");
         return;
       }
-      // XRAY 업데이트
+  
+      // 3. XRAY 업데이트
       for (const img of matched) {
         await axios.put(`${process.env.REACT_APP_DB_URL}/xray/updateResult`, {
           imgIdx: img.imgIdx,
-          result: aiResult,
+          result: diagnosisResult, // FastAPI 결과 사용
         });
       }
-      // diagnosis-result insert
+  
+      // 4. diagnosis-result insert
       for (const img of matched) {
         const body = {
           pIdx: patient.pIdx,
           imgIdx: img.imgIdx,
-          diagnosis: aiResult,
+          diagnosis: diagnosisResult, // FastAPI 결과 사용
           doctorId: userId,
           hosIdx: selectedHospital.hosIdx
         };
@@ -395,12 +413,13 @@ function Result() {
       }
       alert("진단 결과 저장 완료!");
       setHasSaved(true);
-
+  
     } catch (err) {
       console.error(err);
       alert("저장 중 오류 발생");
     }
   }
+  
 
   // 뒤로가기
   function handleGoBack() {
