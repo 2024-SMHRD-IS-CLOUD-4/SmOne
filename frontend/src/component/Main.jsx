@@ -27,6 +27,7 @@ function Main() {
   const patientsPerPage = 5;
 
   const userId = sessionStorage.getItem("userId")
+  
 
   // 선택된 환자
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -66,6 +67,11 @@ function Main() {
   const [imageToDelete, setImageToDelete] = useState(null); // ✅ 삭제할 이미지 상태 추가
   const [showImageWarningModal, setShowImageWarningModal] = useState(false);
   const [hideImageWarningModal, setHideImageWarningModal] = useState(false);
+
+  const [showWarningModal, setShowWarningModal] = useState(false);
+  const [hideWarningModal, setHideWarningModal] = useState(false);
+
+
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_DB_URL}/patients`)
@@ -207,106 +213,78 @@ function Main() {
   // [진단하기]
   async function handleDiagnose() {
     if (!selectedPatient) {
-      setShowDiagnosisWarningModal(true); // ✅ 모달 표시
-
-      setTimeout(() => {
-        setHideDiagnosisWarningModal(true); // ✅ 숨김 애니메이션 적용
-        setTimeout(() => {
-          setShowDiagnosisWarningModal(false);
-          setHideDiagnosisWarningModal(false);
-        }, 300); // ✅ 애니메이션 지속 시간 후 제거
-      }, 1500); // ✅ 1.5초 후 모달 숨김 시작
-
+      setShowDiagnosisWarningModal(true);
+      setTimeout(() => setShowDiagnosisWarningModal(false), 1500);
       return;
     }
+  
     if (newImages.length === 0) {
-      setShowDiagnosisWarningModal(true); // ✅ 진단 불가 모달 표시
-      setTimeout(() => {
-        setShowDiagnosisWarningModal(false); // ✅ 3초 후 자동 닫힘
-      }, 3000);
+      setShowDiagnosisWarningModal(true);
+      setTimeout(() => setShowDiagnosisWarningModal(false), 3000);
       return;
     }
-
+  
     if (!selectedNewImage) {
-        alert("등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.");
-        return;
+      alert("등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.");
+      return;
     }
+  
+    const bigFilename = selectedNewImage ? selectedNewImage.file.name : null; // ✅ bigFilename 정의
+  
     navigate("/loading", {
       state: {
         patient: selectedPatient,
         newlyUploaded: newImages.map((img) => img.file.name),
-        bigFilename: selectedNewImage.file.name,
+        bigFilename,
       },
     });
+  
     try {
-        // 1) 📌 Java 서버에 X-ray 업로드
-        const formData = new FormData();
-        formData.append("pIdx", selectedPatient.pIdx);
-        newImages.forEach((obj) => formData.append("files", obj.file));
-        const bigFilename = selectedNewImage.file.name;
-        formData.append("bigFilename", bigFilename);
-
-
-        // await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, formData, {
-        //     headers: { "Content-Type": "multipart/form-data" },
-        //     withCredentials: true
-        // });
+      // 1️⃣ Java 서버에 X-ray 업로드
+      const formData = new FormData();
+      formData.append("pIdx", selectedPatient.pIdx);
+      newImages.forEach((obj) => formData.append("files", obj.file));
+      formData.append("bigFilename", bigFilename);
+  
       const response = await axios.post(`${process.env.REACT_APP_DB_URL}/xray/diagnose`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
-
-        console.log("X-ray 업로드 완료 ✅");
-
-        // 2) 📌 FastAPI 모델 실행 요청
-        const fastApiResponse = await axios.post(`${process.env.REACT_APP_FASTAPI_URL}/diagnose/`, 
-          {
-              p_idx: selectedPatient.pIdx,
-              doctor_id: userId // 세션에서 doctor_id 가져오기
-          },
-          {
-              headers: { "Content-Type": "application/json" },
-              withCredentials: true // 세션 쿠키 포함
-          }
+  
+      console.log("X-ray 업로드 완료 ✅");
+  
+      // 2️⃣ FastAPI 모델 실행 요청
+      const fastApiResponse = await axios.post(`${process.env.REACT_APP_FASTAPI_URL}/diagnose/`, 
+        {
+          p_idx: selectedPatient.pIdx,
+          doctor_id: userId
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true
+        }
       );
-
-
-
-        console.log("FastAPI 진단 결과:", fastApiResponse.data);
-        console.log("📌 FastAPI에서 받은 진단 결과:", fastApiResponse.data.diagnosis);
-
-         // 🔥 여기서 `result` 객체를 명확하게 가져옴
-         const diagnosisResult = fastApiResponse.data?.result?.diagnosis || "진단 실패";
-         console.log("📌 FastAPI에서 받은 진단 결과:", diagnosisResult);
-
-        // 3) 📌 결과 페이지로 이동
-        navigate("/result", {
-            state: {
-                patient: selectedPatient,
-                aiResult: diagnosisResult,   // FastAPI에서 받은 진단 결과
-                newlyUploaded: newImages.map((img) => img.file.name),
-                bigFilename,
-                fromHistory: false,
-            },
-        });
-
-      const imgPaths = response.data.map((item) => item.imgPath);
-
-      // 3) 결과 페이지 이동
+  
+      console.log("📌 FastAPI에서 받은 진단 결과:", fastApiResponse.data.diagnosis);
+  
+      const diagnosisResult = fastApiResponse.data?.result?.diagnosis || "진단 실패";
+  
+      // 3️⃣ 결과 페이지 이동
       navigate("/result", {
         state: {
           patient: selectedPatient,
-          aiResult,
-          newlyUploaded: imgPaths,
+          aiResult: diagnosisResult,
+          newlyUploaded: newImages.map((img) => img.file.name),
           bigFilename,
           fromHistory: false,
         },
       });
+  
     } catch (e) {
-        console.error(e);
-        alert("진단 과정에서 오류가 발생했습니다.");
+      console.error(e);
+      alert("진단 과정에서 오류가 발생했습니다.");
     }
   }
+  
   // ✅ 모달 수동 닫기 함수
   const closeDiagnosisWarningModal = () => {
     setHideDiagnosisWarningModal(true); // ✅ 숨김 애니메이션 적용
@@ -320,14 +298,19 @@ function Main() {
     if (!selectedPatient) {
       setShowWarningModal(true);
       setTimeout(() => {
-        setShowWarningModal(false);
-      }, 1500);
+        setHideWarningModal(true); // ✅ 숨김 애니메이션 적용
+        setTimeout(() => {
+          setShowWarningModal(false);
+          setHideWarningModal(false);
+        }, 300); // ✅ 애니메이션 지속 시간 후 제거
+      }, 1500); // ✅ 1.5초 후 모달 숨김 시작
+  
       return;
     }
-
+  
     if (!selectedDate) {
       setShowNoHistoryModal(true); // ✅ 모달 표시
-
+  
       setTimeout(() => {
         setHideNoHistoryModal(true); // ✅ 숨김 애니메이션 적용
         setTimeout(() => {
@@ -335,10 +318,10 @@ function Main() {
           setHideNoHistoryModal(false);
         }, 300); // ✅ 애니메이션 지속 시간 후 제거
       }, 1500); // ✅ 1.5초 후 모달 숨김 시작
-
+  
       return;
     }
-
+  
     navigate("/result", {
       state: {
         patient: selectedPatient,

@@ -50,12 +50,7 @@ function SecondVisitUI({
 
   const handleOldThumbClick = (item) => {
     setSelectedOldImage(item);
-<<<<<<< HEAD
     setOldBigPreview(item.imgPath);
-=======
-    setOldBigPreview(item.bigXray);
-
->>>>>>> master
     setOldBaseScale(1);
     setOldZoom(1);
     setOldOffsetX(0);
