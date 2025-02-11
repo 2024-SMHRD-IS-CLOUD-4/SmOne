@@ -58,9 +58,14 @@ function Main() {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [hideDiagnosisWarningModal, setHideDiagnosisWarningModal] = useState(false);
   const [showDiagnosisWarningModal, setShowDiagnosisWarningModal] = useState(false); // ✅ 진단 불가 모달 상태 추가
   const [showNoHistoryModal, setShowNoHistoryModal] = useState(false); // ✅ 과거 진단 기록 없음 모달 상태 추가
-
+  const [hideNoHistoryModal, setHideNoHistoryModal] = useState(false);
+  const [showImageDeleteModal, setShowImageDeleteModal] = useState(false); // ✅ 이미지 삭제 확인 모달 상태 추가
+  const [imageToDelete, setImageToDelete] = useState(null); // ✅ 삭제할 이미지 상태 추가
+  const [showImageWarningModal, setShowImageWarningModal] = useState(false);
+  const [hideImageWarningModal, setHideImageWarningModal] = useState(false);
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_DB_URL}/patients`)
@@ -79,6 +84,8 @@ function Main() {
     }
   };
   const [showWarningModal, setShowWarningModal] = useState(false); // ✅ 환자 선택 요청 모달 상태 추가const [showWarningModal, setShowWarningModal] = useState(false); // ✅ 환자 선택 요청 모달 상태 추가
+  const [hideWarningModal, setHideWarningModal] = useState(false);
+
   // 환자 목록 불러오기
   useEffect(() => {
     axios
@@ -192,10 +199,16 @@ function Main() {
   // [진단하기]
   async function handleDiagnose() {
     if (!selectedPatient) {
-      setShowWarningModal(true); // ✅ 모달 표시
+      setShowDiagnosisWarningModal(true); // ✅ 모달 표시
+
       setTimeout(() => {
-        setShowWarningModal(false); // ✅ 3초 후 자동 닫힘
-      }, 3000);
+        setHideDiagnosisWarningModal(true); // ✅ 숨김 애니메이션 적용
+        setTimeout(() => {
+          setShowDiagnosisWarningModal(false);
+          setHideDiagnosisWarningModal(false);
+        }, 300); // ✅ 애니메이션 지속 시간 후 제거
+      }, 1500); // ✅ 1.5초 후 모달 숨김 시작
+
       return;
     }
     if (newImages.length === 0) {
@@ -205,6 +218,7 @@ function Main() {
       }, 3000);
       return;
     }
+
     if (!selectedNewImage) {
         alert("등록한 X-ray 중 한 장을 클릭(확대)해야 진단 가능합니다.");
         return;
@@ -274,22 +288,33 @@ function Main() {
   }
   // ✅ 모달 수동 닫기 함수
   const closeDiagnosisWarningModal = () => {
-    setShowDiagnosisWarningModal(false);
+    setHideDiagnosisWarningModal(true); // ✅ 숨김 애니메이션 적용
+    setTimeout(() => {
+      setShowDiagnosisWarningModal(false);
+      setHideDiagnosisWarningModal(false);
+    }, 300);
   };
-  // ========== "이전 결과 보기" ==========
+  // ✅ 과거 진단 기록 버튼 클릭 시 실행
   function handleViewOldResult() {
     if (!selectedPatient) {
-      setShowWarningModal(true); // ✅ 모달 표시
+      setShowWarningModal(true);
       setTimeout(() => {
-        setShowWarningModal(false); // ✅ 3초 후 자동 닫힘
-      }, 3000);
+        setShowWarningModal(false);
+      }, 1500);
       return;
     }
+
     if (!selectedDate) {
-      setShowNoHistoryModal(true); // ✅ 과거 진단 기록 없음 모달 표시
+      setShowNoHistoryModal(true); // ✅ 모달 표시
+
       setTimeout(() => {
-        setShowNoHistoryModal(false); // ✅ 3초 후 자동 닫힘
-      }, 3000);
+        setHideNoHistoryModal(true); // ✅ 숨김 애니메이션 적용
+        setTimeout(() => {
+          setShowNoHistoryModal(false);
+          setHideNoHistoryModal(false);
+        }, 300); // ✅ 애니메이션 지속 시간 후 제거
+      }, 1500); // ✅ 1.5초 후 모달 숨김 시작
+
       return;
     }
 
@@ -306,12 +331,28 @@ function Main() {
   }
 
   // ✅ 모달 수동 닫기 함수
-  const closeWarningModal = () => {
-    setShowWarningModal(false);
-  };
-  // ✅ 모달 수동 닫기 함수
   const closeNoHistoryModal = () => {
-    setShowNoHistoryModal(false);
+    setHideNoHistoryModal(true); // ✅ 숨김 애니메이션 적용
+    setTimeout(() => {
+      setShowNoHistoryModal(false);
+      setHideNoHistoryModal(false);
+    }, 300);
+  };
+
+  // ✅ 모달 수동 닫기 함수
+  const closeWarningModal = () => {
+    setHideWarningModal(true); // ✅ 숨김 애니메이션 적용
+    setTimeout(() => {
+      setShowWarningModal(false);
+      setHideWarningModal(false);
+    }, 300);
+  };
+  const closeImageWarningModal = () => {
+    setHideImageWarningModal(true);
+    setTimeout(() => {
+      setShowImageWarningModal(false);
+      setHideImageWarningModal(false);
+    }, 300);
   };
   // const handleLogoClick = () => {
   //   setSelectedPatient(null);
@@ -528,16 +569,35 @@ function Main() {
     e.target.value = null;
   }
 
+  // ✅ 이미지 삭제 버튼 클릭 시 모달 표시
   function handleRemoveNewImage(id) {
-    const ok = window.confirm("이 이미지를 삭제하시겠습니까?");
-    if (!ok) return;
-    setNewImages(prev => prev.filter(x => x.id !== id));
-    const target = newImages.find(x => x.id === id);
-    if (target && target.previewUrl === newBigPreview) {
+    const targetImage = newImages.find(x => x.id === id);
+    if (!targetImage) return;
+
+    setImageToDelete(targetImage);
+    setShowImageDeleteModal(true);
+  }
+
+  // ✅ 이미지 삭제 확인 버튼 클릭 시 실행
+  const confirmImageDelete = () => {
+    if (!imageToDelete) return;
+
+    setNewImages(prev => prev.filter(x => x.id !== imageToDelete.id));
+
+    if (imageToDelete.previewUrl === newBigPreview) {
       setNewBigPreview(null);
       setSelectedNewImage(null);
     }
-  }
+
+    setShowImageDeleteModal(false);
+    setImageToDelete(null);
+  };
+
+  // ✅ 모달 수동 닫기 함수
+  const closeImageDeleteModal = () => {
+    setShowImageDeleteModal(false);
+    setImageToDelete(null);
+  };
 
   // Edit / Delete
   const handleEditPatient = (thePatient) => {
@@ -645,43 +705,43 @@ function Main() {
             </button>
             {showWarningModal && (
               <div className="patient-warning-modal-overlay" onClick={closeWarningModal}>
-                <div className="patient-warning-modal">
+                <div className={`past-diagnosis-modal ${hideWarningModal ? "hide" : ""}`}>
                   <img src={yellowwarningIcon} alt="경고" className="patient-warning-icon" /> {/* ✅ 경고 아이콘 추가 */}
                   <p>환자를 선택해주세요.</p>
-                  <button onClick={closeWarningModal}>확인</button>
                 </div>
               </div>
             )}
+
             {/* 진단하기 버튼 */}
             <button className="diagnose-top-btn" onClick={handleDiagnose} disabled={newImages.length > 0 && !selectedNewImage}>
               <img src={stethoscopeIcon} alt="진단 아이콘" className="stethoscope-icon" />
               진단하기
             </button>
           </div>
-          {showWarningModal && (
-            <div className="patient-warning-modal-overlay" onClick={closeWarningModal}>
-              <div className="patient-warning-modal">
-                <img src={yellowwarningIcon} alt="경고" className="patient-warning-icon" /> {/* ✅ 경고 아이콘 추가 */}
-                <p>환자를 선택해주세요.</p>
-                <button onClick={closeWarningModal}>확인</button>
-              </div>
-            </div>
-          )}
+
           {showDiagnosisWarningModal && (
             <div className="diagnosis-warning-modal-overlay" onClick={closeDiagnosisWarningModal}>
-              <div className="diagnosis-warning-modal">
+              <div className={`diagnosis-warning-modal ${hideDiagnosisWarningModal ? "hide" : ""}`}>
                 <img src={yellowwarningIcon} alt="경고" className="diagnosis-warning-icon" /> {/* ✅ 경고 아이콘 추가 */}
-                <p>X-ray를 등록해주세요</p>
-                <button onClick={closeDiagnosisWarningModal}>확인</button>
+                <p>X-ray 사진을 등록해주세요.</p> {/* ✅ 텍스트 변경 */}
               </div>
             </div>
           )}
+
           {showNoHistoryModal && (
             <div className="no-history-modal-overlay" onClick={closeNoHistoryModal}>
-              <div className="no-history-modal">
+              <div className={`no-history-modal ${hideNoHistoryModal ? "hide" : ""}`}>
                 <img src={yellowwarningIcon} alt="경고" className="no-history-icon" /> {/* ✅ 경고 아이콘 추가 */}
                 <p>과거 진단 기록이 없습니다.</p>
-                <button onClick={closeNoHistoryModal}>확인</button>
+              </div>
+            </div>
+          )}
+          {showImageWarningModal && (
+            <div className="image-warning-modal-overlay" onClick={closeImageWarningModal}>
+              <div className={`image-warning-modal ${hideImageWarningModal ? "hide" : ""}`}>
+                <img src={warningIcon} alt="경고" className="image-warning-icon" /> {/* ✅ 경고 아이콘 추가 */}
+                <p>사진이 업로드 되어있지 않습니다.</p>
+                <button onClick={closeImageWarningModal}>확인</button>
               </div>
             </div>
           )}
@@ -911,6 +971,19 @@ function Main() {
                 />
               </>
             )}
+            {showImageDeleteModal && (
+              <div className="image-delete-modal-overlay" onClick={closeImageDeleteModal}>
+                <div className="image-delete-modal">
+                  <img src={warningIcon} alt="경고" className="image-delete-icon" /> {/* ✅ 경고 아이콘 추가 */}
+                  <p>이 이미지를 삭제하시겠습니까?</p>
+                  <div className="image-delete-modal-buttons">
+                    <button className="confirm" onClick={confirmImageDelete}>삭제</button>
+                    <button className="cancel" onClick={closeImageDeleteModal}>취소</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </div>

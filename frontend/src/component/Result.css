@@ -57,7 +57,8 @@
   margin-left: 1.25rem;
 }
 
-.result-patient-detail, .result-date-list {
+.result-patient-detail,
+.result-date-list {
   background: rgba(0, 0, 0, 0.5);
   padding: 0.625rem;
   margin-bottom: 0.625rem;
@@ -68,7 +69,7 @@
 .patient-info-box {
   color: #fff;
   margin-top: 0.3125rem;
-  margin-bottom: 0.3125rem;
+  margin-bottom: 1.3125rem;
 }
 
 .result-left-panel h2 {
@@ -219,7 +220,7 @@
   border: 0.0625rem solid rgba(255, 255, 255, 0.2);
   border-radius: 0.375rem;
   padding: 0.625rem;
-  margin-bottom: 0.625rem;
+  margin-bottom: 1.625rem;
   margin-top: 0.625rem;
   height: 11.875rem;
   overflow-y: auto;
@@ -341,7 +342,7 @@
 .thumb-item {
   width: 5rem;
   height: 5rem;
-  border: 0.125rem dashed #666;
+  border: 0.125rem solid #666;
   cursor: pointer;
 }
 
@@ -500,6 +501,219 @@
 .print-icon {
   width: 1.5625rem;
   height: 1.5625rem;
-  margin-right: 0.5rem; /* 8px */
+  margin-right: 0.5rem;
+  /* 8px */
 }
 
+.hospital-warning-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hospital-warning-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 350px;
+  opacity: 0;
+  transform: scale(0.8);
+  animation: hospital-modal-fade-in 0.3s ease-in-out forwards;
+}
+
+.hospital-warning-modal.hide {
+  animation: hospital-modal-fade-out 0.3s ease-in-out forwards;
+}
+
+.hospital-warning-icon {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+.hospital-warning-modal p {
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+@keyframes hospital-modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes hospital-modal-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.save-warning-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.save-warning-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 350px;
+  opacity: 0;
+  transform: scale(0.8);
+  animation: save-modal-fade-in 0.3s ease-in-out forwards;
+}
+
+.save-warning-modal.hide {
+  animation: save-modal-fade-out 0.3s ease-in-out forwards;
+}
+
+.save-warning-icon {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+.save-warning-modal p {
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.save-warning-modal button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #d9534f;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.save-warning-modal button:hover {
+  background-color: #c9302c;
+}
+
+@keyframes save-modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes save-modal-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.diagnosis-success-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.diagnosis-success-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 350px;
+  opacity: 0;
+  animation: diagnosis-success-fade-in 0.3s ease-in-out forwards;
+}
+
+.diagnosis-success-modal.hide {
+  animation: diagnosis-success-fade-out 0.3s ease-in-out forwards;
+}
+
+.diagnosis-success-icon {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+.diagnosis-success-modal p {
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+
+@keyframes diagnosis-success-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes diagnosis-success-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}

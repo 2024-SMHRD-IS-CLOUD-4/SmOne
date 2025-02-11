@@ -6,28 +6,11 @@ const Loading = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate("/result", { state: location.state });
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [navigate, location.state]);
-
-  return (
-    <div className="loading-container">
-      <div className="circle-container">
-        <div className="circle"></div>
+    return (
+      <div className="loadingRing">
+        Diagnosing
+        <span className="loadingSpan"></span>
       </div>
-      <div className="circle-container">
-        <div className="circle"></div>
-      </div>
-      <div className="circle-container">
-        <div className="circle"></div>
-      </div>
-      <p>Diagnosing...</p>
-    </div>
-  );
-};
-
+    );
+  };
 export default Loading;

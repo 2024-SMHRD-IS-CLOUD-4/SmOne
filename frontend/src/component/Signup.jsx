@@ -57,7 +57,7 @@ function Signup() {
       if (res.data) {
         setIsDuplicate(true);
         setShake(true);
-        setIdCheckMessage("중복된 아이디입니다람쥐.");
+        setIdCheckMessage("중복된 아이디입니다.");
         setTimeout(() => setShake(false), 500);
       } else {
         setIsDuplicate(false);
@@ -316,12 +316,17 @@ function Signup() {
             onChange={handlePasswordChange}
             required
           />
-          <button type="button" className="toggle-password-btn5" onClick={togglePasswordVisibility}>
+          <button
+          type="button"
+          className={`toggle-password-btn5 ${idCheckMessage ? "error-active" : ""}`}
+          onClick={togglePasswordVisibility}>
+
             <img
               src={showPassword ? visibleIcon : hiddenIcon}
               alt={showPassword ? "비밀번호 보임" : "비밀번호 숨김"}
               className="password-icon5"
             />
+            
           </button>
         </div>
         {passwordMessage && <p className="password-error-message">{passwordMessage}</p>}

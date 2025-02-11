@@ -273,6 +273,10 @@ transition: background 0.3s ease-in-out;
   color: #666;
 }
 
+.toggle-password-btn5.error-active {
+  top: 270px;
+}
+
 .toggle-password-btn5:hover .password-icon5 {
   opacity: 0.7;
 }
@@ -280,7 +284,7 @@ transition: background 0.3s ease-in-out;
 .password-icon5 {
   width: 24px;
   height: 15px;
-  margin-top: 8px;
+  margin-top: 7px;
   opacity: 0.5;
   transition: opacity 0.3s ease;
 }

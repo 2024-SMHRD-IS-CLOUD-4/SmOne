@@ -380,7 +380,7 @@
   transform: scale(0.9);
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
   opacity: 0;
-  height: 220px;
+  height: auto;
 }
 
 /* 모달 활성화 시 애니메이션 */
@@ -424,7 +424,27 @@
   }
 }
 
-.modal-overlay.fade-in {
-  animation: fadeIn 0.3s ease-in-out;
+
+/* ✅ 모달이 사라질 때 애니메이션 */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
 }
 
+/* ✅ 모달 활성화 상태 */
+.modal-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ✅ 모달이 사라질 때 적용되는 클래스 */
+.modal-overlay.hide {
+  opacity: 0;
+  visibility: hidden;
+}

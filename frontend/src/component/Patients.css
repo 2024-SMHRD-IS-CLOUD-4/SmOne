@@ -231,6 +231,7 @@
   margin-bottom: 12px;
   display: block;
 }
+
 /* ✅ 환자 등록 완료 모달 오버레이 */
 .patient-success-modal-overlay {
   position: fixed;
@@ -257,11 +258,17 @@
   animation: patient-modal-fade-in 0.3s ease-in-out forwards;
 }
 
+/* ✅ 모달이 닫힐 때 (JS에서 hide 클래스 추가) */
+.patient-success-modal.hide {
+  animation: patient-modal-fade-out 0.3s ease-in-out forwards;
+}
+
 /* ✅ 체크마크 아이콘 스타일 */
 .patient-success-icon {
   width: 120px;
   height: 120px;
-  margin-bottom: 50x; /* 아이콘과 텍스트 간격 */
+  margin-bottom: 50x;
+  /* 아이콘과 텍스트 간격 */
   margin-top: 10px;
 }
 
@@ -293,10 +300,24 @@
 @keyframes patient-modal-fade-in {
   from {
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* ✅ 환자 등록 완료 모달이 사라질 때 애니메이션 */
+@keyframes patient-modal-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95);
   }
 }
