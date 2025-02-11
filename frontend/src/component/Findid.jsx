@@ -12,24 +12,33 @@ const Findid = () => {
     emailDomain: "",
   });
   const [foundUserId, setFoundUserId] = useState("");
+  const [errorField, setErrorField] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setErrorField("");
   };
 
   const handleFindId = async () => {
+    setErrorField("");
+    setErrorMessage("");
+
     if (!formData.centerId.trim()) {
-      alert("기관명을 입력해주세요.");
+      setErrorField("centerId");
+      setErrorMessage("기관명을 입력해주세요.");
       return;
     }
     if (!formData.userName.trim()) {
-      alert("관리자명을 입력해주세요.");
+      setErrorField("userName");
+      setErrorMessage("관리자명을 입력해주세요.");
       return;
     }
     if (!formData.emailId.trim() || !formData.emailDomain.trim()) {
-      alert("이메일을 입력해주세요.");
+      setErrorField("email");
+      setErrorMessage("이메일을 입력해주세요.");
       return;
     }
 
@@ -47,16 +56,18 @@ const Findid = () => {
       const response = await axios.post(`${process.env.REACT_APP_DB_URL}/users/findid`, sendData);
       if (response && response.data) {
         setFoundUserId(response.data);
-        alert(`아이디를 찾았습니다: ${response.data}`);
       } else {
-        alert("알 수 없는 오류가 발생했습니다.");
+        setErrorField("findid-btn");
+        setErrorMessage("알 수 없는 오류가 발생했습니다.");
       }
     } catch (error) {
       console.error("아이디 찾기 오류:", error);
       if (error.response && error.response.status === 404) {
-        alert("입력하신 정보와 일치하는 아이디가 없습니다.");
+        setErrorField("findid-btn");
+        setErrorMessage("입력하신 정보와 일치하는 아이디가 없습니다.");
       } else {
-        alert("아이디를 찾는 중 오류가 발생했습니다.");
+        setErrorField("findid-btn");
+        setErrorMessage("아이디를 찾는 중 오류가 발생했습니다.");
       }
     }
   };
@@ -68,8 +79,8 @@ const Findid = () => {
   return (
     <div className={`findid-container ${foundUserId ? "expanded" : ""}`}>
       <div className="findid_header">
-      <h1 className="findid-title">아이디 찾기</h1>
-      <button className="findid-close-btn" onClick={() => navigate("/")}>X</button>
+        <h1 className="findid-title">아이디 찾기</h1>
+        <button className="findid-close-btn" onClick={() => navigate("/")}>X</button>
       </div>
       
       <div className="findid-form">
@@ -81,7 +92,7 @@ const Findid = () => {
             placeholder="기관명을 입력하세요"
             value={formData.centerId}
             onChange={handleChange}
-            className="long-input"
+            className={`long-input ${errorField === "centerId" ? "error" : ""}`}
             required
           />
           <select
@@ -99,7 +110,7 @@ const Findid = () => {
         <input
           type="text"
           name="userName"
-          className="findid_name"
+          className={`findid_name ${errorField === "userName" ? "error" : ""}`}
           placeholder="관리자명을 입력하세요"
           value={formData.userName}
           onChange={handleChange}
@@ -111,7 +122,7 @@ const Findid = () => {
           <input
             type="text"
             name="emailId"
-            className="email-input"
+            className={`email-input ${errorField === "email" ? "error" : ""}`}
             placeholder="이메일 아이디"
             value={formData.emailId}
             onChange={handleChange}
@@ -124,14 +135,16 @@ const Findid = () => {
             placeholder="직접입력"
             value={formData.emailDomain}
             onChange={handleChange}
-            className="email-input"
+            className={`email-input ${errorField === "email" ? "error" : ""}`}
             required
           />
         </div>
 
-        <button className="findid-btn" onClick={handleFindId}>
+        <button className={`findid-btn ${errorField === "findid-btn" ? "error" : ""}`} onClick={handleFindId}>
           아이디 찾기
         </button>
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         {foundUserId && (
           <div className="result-box">
