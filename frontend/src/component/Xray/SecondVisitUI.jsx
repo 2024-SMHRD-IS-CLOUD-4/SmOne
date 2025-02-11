@@ -25,18 +25,17 @@ function SecondVisitUI({
 }) {
   const previewBoxWidth = 570;
   const previewBoxHeight = 570;
-  
- /** ✅ useEffect 내부에서 X-ray 이미지 목록을 불러오기 */
- useEffect(() => {
-  if (selectedPatient) {
-    axios
-      .get(`${process.env.REACT_APP_DB_URL2}/list?pIdx=${selectedPatient}`)
-      .then(response => {
-        setOldImages(response.data); // ✅ API 응답 데이터를 상태에 저장
-      })
-      .catch(error => console.error("❌ X-RAY 이미지 로드 실패:", error));
-  }
-}, [selectedPatient, setOldImages]);  // ✅ 의존성 배열 수정
+
+  /** ✅ useEffect 내부에서 X-ray 이미지 목록을 불러오기 */
+  useEffect(() => {
+    if (selectedPatient) {
+      axios.get(`${process.env.REACT_APP_DB_URL2}/list?pIdx=${selectedPatient}`)
+        .then(response => {
+          setOldImages(response.data); // ✅ API 응답 데이터를 상태에 저장
+        })
+        .catch(error => console.error("❌ X-RAY 이미지 로드 실패:", error));
+    }
+  }, [selectedPatient, setOldImages]);  // ✅ 의존성 배열 수정
 
 
   // 과거 X-ray
@@ -51,7 +50,12 @@ function SecondVisitUI({
 
   const handleOldThumbClick = (item) => {
     setSelectedOldImage(item);
+<<<<<<< HEAD
     setOldBigPreview(item.imgPath);
+=======
+    setOldBigPreview(item.bigXray);
+
+>>>>>>> master
     setOldBaseScale(1);
     setOldZoom(1);
     setOldOffsetX(0);
@@ -66,7 +70,7 @@ function SecondVisitUI({
     const scaleH = previewBoxHeight / natH;
     setOldBaseScale(Math.min(scaleW, scaleH));
   };
-  
+
   const handleWheelOld = (e) => {
     let delta = e.deltaY < 0 ? 0.1 : -0.1;
     let newZ = oldZoom + delta;
@@ -189,7 +193,7 @@ function SecondVisitUI({
     <div className="xray-flex" style={{ position: "relative" }}>
       {/* 과거 X-ray */}
       <div className="xray-subpanel2">
-        <h4 style={{ marginTop: 0 }}>{oldXrayTitle}</h4>
+        <h4 style={{ marginBottom: "10px", marginTop: "-10px" }}>{oldXrayTitle}</h4>
         <div
           style={{
             width: `${previewBoxWidth}px`,
@@ -258,7 +262,7 @@ function SecondVisitUI({
 
       {/* 신규 X-ray */}
       <div className="xray-subpanel2">
-        <h4 style={{ marginTop: 0 }}>신규 X-ray 등록</h4>
+        <h4 style={{ marginBottom: "10px", marginTop: "-10px" }}>신규 X-ray 등록</h4>
         <div
           style={{
             width: `${previewBoxWidth}px`,
@@ -286,7 +290,7 @@ function SecondVisitUI({
             />
           ) : (
             <div style={{ color: "#999", marginTop: "250px" }}>
-              밑의 아이콘을 클릭하여 사진을 등록해주세요
+              밑의 아이콘을 클릭하여 X-ray를 등록해주세요
             </div>
           )}
         </div>
@@ -366,8 +370,8 @@ function SecondVisitUI({
                     style={{
                       position: "absolute",
                       top: 0,
-                      right: 2,
-                      width: "10px", /* 기존보다 5px 넓게 설정 */
+                      right: 0,
+                      width: "14px", /* 기존보다 5px 넓게 설정 */
                       background: "rgba(255,0,0,0.7)",
                       border: "none",
                       color: "#fff",

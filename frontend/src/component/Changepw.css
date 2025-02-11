@@ -1,6 +1,5 @@
-/* 반투명 컨테이너 */
 .changepw-container {
-  position: relative; /* 이 부분이 중요합니다 */
+  position: relative;
   width: 450px;
   height: 450px;
   margin: 200px auto 0 auto;
@@ -11,12 +10,11 @@
   padding: 30px 25px;
   color: #fff;
   text-align: center;
-  transition: height 0.2s ease-in-out; /* ✅ 부드러운 높이 변경 */
+  transition: height 0.2s ease-in-out;
 }
 
 .changepw-form {
-  display: flex
-;
+  display: flex;
   flex-direction: column;
   gap: 15px;
   text-align: left;
@@ -78,12 +76,6 @@ h1 {
   margin-bottom: 25px;
 }
 
-/* form {
-  display: flex;
-  flex-direction: column;
-
-} */
-
 label {
   text-align: left;
   font-size: 14px;
@@ -99,7 +91,6 @@ input[type="text1"] {
   font-size: 20px;
   height: 40px;
   margin-bottom: 45px;
-  /* 기관명 입력 박스 아래 간격 설정 */
 }
 
 input[type="password1"] {
@@ -109,7 +100,6 @@ input[type="password1"] {
   font-size: 20px;
   height: 40px;
   margin-bottom: 45px;
-  /* 비밀번호 입력 박스 아래 간격 설정 */
 }
 
 input:focus {
@@ -130,69 +120,71 @@ input:focus {
 .pass-button:hover {
   background-color: #555555;
 }
-  /* 비밀번호 변경 버튼 */
-  .changepw_btn {
-    margin-top: 35px;
-    padding: 12px;
-    border: none;
-    border-radius: 4px;
-    background-color: #333;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  .changepw_btn:hover {
-    background-color: #555;
-  }
-  .changepw_btn:disabled {
-    background-color: #666;
-    cursor: not-allowed;
-  }
 
-    /* X 버튼 (닫기 버튼) */
-  .changepw-close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    padding: 6px 10px;
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.3s ease-in-out;
-  }
-  
-  .changepw-close-btn:hover {
-    background-color: #666;
-  }
+.changepw_btn {
+  margin-top: 35px;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #333;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
 
-  /* 흔들림 애니메이션 */
+.changepw_btn:hover {
+  background-color: #555;
+}
+
+.changepw_btn:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
+
+.changepw-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 6px 11px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease-in-out;
+}
+
+.changepw-close-btn:hover {
+  background-color: #666;
+}
+
 @keyframes shake {
   0% {
     transform: translateX(0);
   }
+
   25% {
     transform: translateX(-5px);
   }
+
   50% {
     transform: translateX(5px);
   }
+
   75% {
     transform: translateX(-5px);
   }
+
   100% {
     transform: translateX(0);
   }
 }
 
-/* 흔들림 효과 */
 .shake {
   animation: shake 0.3s ease-in-out;
 }
 
-/* 오류 메시지 스타일 */
 .password-error-message {
   color: red;
   font-size: 14px;
@@ -200,13 +192,11 @@ input:focus {
   margin-top: 5px;
 }
 
-/* 오류 입력 필드 스타일 */
 .error-border1 {
   border: 2px solid red !important;
   transition: border 0.2s ease-in-out;
 }
 
-/* 비밀번호 입력 필드 컨테이너 */
 .password-container {
   display: flex;
   align-items: center;
@@ -214,11 +204,10 @@ input:focus {
   width: 100%;
 }
 
-/* 비밀번호 입력 필드 */
 .changepw-pw1,
 .changepw-pw2 {
   width: 100%;
-  padding-right: 40px; /* 👁 아이콘 공간 확보 */
+  padding-right: 40px;
   padding-left: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -226,7 +215,14 @@ input:focus {
   height: 44px;
 }
 
-/* 👁 비밀번호 보기 아이콘 (입력 칸 내부 고정) */
+.password-match-message {
+  text-align: center;
+  font-size: 14px;
+  color: #ccc;
+  margin-top: 5px;
+  display: block;
+}
+
 .toggle-password-btn {
   position: absolute;
   right: 10px;
@@ -241,7 +237,6 @@ input:focus {
   height: 100%;
 }
 
-/* 👁 비밀번호 보기 아이콘 (입력 칸 내부 위치) */
 .password-icon {
   position: absolute;
   right: 10px;
@@ -252,18 +247,15 @@ input:focus {
   transition: opacity 0.3s ease;
 }
 
-/* 새 비밀번호 입력 필드 아이콘 */
 .password-icon-pw3 {
-  top: -230px; /* 입력 칸 내부 정렬 */
+  top: -230px;
   right: 0px;
 }
 
-/* 새 비밀번호 확인 입력 필드 아이콘 */
 .password-icon-pw4 {
   right: 23px;
 }
 
-/* 👁 아이콘 호버 효과 */
 .password-icon:hover {
   opacity: 0.7;
 }

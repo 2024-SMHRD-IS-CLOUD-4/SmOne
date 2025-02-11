@@ -11,7 +11,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorState, setErrorState] = useState({ userId: false, userPw: false });
   const [shake, setShake] = useState({ userId: false, userPw: false });
-  const [errorMessage, setErrorMessage] = useState(''); // 추가: 에러 메시지 상태
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -19,7 +19,7 @@ const Login = () => {
     setFormData({ ...formData, [name]: value });
     setErrorState({ ...errorState, [name]: false });
     setShake({ ...shake, [name]: false });
-    setErrorMessage(''); // 입력 시 에러 메시지 초기화
+    setErrorMessage('');
   };
 
   const handleSubmit = async (e) => {
@@ -42,13 +42,13 @@ const Login = () => {
       } else {
         setErrorState({ userId: true, userPw: true });
         setShake({ userId: true, userPw: true });
-        setErrorMessage('아이디 또는 비밀번호가 일치하지 않습니다!'); // 에러 메시지 설정
+        setErrorMessage('아이디 또는 비밀번호가 일치하지 않습니다!');
       }
     } catch (error) {
       console.error('로그인 오류:', error);
       setErrorState({ userId: true, userPw: true });
       setShake({ userId: true, userPw: true });
-      setErrorMessage('아이디 또는 비밀번호가 일치하지 않습니다!'); // 에러 메시지 설정
+      setErrorMessage('아이디 또는 비밀번호가 일치하지 않습니다!');
     } finally {
       setIsLoading(false);
     }
@@ -59,7 +59,6 @@ const Login = () => {
       <img src={teamLogo} alt="Team Logo" className="login-team-logo" />
       <form className="login-form" onSubmit={handleSubmit}>
 
-        {/* 아이디 입력 필드 */}
         <div className={`input-container ${shake.userId ? 'shake' : ''}`}>
           <img src={idIcon} alt="아이디 아이콘" className="input-icon" />
           <input
@@ -73,7 +72,6 @@ const Login = () => {
           />
         </div>
 
-        {/* 비밀번호 입력 필드 */}
         <div className={`input-container ${shake.userPw ? 'shake' : ''}`}>
           <img src={pwIcon} alt="비밀번호 아이콘" className="input-icon" />
           <input
@@ -88,7 +86,6 @@ const Login = () => {
         </div>
 
 
-        {/* 에러 메시지 출력 */}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <button type="submit" className="login-btn" disabled={isLoading}>
@@ -98,9 +95,9 @@ const Login = () => {
 
       <div className="login-extra">
         <span onClick={() => navigate('/findid')}>아이디 찾기</span>
-        <span className="separator">|</span>  {/* 구분자 추가 */}
+        <span className="separator">|</span>
         <span onClick={() => navigate('/findpw')}>비밀번호 찾기</span>
-        <span className="separator">|</span>  {/* 구분자 추가 */}
+        <span className="separator">|</span>
         <span onClick={() => navigate('/signup')}>회원가입</span>
       </div>
 

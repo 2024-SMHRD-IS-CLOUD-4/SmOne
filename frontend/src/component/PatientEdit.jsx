@@ -3,10 +3,15 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import "./PatientEdit.css";
 import Menu from "./Menu"; // Menu 추가
+import checkmarkIcon from "./png/checkmark.png";
+
 
 function PatientEdit() {
-  const { pIdx } = useParams(); // URL에서 pIdx추출
+  const { pIdx } = useParams();
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalHiding, setModalHiding] = useState(false); // ✅ 숨김 애니메이션 상태 추가
 
   const [formData, setFormData] = useState({
     pName: "",
@@ -22,7 +27,6 @@ function PatientEdit() {
     pAdd: "",
   });
 
-  // [1] 최초 마운트 시: 해당 pIdx의 환자 정보 로딩
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_DB_URL}/patients`)
       .then((res) => {
@@ -33,31 +37,26 @@ function PatientEdit() {
           return;
         }
 
-        // 주민번호 파싱
         let [birthFront, birthBack] = ["", ""];
         if (found.birth && found.birth.includes("-")) {
           [birthFront, birthBack] = found.birth.split("-");
         }
 
-        // 전화번호 파싱
         let [phone1, phone2, phone3] = ["", "", ""];
         if (found.tel && found.tel.includes("-")) {
           [phone1, phone2, phone3] = found.tel.split("-");
         }
 
-        // 주소 파싱
         let post = "";
         let addr = "";
         let detail = "";
         const splitted = found.pAdd.trim().split(/\s+/);
 
-        // 맨 앞 5자리 숫자는 우편번호
         if (splitted[0] && /^\d{5}$/.test(splitted[0])) {
           post = splitted[0];
-          splitted.shift(); // 제거
+          splitted.shift();
         }
 
-        // 마지막 토큰이 302호, 3층 등인 경우 상세주소로
         const lastToken = splitted[splitted.length - 1];
         if (lastToken && /\d+(층|호)$/.test(lastToken)) {
           detail = lastToken;
@@ -66,7 +65,6 @@ function PatientEdit() {
 
         addr = splitted.join(" ");
 
-        // 상태 반영
         setFormData({
           pName: found.pName,
           gender: found.gender,
@@ -88,7 +86,6 @@ function PatientEdit() {
       });
   }, [pIdx, navigate]);
 
-  // [2] 입력 핸들러 (숫자만 입력하는 필드)
   const handleChange = (e) => {
     const { name, value, maxLength } = e.target;
     if (
@@ -103,9 +100,7 @@ function PatientEdit() {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
-  
 
-  // [2-1] 최대 글자수 채우면 다음 필드 포커스
   const handleNextFocus = (e, nextField) => {
     const { value, maxLength } = e.target;
     if (value.length === maxLength && nextField) {
@@ -113,14 +108,12 @@ function PatientEdit() {
     }
   };
 
-  // [3] 다음 주소API
   const handleAddressSearch = () => {
     new window.daum.Postcode({
       oncomplete: (data) => {
-        const addr = data.address;   // 예: "서울시 ..."
-        const zonecode = data.zonecode;  // "12345"
+        const addr = data.address;
+        const zonecode = data.zonecode;
 
-        // 1) 우편번호/기본주소 세팅
         setFormData(prev => ({
           ...prev,
           postcode: zonecode,
@@ -128,15 +121,12 @@ function PatientEdit() {
           pAdd: `${zonecode} ${addr} ${prev.detailAddress}`.trim()
         }));
 
-        // 2) 다음(카카오) 지도 JS의 Geocoder로 좌표 구하기
         const geocoder = new window.daum.maps.services.Geocoder();
         geocoder.addressSearch(addr, (result, status) => {
           if (status === window.daum.maps.services.Status.OK) {
-            // result[0].x = 경도 / result[0].y = 위도
             const { x, y } = result[0];
             console.log("브라우저측 좌표 변환 결과:", x, y);
 
-            // state에 lat/lng 저장
             setFormData(prev => ({
               ...prev,
               pLat: y,
@@ -155,16 +145,12 @@ function PatientEdit() {
     }).open();
   };
 
-  // [4] 수정 버튼 => PUT
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { birthPart1, birthPart2, phonePart1, phonePart2, phonePart3 } = formData;
+    const newBirth = `${formData.birthPart1}-${formData.birthPart2}`;
+    const newTel = `${formData.phonePart1}-${formData.phonePart2}-${formData.phonePart3}`;
+    const newPAdd = `${formData.postcode} ${formData.address} ${formData.detailAddress}`.trim();
 
-    const newBirth = `${birthPart1}-${birthPart2}`;
-    const newTel   = `${phonePart1}-${phonePart2}-${phonePart3}`;
-    const newPAdd  = `${formData.postcode} ${formData.address} ${formData.detailAddress}`.trim();
-
-    // 백엔드로 넘길 객체
     const sendData = {
       pName: formData.pName,
       gender: formData.gender,
@@ -172,39 +158,59 @@ function PatientEdit() {
       tel: newTel,
       pAdd: newPAdd,
 
-      // ⬇️ 프론트에서 구한 위도/경도도 함께 전송
       pLat: formData.pLat,
       pLng: formData.pLng,
+
     };
 
     try {
-      // ***중요***: 꼭 /update/${pIdx} 형태로 (PathVariable)
       await axios.put(`${process.env.REACT_APP_DB_URL}/patients/update/${pIdx}`, sendData);
-      alert("환자 정보가 수정되었습니다.");
-      navigate("/main");
+      setShowModal(true); // ✅ 모달 표시
+      setTimeout(() => setModalVisible(true), 10); // ✅ 애니메이션 효과 추가
+
+      // ✅ 1.5초 후 자동으로 모달 닫기
+      setTimeout(() => {
+        closeModal();
+      }, 1500);
+
     } catch (err) {
       console.error("환자 수정 오류:", err);
-      alert("환자 정보 수정 중 오류가 발생했습니다.");
+      setShowModal(true);
+      setTimeout(() => setModalVisible(true), 10);
+
+      // ✅ 1.5초 후 자동으로 모달 닫기 (에러 메시지 포함)
+      setTimeout(() => {
+        closeModal();
+      }, 1500);
     }
   };
-
+  // ✅ 모달 수동 닫기 함수
+  const closeModal = () => {
+    setModalHiding(true); // ✅ 숨김 애니메이션 적용
+    setTimeout(() => {
+      setShowModal(false);
+      setModalVisible(false);
+      setModalHiding(false);
+      navigate("/main");
+    }, 300); // ✅ 애니메이션 지속 시간 후 제거
+  };
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <Menu />  {/* ✅ 네비게이션 메뉴 추가 */}
+        <Menu />
         <div className='Patientedit-container'>
           <button
             className="back-btn"
             onClick={(e) => {
-              e.preventDefault(); // ✅ 기본 동작 방지
-              navigate("/main");  // ✅ 환자 수정 없이 페이지 이동
+              e.preventDefault();
+              navigate("/main");
             }}
           >
             X
           </button>
 
           <div className="form-wrapper">
-            <h1 className="patient-title1">환자 수정</h1>
+            <h1 className="patient-title1">환자 정보 수정</h1>
             <div className="name-and-gender-group">
               <div className="name-group">
                 <label>이름</label>
@@ -220,7 +226,6 @@ function PatientEdit() {
               </div>
 
               <div>
-                {/* <label>성별</label> */}
                 <div className="radio-group">
                   <span
                     className={`radio ${formData.gender === "남" ? "selected" : ""}`}
@@ -345,11 +350,21 @@ function PatientEdit() {
             </div>
 
             <button type="submit" className="submit-button" >
-              환자 수정
+              환자 정보 수정
             </button>
           </div>
         </div>
       </form>
+      {showModal && (
+        <div className={`modal-overlay ${modalVisible ? "visible" : ""} ${modalHiding ? "hide" : ""}`}>
+          <div className="edit-modal-content">
+            <img src={checkmarkIcon} alt="Success" className="modal-icon" />
+            <p>환자 정보가 수정되었습니다.</p>
+          </div>
+        </div>
+      )}
+
+
     </>
   );
 }

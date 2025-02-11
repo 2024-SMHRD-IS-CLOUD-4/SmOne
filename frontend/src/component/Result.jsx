@@ -6,10 +6,18 @@ import DateList from "./Xray/DateList";
 import "./Result.css";
 import Menu from "./Menu";
 import printerIcon from "./png/printerimg.png";
+import warningIcon from "./png/yellowwarning.png";
+import checkmarkIcon from "./png/checkmark.png";
 
 function Result() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [showHospitalWarningModal, setShowHospitalWarningModal] = useState(false); // ✅ 병원 선택 요청 모달 상태 추가
+  const [hideHospitalWarningModal, setHideHospitalWarningModal] = useState(false); // ✅ 숨김 애니메이션 상태 추가
+  const [hideSaveWarningModal, setHideSaveWarningModal] = useState(false);
+  const [showSaveWarningModal, setShowSaveWarningModal] = useState(false); // ✅ 진단 저장 요청 모달 상태 추가
+  const [showDiagnosisSuccessModal, setShowDiagnosisSuccessModal] = useState(false); // ✅ 진단 저장 완료 모달 상태 추가
+  const [hideDiagnosisSuccessModal, setHideDiagnosisSuccessModal] = useState(false); // ✅ 숨김 애니메이션 상태 추가
 
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
@@ -79,7 +87,6 @@ function Result() {
 
   // 새 진단 모드에서 "진단 결과 저장 완료" 여부
   const [hasSaved, setHasSaved] = useState(false);
-
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current;
@@ -87,16 +94,31 @@ function Result() {
       canvas.height = bigImgRef.current?.offsetHeight || 500;
       const ctx = canvas.getContext("2d");
 
-      // ✅ 기존에 그린 그림 유지하도록 변경
+      // ✅ 기존 그림 유지 (캔버스를 다시 설정할 때 저장된 그림을 유지)
+      const prevImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+      // ✅ 기존에 그린 그림 유지
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
+
       ctxRef.current = ctx;
 
-      // ✅ 초기 색상 및 굵기 적용
-      ctx.strokeStyle = color;
-      ctx.lineWidth = lineWidth;
+      // ✅ 이전 그림을 다시 그리기
+      ctx.putImageData(prevImage, 0, 0);
+      // ✅ 기본 선 색상을 빨간색으로 설정
+      ctxRef.current.strokeStyle = "red";
+      ctxRef.current.lineWidth = 3;
     }
-  }, [color, bigPreview]);
+  }, [bigPreview]); // ✅ `bigPreview`가 변경될 때만 실행
+
+  useEffect(() => {
+    if (ctxRef.current) {
+      // ✅ 색상 및 굵기 변경 시 기존 그림 유지
+      ctxRef.current.strokeStyle = color;
+      ctxRef.current.lineWidth = lineWidth;
+    }
+  }, [color, lineWidth]); // ✅ 색상과 선 두께 변경 시만 실행
+
 
   
 
@@ -426,34 +448,55 @@ function Result() {
     navigate("/main");
   }
 
-  // [★] 출력하기: PrintPage.jsx로 데이터 전달
   function handlePrint() {
-    if (!fromHistory && !hasSaved) {
-      alert("먼저 [진단 결과 저장하기]를 완료해야 출력 가능합니다!");
+    if (fromHistory) {
+      // ✅ 과거 진단 보기에서 넘어온 경우 즉시 출력 화면으로 이동
+      navigate("/print", {
+        state: {
+          patient,
+          aiResult,
+          bigPreview,
+          selectedHospital,
+          centerId: loginUser?.centerId,
+          userName: loginUser?.userName,
+          userEmail: loginUser?.email,
+          userAddress: loginUser?.address,
+          diagDate: selectedDate,
+        },
+      });
       return;
     }
+
+    // ✅ 새 진단 모드에서는 기존 동작 유지 (진단 저장 후 출력 가능)
+    if (!hasSaved) {
+      setShowSaveWarningModal(true); // ✅ 모달 표시
+      setTimeout(() => {
+        setHideSaveWarningModal(true); // ✅ 숨김 애니메이션 적용
+        setTimeout(() => {
+          setShowSaveWarningModal(false); // ✅ 모달 완전히 제거
+          setHideSaveWarningModal(false);
+        }, 300); // ✅ 애니메이션 시간 후 제거
+      }, 1500); // ✅ 1.5초 후 모달 숨김 시작
+      return;
+    }
+
     if (!loginUser) {
       alert("로그인 사용자 정보를 가져오지 못했습니다.");
       return;
     }
-
-    // 병원 객체
-    const hospitalToSend = fromHistory
-      ? selectedHospital // 과거 모드: 이미 DB조회한 병원
-      : selectedHospital || null;
 
     navigate("/print", {
       state: {
         patient,
         aiResult,
         bigPreview,
-        selectedHospital: hospitalToSend, // 병원객체
+        selectedHospital,
         centerId: loginUser.centerId,
         userName: loginUser.userName,
         userEmail: loginUser.email,
         userAddress: loginUser.address,
-        diagDate: selectedDate
-      }
+        diagDate: selectedDate,
+      },
     });
   }
   //------------------------------------------------
@@ -522,7 +565,91 @@ function Result() {
     userSelect: "none"
   };
 
+  async function handleSaveDiagnosis() {
+    if (!selectedHospital) {
+      setShowHospitalWarningModal(true); // ✅ 모달 표시
+      setTimeout(() => {
+        setHideHospitalWarningModal(true); // ✅ 숨김 애니메이션 적용
+        setTimeout(() => {
+          setShowHospitalWarningModal(false); // ✅ 모달 완전히 제거
+          setHideHospitalWarningModal(false);
+        }, 300); // ✅ 애니메이션 시간 후 제거
+      }, 1500); // ✅ 1.5초 후 모달 숨김 시작
+      return;
+    }
 
+    const userId = sessionStorage.getItem("userId") || "testDoctor";
+    try {
+      const matched = xrayList.filter(x =>
+        newlyUploaded.some(orig => x.imgPath.includes(orig))
+      );
+      if (matched.length === 0) {
+        alert("업로드된 X-ray와 매칭된 이미지가 없습니다.");
+        return;
+      }
+
+      for (const img of matched) {
+        await axios.put(`${process.env.REACT_APP_DB_URL}/xray/updateResult`, {
+          imgIdx: img.imgIdx,
+          result: aiResult,
+        });
+      }
+
+      for (const img of matched) {
+        const body = {
+          pIdx: patient.pIdx,
+          imgIdx: img.imgIdx,
+          diagnosis: aiResult,
+          doctorId: userId,
+          hosIdx: selectedHospital.hosIdx
+        };
+        await axios.post(`${process.env.REACT_APP_DB_URL}/diagnosis-result`, body, {
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      setShowDiagnosisSuccessModal(true); // ✅ 모달 표시
+      setHasSaved(true);
+
+      setTimeout(() => {
+        setHideDiagnosisSuccessModal(true); // ✅ 숨김 애니메이션 적용
+        setTimeout(() => {
+          setShowDiagnosisSuccessModal(false); // ✅ 모달 완전히 제거
+          setHideDiagnosisSuccessModal(false);
+        }, 300); // ✅ 애니메이션 시간 후 제거
+      }, 1500); // ✅ 2초 후 모달 숨김 시작
+
+
+    } catch (err) {
+      console.error(err);
+      alert("저장 중 오류 발생");
+    }
+  }
+
+  // ✅ 모달 수동 닫기 함수
+  const closeDiagnosisSuccessModal = () => {
+    setHideDiagnosisSuccessModal(true); // ✅ 숨김 애니메이션 적용
+    setTimeout(() => {
+      setShowDiagnosisSuccessModal(false);
+      setHideDiagnosisSuccessModal(false);
+    }, 300);
+  };
+  // ✅ 모달 수동 닫기 함수
+  const closeHospitalWarningModal = () => {
+    setHideHospitalWarningModal(true); // ✅ 숨김 애니메이션 적용
+    setTimeout(() => {
+      setShowHospitalWarningModal(false);
+      setHideHospitalWarningModal(false);
+    }, 300);
+  };
+  // ✅ 모달 수동 닫기 함수
+  const closeSaveWarningModal = () => {
+    setHideSaveWarningModal(true); // ✅ 숨김 애니메이션 적용
+    setTimeout(() => {
+      setShowSaveWarningModal(false);
+      setHideSaveWarningModal(false);
+    }, 300);
+  };
   return (
     <div className="result-container">
       <Menu />
@@ -534,6 +661,14 @@ function Result() {
           </button>
         </div>
       </div>
+      {showSaveWarningModal && (
+        <div className="save-warning-modal-overlay" onClick={closeSaveWarningModal}>
+          <div className={`save-warning-modal ${hideSaveWarningModal ? "hide" : ""}`}>
+            <img src={warningIcon} alt="경고" className="save-warning-icon" /> {/* ✅ 경고 아이콘 추가 */}
+            <p>진단 결과를 먼저 저장해주세요</p>
+          </div>
+        </div>
+      )}
 
       <div className="result-main">
         {/* 왼쪽 패널 */}
@@ -576,7 +711,7 @@ function Result() {
             </div>
           )}
           <div className="date-list-box">
-          <video autoPlay loop muted playsInline className="date-list-video">
+            <video autoPlay loop muted playsInline className="date-list-video">
               <source src="/video2.mp4" type="video/mp4" />
             </video>
             <DateList
@@ -719,6 +854,22 @@ function Result() {
                   진단 저장
                 </button>
               </div>
+              {showHospitalWarningModal && (
+                <div className="hospital-warning-modal-overlay" onClick={closeHospitalWarningModal}>
+                  <div className={`hospital-warning-modal ${hideHospitalWarningModal ? "hide" : ""}`}>
+                    <img src={warningIcon} alt="경고" className="hospital-warning-icon" /> {/* ✅ 경고 아이콘 추가 */}
+                    <p>가까운 병원 중 하나를 선택해주세요</p>
+                  </div>
+                </div>
+              )}
+              {showDiagnosisSuccessModal && (
+                <div className="diagnosis-success-modal-overlay" onClick={closeDiagnosisSuccessModal}>
+                  <div className={`diagnosis-success-modal ${hideDiagnosisSuccessModal ? "hide" : ""}`}>
+                    <img src={checkmarkIcon} alt="완료" className="diagnosis-success-icon" /> {/* ✅ 체크 아이콘 추가 */}
+                    <p>진단 결과 저장 완료!</p>
+                  </div>
+                </div>
+              )}
 
               <div className="result_hospital">
                 {(!patient?.pLat || !patient?.pLng) ? (

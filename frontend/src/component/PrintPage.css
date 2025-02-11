@@ -1,45 +1,38 @@
-/* ✅ 스크롤바 디자인 개선 */
 ::-webkit-scrollbar {
-  width: 8px; /* 기존보다 얇게 */
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; /* 연한 회색 배경 */
-  border-radius: 10px; /* 부드러운 모서리 */
+  background: #f1f1f1;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #bbb; /* 스크롤바 색상 */
-  border-radius: 10px; /* 둥글게 */
+  background: #bbb;
+  border-radius: 10px;
   transition: background 0.3s ease-in-out;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #888; /* 마우스를 올리면 색상 변경 */
+  background: #888;
 }
 
 
 .diagnosis-body {
   position: relative;
   width: 100vw;
-  /* 화면 너비 전체 */
   height: 100vh;
-  /* 화면 높이 전체 */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  /* 상단부터 배치 */
   overflow: auto;
 }
 
 .print-button {
   position: absolute;
-  /* 위치를 절대값으로 설정 */
   top: 20px;
-  /* 상단에서 20px */
   right: 20px;
-  /* 오른쪽 가장자리에서 20px */
   background-color: #4187f6;
   color: white;
   padding: 10px 15px;
@@ -55,22 +48,18 @@
 
 .print_header {
   position: relative;
-  /* 기준 위치 */
   height: 40px;
   color: #fff;
   padding: 0 40px;
   box-sizing: border-box;
   margin-top: 10px;
   text-align: right;
-  /* 텍스트와 버튼 우측 정렬 */
 }
 
 
-/* 공통 버튼 스타일 */
 .print_btn1,
 .print_btn2 {
   display: inline-block;
-  /* 버튼을 가로로 배치 */
   padding: 10px 15px;
   border: none;
   border-radius: 6px;
@@ -80,9 +69,7 @@
   font-weight: bold;
   cursor: pointer;
   margin-left: 10px;
-  /* 버튼 간 간격 */
   transition: background 0.3s ease-in-out;
-  /* 부드러운 색상 전환 */
 }
 
 .print_btn1 {
@@ -103,22 +90,19 @@
   width: 40px;
   height: 40px;
 }
+
 .printer-icon {
-  width: 20px;  /* 아이콘 크기 */
-  height: 20px; /* 아이콘 크기 */
-  vertical-align: middle; /* 아이콘을 텍스트와 같은 높이에 맞춤 */
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
   margin-right: 5px;
 }
 
-/* 취소하기 버튼 스타일 */
 .cancel-button {
   position: absolute;
   top: 20px;
-  /* 출력 버튼과 같은 높이 */
   right: 230px;
-  /* 출력 버튼의 오른쪽에 위치 */
   background-color: #f44336;
-  /* 빨간색 배경 */
   color: white;
   padding: 10px 15px;
   border: none;
@@ -139,7 +123,6 @@
 
 .cancel-button:hover {
   background-color: #d32f2f;
-  /* 더 진한 빨간색 */
 }
 
 .overlay-box {
@@ -149,14 +132,11 @@
   left: 10px;
   right: 10px;
   background: rgba(0, 0, 0, 0.5);
-  /* 반투명 검은색 */
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  /* 버튼과 콘텐츠를 세로로 배치 */
   align-items: center;
   justify-content: flex-start;
-  /* 위쪽부터 배치 */
   padding: 20px;
   overflow: auto;
 }
@@ -165,20 +145,15 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.7); /* 30% 축소 */
+  transform: translate(-50%, -50%) scale(0.7);
   background-color: white;
   padding: 20px;
   max-width: 210mm;
   max-height: 100vh;
-  /* ✅ 화면 높이의 80%까지만 사용 (원하는 크기로 조절 가능) */
   box-sizing: border-box;
   overflow-y: auto;
-  /* ✅ 세로 스크롤 활성화 */
   overflow-x: hidden;
-  /* ✅ 가로 스크롤 방지 */
 }
-
-
 
 .report-header {
   text-align: center;
@@ -187,7 +162,7 @@
 
 .report-header h2 {
   font-size: 30px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .report-header span {
@@ -199,7 +174,6 @@
 .grid-table {
   width: 100%;
   table-layout: fixed;
-  /* ✅ 테이블 크기 고정 */
   border-collapse: collapse;
   margin-top: 10px;
 }
@@ -219,37 +193,27 @@
 .grid-table .address-cell {
   word-wrap: break-word;
   word-break: break-word;
-  /* ✅ 주소는 자동 줄바꿈 허용 */
   white-space: normal;
   max-width: 200px;
-  /* ✅ 주소 칸은 지정된 크기를 넘지 않도록 제한 */
 }
 
-/* 특정 칸 배경색 설정 */
 .highlight-cell {
   text-align: center;
   background-color: #a7a8a6;
   color: #000;
-  /* 텍스트 색상을 검정으로 */
 }
 
-/* 의료기관 병합 스타일 */
 .merged-cell {
   border: 2px solid #000;
-  /* 두꺼운 테두리 */
   text-align: center;
   vertical-align: middle;
   font-weight: bold;
 }
 
-/* 치료소견 및 X-ray 병합 스타일 */
 .treatment-cell {
   height: 200px;
-  /* 병합된 칸의 높이 설정 */
   vertical-align: top;
-  /* 내용이 위쪽에 정렬되도록 설정 */
   text-align: center;
-  /* 텍스트 및 이미지 중앙 정렬 */
 }
 
 .grid-table .report-image {
@@ -259,18 +223,22 @@
   margin: 0 auto;
 }
 
-/* X-ray 칸과 진단내용 칸 스타일 */
 .xray-cell {
   height: 500px;
   text-align: center;
   vertical-align: middle;
+  position: relative;
 }
 
 .xray-cell img {
+  max-width: 100%;
+  max-height: 100%;
+  /* position: absolute;
   display: block;
-  margin: 0 auto;
-  width: 500px;
-  height: 300px;
+  margin: 10px 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
 }
 
 .diagnosis-cell {
@@ -280,15 +248,11 @@
 }
 
 
-/* 인쇄 스타일 */
 @media print {
   .print-topbar {
     display: none;
-    /* 인쇄 시 상단바 숨기려면 */
     position: relative;
-    /* 부모 요소 기준 */
     justify-content: space-between;
-    /* 좌우 정렬 */
     align-items: center;
     padding: 15px 20px;
     background-color: #f8f9fa;
@@ -298,32 +262,26 @@
   @page {
     size: A4;
     margin: 0;
-    /* 프린트 시 여백 제거 */
   }
 
   .report-content {
     width: 210mm;
-    /* A4 너비 */
     height: 297mm;
-    /* A4 높이 */
     position: absolute;
     top: 0;
     left: 0;
     transform: none;
-    /* 중앙 정렬 제거 (전체 용지를 채우기 위해) */
     background-color: white;
     padding-right: 15mm;
     padding-left: 15mm;
     box-sizing: border-box;
   }
 
-  /* ✅ 스크롤 제거 */
   .report-content::-webkit-scrollbar {
     display: none;
   }
 }
 
-/* X 버튼 (닫기 버튼) */
 .printpage-close-btn {
   position: absolute;
   top: 15px;
@@ -346,24 +304,18 @@
   background-color: #666;
 }
 
-/* ✅ 인쇄할 때 X 버튼 숨기기 */
 @media print {
   .printpage-close-btn {
     display: none !important;
   }
 }
 
-/* ✅ 인쇄할 때 highlight-cell의 배경색 유지 */
 @media print {
   .highlight-cell {
     background-color: #a7a8a6 !important;
-    /* ✅ 강제로 배경색 적용 */
     color: black !important;
-    /* ✅ 텍스트 색상 유지 */
     -webkit-print-color-adjust: exact !important;
-    /* ✅ Safari, Chrome에서 색상 유지 */
     print-color-adjust: exact !important;
-    /* ✅ Firefox 등에서 색상 유지 */
   }
 }
 
@@ -373,31 +325,37 @@
   white-space: normal;
   max-width: 300px;
 }
-/* 근처 병원 테이블 스타일 */
+
 .print-table {
   width: 100%;
-  border-collapse: collapse; /* 테두리 겹침 방지 */
+  border-collapse: collapse;
   margin-top: 10px;
 }
 
-/* 테이블 셀 기본 스타일 */
 .print-table th,
 .print-table td {
-  border: 1px solid black; /* 테두리 추가 */
+  border: 1px solid black;
   padding: 10px;
   text-align: center;
 }
 
-/* 제목 셀 스타일 */
 .print-table th {
   background-color: #a7a8a6;
   font-weight: bold;
 }
+
 .print-date {
-  text-align: center;  /* 텍스트 가운데 정렬 */
+  text-align: center;
   font-size: 16px;
   font-weight: bold;
   color: gray;
   margin-top: 15px;
   margin-bottom: -15px;
+}
+/* ✅ 메인화면 버튼 아이콘 스타일 */
+.home-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 3px;
+  vertical-align: middle;
 }
