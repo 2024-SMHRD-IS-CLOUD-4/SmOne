@@ -66,8 +66,9 @@ def load_image_from_db(img_idx):
     try:
         cursor.execute(query, (img_idx,))
         result = cursor.fetchone()
-        if not result:
-            raise FileNotFoundError(f"DB에서 IMG_IDX={img_idx}에 대한 경로를 찾을 수 없습니다.")
+        if not result or not result[0]:
+             raise FileNotFoundError(f"⚠ ERROR: IMG_IDX={img_idx}에 대한 이미지 경로가 DB에 없습니다.")
+
         image_url = result[0]
 
         # 웹 URL에서 이미지 다운로드
@@ -262,7 +263,8 @@ def test(doctor_id, p_idx):
             print(f"⚠ ERROR: IMG_IDX={img_idx} 처리 중 오류 발생: {e}")
             continue
 
-    print(f"✅ P_IDX={p_idx}에 대한 모든 이미지 처리 완료.")
+    print(f"✅ 최종 diagnosis_results: {diagnosis_results}")
+    return diagnosis_results
 
 
 if __name__ == "__main__":
