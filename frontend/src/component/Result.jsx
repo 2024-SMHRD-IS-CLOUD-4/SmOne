@@ -35,12 +35,12 @@ function Result() {
     // 🔽🔽🔽 여기에 useEffect 추가 🔽🔽🔽
     useEffect(() => {
       console.log("📌 Result 페이지에서 location.state.aiResult:", location.state?.aiResult);
-      
-      if (location.state?.aiResult) {
+    
+      if (location.state?.aiResult !== undefined) {
         console.log("📌 AI 진단 결과 업데이트됨:", location.state.aiResult);
         setAiResult(location.state.aiResult);
       } else {
-        console.warn("⚠️ AI 진단 결과가 undefined로 들어옴!");
+        console.warn("⚠️ AI 진단 결과가 undefined로 들어옴! 기존 값 유지");
       }
     }, [location.state?.aiResult]);
 
