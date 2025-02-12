@@ -6,10 +6,7 @@ import os
 import requests
 import pymysql
 
-
 TEMP_IMAGE_PATH = "temp_image.png"
-
-
 
 def get_db_connection():
     return pymysql.connect(
@@ -19,6 +16,16 @@ def get_db_connection():
         database="campus_24IS_CLOUD_p3_3",
         port=3307
     )
+   
+# 결과 저장값 
+def convert_diagnosis(diagnosis):
+    mapping = {
+        "TB": "결핵",
+        "PNEUMONIA": "폐렴",
+        "NORMAL": "정상",
+        "OTHER": "other"
+    }
+    return mapping.get(diagnosis, "unknown")
 
 def get_image_path(p_idx):
     conn = get_db_connection()
@@ -45,9 +52,7 @@ def get_image_path(p_idx):
     finally:
         conn.close()
 
-
     return result[0] if result else None
-
 
 # 웹 URL 또는 로컬에서 이미지 로드
 def load_image_from_db(img_idx):
@@ -97,7 +102,6 @@ def load_image_from_db(img_idx):
         return None
     finally:
         conn.close()
-
 
 # 이미지 전처리 함수
 def _min_max_normalize(arr: np.ndarray) -> np.ndarray:
@@ -157,14 +161,12 @@ def update_processed_at(img_idx):
     finally:
         conn.close()
         
-        
 def get_img_idx(p_idx):
     """
     P_IDX에 해당하는 처리되지 않은 IMG_IDX 리스트 반환
     """
     conn = get_db_connection()
     cursor = conn.cursor()
-    
     
     query = """
         SELECT IMG_IDX
@@ -183,7 +185,6 @@ def get_img_idx(p_idx):
     finally:
         conn.close()
 
-    
 def get_result(result):
     labels = ["TB" , "PNEUMONIA" , "NORMAL" , "OTHER"]
     
@@ -193,30 +194,6 @@ def get_result(result):
     print(f"Predicted label: {labels[max_index]}, Confidence: {result[0][max_index]:.4f}")
     return labels[max_index]
 
-def save_result(p_idx, diagnosis_name, doctor_id, img_idx):
-    conn = pymysql.connect(
-    host="project-db-cgi.smhrd.com",
-    user="campus_24IS_CLOUD_p3_3",
-    password="smhrd3",
-    database="campus_24IS_CLOUD_p3_3",
-    port=3307
-    )
-    cursor = conn.cursor()
-    
-    query = """
-        INSERT INTO DIAGNOSIS_RESULT (IMG_IDX, DIAGNOSIS, DOCTOR_ID, P_IDX, DIAGNOSED_AT)
-        VALUES (%s, %s, %s, %s, NOW())
-    """
-    
-    try :
-        cursor.execute(query, (img_idx, diagnosis_name, doctor_id, p_idx))
-        conn.commit()
-        print('진단 결과가 성공적으로 DB에 저장되었습니다.')
-    except Exception as e :
-        print(f"DB 저장 중 오류 발생 : {e}")
-    finally :
-        conn.close()
-
 def test(doctor_id, p_idx):
     """
     P_IDX에 해당하는 처리되지 않은 모든 이미지를 처리
@@ -224,16 +201,17 @@ def test(doctor_id, p_idx):
     
     if not doctor_id:
         print(f"⚠ ERROR: doctor_id가 None입니다. P_IDX={p_idx}")
-        return
+        return []
 
     # 처리되지 않은 IMG_IDX 리스트 가져오기
     img_ids = get_img_idx(p_idx)
     if not img_ids:
         print(f"⚠ ERROR: P_IDX={p_idx}에 대한 처리할 이미지가 없습니다.")
-        return
+        return[]
 
     # 모델 로드
     model = load_model()
+    results = []
 
     # IMG_IDX 리스트 반복 처리
     for img_idx in img_ids:
@@ -247,23 +225,28 @@ def test(doctor_id, p_idx):
                 continue
 
             # 모델 추론
-            result = inference(arr, model)
+            inference_result = inference(arr, model)
+            
+            # 결과 데이터 정리
+            diagnosis_name = get_result(inference_result)
+            confidence = float(max(inference_result[0]))  # 신뢰도 값 추가
 
-            # 진단 결과 이름 가져오기
-            diagnosis_name = get_result(result)
-            print(f"IMG_IDX={img_idx}, 진단 결과: {diagnosis_name}")
-
-            # 결과를 DB에 저장
-            save_result(p_idx, diagnosis_name, doctor_id, img_idx)
-
-            # 처리 상태 업데이트
+            # 결과 저장
             update_processed_at(img_idx)
+
+            # 🚀 결과 리스트에 저장
+            results.append({
+                "img_idx": img_idx,
+                "diagnosis": diagnosis_name,
+                "confidence": confidence
+            })
         except Exception as e:
             print(f"⚠ ERROR: IMG_IDX={img_idx} 처리 중 오류 발생: {e}")
             continue
 
     print(f"✅ P_IDX={p_idx}에 대한 모든 이미지 처리 완료.")
-
+    
+    return results
 
 if __name__ == "__main__":
     test()

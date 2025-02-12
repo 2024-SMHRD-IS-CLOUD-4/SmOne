@@ -44,8 +44,8 @@ public class XrayImages {
 	@Column(name = "PROCESSED_AT")
 	private Timestamp processedAt; // 우선 null 허용
 	
-	@Column(name = "RESULT", length = 255)
-	private String result; // 우선 null 허용
+	@Column(name = "RESULT", columnDefinition = "TEXT")
+	private String result;
 	
 	@Column(name="BIG_XRAY", length=1000)
 	private String bigXray;

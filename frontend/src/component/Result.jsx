@@ -22,41 +22,58 @@ function Result() {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
 
+  // X-ray 목록
+  const [xrayList, setXrayList] = useState([]);
+  const [selectedXray, setSelectedXray] = useState(null);
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [aiResult, setAiResult] = useState([]);
+  const formattedAiResult = Array.isArray(aiResult) ? aiResult : [aiResult];
+
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+  }
+
   // 그리기 상태
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState("#FF0000");
   const [lineWidth, setLineWidth] = useState(3);
 
+  // 저장값 한글로~~
+  const diagnosisMapping = {
+    TB: "결핵",
+    PNEUMONIA: "폐렴",
+    NORMAL: "정상",
+    OTHER: "other"
+  };
+
   // 넘어온 state
   const patient = location.state?.patient || null;
-  const [aiResult, setAiResult] = useState(location.state?.aiResult || "진단 결과 없음");
-  
 
-    // 🔽🔽🔽 여기에 useEffect 추가 🔽🔽🔽
-    useEffect(() => {
-      console.log("📌 Result 페이지에서 location.state.aiResult:", location.state?.aiResult);
-      
-      if (location.state?.aiResult) {
-        console.log("📌 AI 진단 결과 업데이트됨:", location.state.aiResult);
-        setAiResult(location.state.aiResult);
-      } else {
-        console.warn("⚠️ AI 진단 결과가 undefined로 들어옴!");
+  useEffect(() => {
+    if (location.state?.aiResult && location.state.aiResult.length > 0) {
+      const resultData = Array.isArray(location.state.aiResult)
+      ? location.state.aiResult
+      : [location.state.aiResult];
+      setAiResult(resultData);
+      if (xrayList.length > 0) {
+        setSelectedXray(xrayList[0]); // 첫 번째 X-ray 선택
+        setBigPreview(correctImageUrl(xrayList[0].imgPath));
+        const firstDiagnosis = location.state.aiResult.find(
+          (result) => String(result.img_idx) === String(xrayList[0].imgIdx)
+        );
+        setSelectedDiagnosis(firstDiagnosis || null);
       }
-    }, [location.state?.aiResult]);
-
-  
-  console.log("📌 FastAPI에서 받아온 AI 진단 결과:", location.state?.aiResult);
-  console.log("📌 Result 페이지에서 초기 aiResult 상태값:", aiResult);
+    } else {
+      console.warn("⚠️ AI 진단 결과가 undefined로 들어옴!");
+    }
+  }, [location.state?.aiResult]);
 
   const { state } = location;
   const { newlyUploaded } = state || { newlyUploaded: [] };
   // const bigFilename = location.state?.bigFilename || null;
   const fromHistory = location.state?.fromHistory || false;
   const preSelectedDate = location.state?.selectedDate || null;
-
-  // X-ray 목록
-  const [xrayList, setXrayList] = useState([]);
-  const [selectedXray, setSelectedXray] = useState(null);
 
   // 큰 이미지 미리보기 + 확대/이동
   const [bigPreview, setBigPreview] = useState(null);
@@ -88,6 +105,8 @@ function Result() {
   // 새 진단 모드에서 "진단 결과 저장 완료" 여부
   const [hasSaved, setHasSaved] = useState(false);
   useEffect(() => {
+    console.log("📌 localStorage loginUser:", localStorage.getItem("loginUser"));
+    console.log("📌 sessionStorage loginUser:", sessionStorage.getItem("loginUser"));
     if (canvasRef.current) {
       const canvas = canvasRef.current;
       canvas.width = bigImgRef.current?.offsetWidth || 500;
@@ -119,17 +138,6 @@ function Result() {
     }
   }, [color, lineWidth]); // ✅ 색상과 선 두께 변경 시만 실행
 
-
-  
-
-  // ✅ 색상 및 굵기 변경 시 기존 그림을 유지하며 새로운 설정 적용
-  useEffect(() => {
-    if (ctxRef.current) {
-      ctxRef.current.strokeStyle = color;
-      ctxRef.current.lineWidth = lineWidth;
-    }
-  }, [color, lineWidth]);
-
   // 마우스 이벤트 핸들러
   const startDrawing = (e) => {
     ctxRef.current.beginPath();
@@ -154,19 +162,16 @@ function Result() {
   };
 
   const correctImageUrl = (url) => {
-    if (!url) return "";  // url이 없을 경우 빈 값 반환
-  
-    // URL이 이미 절대 경로일 경우 그대로 반환
+    if (!url) return "";
     if (url.startsWith("http://") || url.startsWith("https://")) {
       return url;
     }
-  
-    // URL이 상대경로(h0027.png)일 경우, 클라우드 스토리지 주소를 붙여서 반환
     return `https://kr.object.ncloudstorage.com/ilungview-bucket/${url}`;
   };
+
+  // 선택한 이미지 진단 결과 출력하기
+  const [selectedDiagnosis, setSelectedDiagnosis] = useState(null);
   
-
-
   // ---------------- 1) 마운트 시 유저정보, X-ray 날짜목록 불러오기 ----------------
   useEffect(() => {
     // A. 환자 유효성 체크
@@ -181,7 +186,10 @@ function Result() {
     if (storedUserId) {
       axios
         .get(`${process.env.REACT_APP_DB_URL}/users/mypage?userId=${storedUserId}`, { withCredentials: true })
-        .then(res => setLoginUser(res.data))
+        .then(res => {
+          console.log("🟢 유저 정보 API 응답:", res.data.email);
+          setLoginUser(res.data)
+        })
         .catch(err => console.error("유저 정보 불러오기 실패:", err));
     }
 
@@ -199,62 +207,100 @@ function Result() {
 
   // ---------------- 2) 날짜 선택 => X-ray 목록, 과거결과(병원/진단) ----------------
   useEffect(() => {
-    if (!selectedDate) return;
+    if (!selectedDate || !patient) return;
 
     // (A) X-ray 목록
+    // axios
+    //   .get(`${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
+    //   .then((res) => {
+    //     setXrayList(res.data);
+    //     if (res.data.length > 0) {
+    //       const firstXray = res.data[0];
+    //       if (!selectedXray) {  // ✅ 처음 로드될 때만 첫 번째 X-ray 선택
+    //         setSelectedXray(firstXray);
+    //         setBigPreview(correctImageUrl(firstXray.imgPath));
+    //         const firstDiagnosis = aiResult.find(
+    //           (result) => String(result.img_idx) === String(firstXray.imgIdx)
+    //         );
+    //         setSelectedDiagnosis(firstDiagnosis || null);
+    //       }
+    //     }
+    //   })
+    //   .catch((e) => console.error(e));
     axios
       .get(`${process.env.REACT_APP_DB_URL}/xray/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
       .then((res) => {
-        console.log("✅ 불러온 X-ray 목록:", res.data); // 확인용 로그 추가
         setXrayList(res.data);
-        
         if (res.data.length > 0) {
-
-          const bigOne = res.data.find((x) => x.bigXray != null);
-          if (bigOne) {
-            setSelectedXray(bigOne || res.data[0]);
-            setBigPreview(correctImageUrl((bigOne || res.data[0]).imgPath));
-          } else {
-            setSelectedXray(res.data[0]);
-            setBigPreview(correctImageUrl(res.data[0].imgPath));
-          }
-        } else {
-          setXrayList([]);
-          setSelectedXray(null);
-          setBigPreview(null);
+          const firstXray = res.data[0];
+          setSelectedXray(firstXray);
+          setBigPreview(correctImageUrl(firstXray.imgPath));
         }
       })
-      .catch((e) => console.error(e));
-      
+      .catch((err) => console.error("❌ X-ray 목록 불러오기 실패:", err));
+  }, [selectedDate, patient]);
 
+  useEffect(() => {
+    if (!fromHistory || !selectedDate || !patient) return;
+
+    axios
+      .get(`${process.env.REACT_APP_DB_URL}/diagnosis-result/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
+      .then((res) => {
+        const resultData = Array.isArray(res.data) ? res.data : [res.data];
+        setAiResult(resultData);
+
+        console.log("📌 과거 진단 결과 불러오기 성공:", resultData);
+      })
+      .catch((err) => console.error("❌ 과거 진단 결과 불러오기 실패:", err));
+  }, [fromHistory, selectedDate, patient]);
     // (B) 이전결과 모드 => diagnosis_result + hospital
-    if (fromHistory) {
-      axios
-        .get(`${process.env.REACT_APP_DB_URL}/diagnosis-result/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
-        .then((res) => {
-          if (res.data && res.data.length > 0) {
-            // 첫 번째 진단 결과
-            const firstDiag = res.data[0];
-            setAiResult(firstDiag.diagnosis);
+  //   if (fromHistory) {
+  //     axios
+  //       .get(`${process.env.REACT_APP_DB_URL}/diagnosis-result/byDate?pIdx=${patient.pIdx}&date=${selectedDate}`)
+  //       .then((res) => {
+  //         if (res.data && res.data.length > 0) {
+  //           // 첫 번째 진단 결과
+  //           const firstDiag = res.data[0];
 
-            // 병원 상세
-            const hosIdx = firstDiag.hosIdx;
-            return axios.get(`${process.env.REACT_APP_DB_URL}/hospitals/${hosIdx}`);
-          } else {
-            throw new Error("No past diagnosis data");
-          }
-        })
-        .then(hosRes => setSelectedHospital(hosRes.data))
-        .catch(err => {
-          console.log("과거 병원 정보 없음 =>", err.message);
-          setSelectedHospital(null);
-        });
-    } else {
-      // 새 진단 => 병원 선택 초기화
-      setSelectedHospital(null);
-      setHasSaved(false);
-    }
-  }, [selectedDate, fromHistory, patient]);
+  //           console.log("📌 과거 진단 결과:", firstDiag.diagnosis);
+  //           setAiResult(res.data);
+
+  //           setSelectedXray(xrayList[0] || null);
+
+  //           if (Array.isArray(firstDiag.diagnosis)) {
+  //             setAiResult(firstDiag.diagnosis);
+  //           } else {
+  //             console.warn("⚠️ 과거 진단 결과가 배열이 아님! 빈 배열로 초기화");
+  //             setAiResult([]); // 🚨 배열이 아닐 경우 기본값 설정
+  //           }
+
+  //           // 병원 상세
+  //           const hosIdx = firstDiag.hosIdx;
+  //           return axios.get(`${process.env.REACT_APP_DB_URL}/hospitals/${hosIdx}`);
+  //         } else {
+  //           throw new Error("No past diagnosis data");
+  //         }
+  //       })
+  //       .then(hosRes => setSelectedHospital(hosRes.data))
+  //       .catch(err => {
+  //         console.log("과거 병원 정보 없음 =>", err.message);
+  //         setSelectedHospital(null);
+  //       });
+  //   } else {
+  //     // 새 진단 => 병원 선택 초기화
+  //     setSelectedHospital(null);
+  //     setHasSaved(false);
+  //   }
+  // }, [selectedDate, fromHistory, patient, xrayList]);
+
+  useEffect(() => {
+    if (!selectedXray || !aiResult.length) return;
+    const matchedDiagnosis = aiResult.find(
+      (result) => Number(result.imgIdx) === Number(selectedXray.imgIdx)
+    );
+
+    setSelectedDiagnosis(matchedDiagnosis || null);
+  }, [selectedXray, aiResult]);
 
   // ---------------- 3) 병원 안내 (새 진단 모드) ----------------
   useEffect(() => {
@@ -357,17 +403,35 @@ function Result() {
 
   // 썸네일 클릭
   function handleThumbClick(imgPath) {
+    if (!imgPath) return;
+    const clickedXray = xrayList.find(
+      (xray) => correctImageUrl(xray.imgPath) === correctImageUrl(imgPath)
+    );
+  
+    if (!clickedXray) {
+      console.warn("⚠️ 선택한 X-ray를 찾을 수 없음!");
+      return;
+    }
     setBigPreview(correctImageUrl(imgPath)); // 올바른 경로 변환 후 적용
-    setSelectedXray(imgPath);
+    setSelectedXray(clickedXray);
+    const matchedDiagnosis = aiResult.find(
+      (result) => String(result.img_idx) === String(clickedXray.imgIdx)
+    );
+    setSelectedDiagnosis(matchedDiagnosis || null);
     setBaseScale(1);
     setZoom(1);
     setOffsetX(0);
     setOffsetY(0);
-    console.log("✅ bigPreview 이미지 경로:", bigPreview);
   }
 
-
-
+  useEffect(() => {
+    if (!selectedXray) return;
+    const matchedDiagnosis = aiResult.find((result) => String(result.img_idx) === String(selectedXray.imgIdx));
+    setSelectedDiagnosis(matchedDiagnosis || null);
+    if (JSON.stringify(selectedDiagnosis) !== JSON.stringify(matchedDiagnosis)) {
+      setSelectedDiagnosis(matchedDiagnosis || null);
+    }
+  }, [selectedXray, aiResult]);
 
   // 날짜 클릭
   function handleDateClick(d) {
@@ -382,59 +446,40 @@ function Result() {
   // 새 진단 결과 저장
   async function handleSaveDiagnosis() {
     if (!selectedHospital) {
-      alert("가까운 병원 중 하나를 선택해주세요!");
+      setShowHospitalWarningModal(true); // ✅ 모달 표시
+      setTimeout(() => {
+        setHideHospitalWarningModal(true); // ✅ 숨김 애니메이션 적용
+        setTimeout(() => {
+          setShowHospitalWarningModal(false); // ✅ 모달 완전히 제거
+          setHideHospitalWarningModal(false);
+        }, 300); // ✅ 애니메이션 시간 후 제거
+      }, 1500); // ✅ 1.5초 후 모달 숨김 시작
+      return;
+    }
+
+    if (!aiResult || aiResult.length === 0) {
+      alert("저장할 진단 결과가 없습니다.");
       return;
     }
   
     const userId = sessionStorage.getItem("userId") || "testDoctor";
     try {
-      // 1. FastAPI로 진단 요청
-      const fastApiResponse = await axios.post(
-        "http://223.130.157.164:8000/diagnose/",
-        { 
-          p_idx: patient.pIdx, 
-          doctor_id: userId 
-        }
-      );
-  
-      // FastAPI에서 받은 진단 결과
-      const diagnosisResult = fastApiResponse.data.result;
-      console.log("📌 FastAPI 진단 결과:", diagnosisResult);
-  
-      setAiResult(diagnosisResult); // AI 진단 결과 상태 업데이트
-  
-      // 2. 새로 업로드된 X-ray와 매칭
       const matched = xrayList.filter(x =>
         newlyUploaded.some(orig => x.imgPath.includes(orig))
       );
-      if (matched.length === 0) {
-        alert("업로드된 X-ray와 매칭된 이미지가 없습니다.");
-        return;
-      }
-  
-      // 3. XRAY 업데이트
-      for (const img of matched) {
-        await axios.put(`${process.env.REACT_APP_DB_URL}/xray/updateResult`, {
-          imgIdx: img.imgIdx,
-          result: diagnosisResult, // FastAPI 결과 사용
-        });
-      }
-  
-      // 4. diagnosis-result insert
-      for (const img of matched) {
+
+      for (const img of aiResult) { 
         const body = {
-          pIdx: patient.pIdx,
-          imgIdx: img.imgIdx,
-          diagnosis: diagnosisResult, // FastAPI 결과 사용
-          doctorId: userId,
+          imgIdx: img.img_idx,
           hosIdx: selectedHospital.hosIdx
         };
-        await axios.post(`${process.env.REACT_APP_DB_URL}/diagnosis-result`, body, {
+
+        await axios.post(`${process.env.REACT_APP_DB_URL}/diagnosis-result/update_hospital_info`, body, { 
           headers: { "Content-Type": "application/json" },
         });
       }
       alert("진단 결과 저장 완료!");
-      setHasSaved(true);
+      // setHasSaved(true);
   
     } catch (err) {
       console.error(err);
@@ -442,7 +487,6 @@ function Result() {
     }
   }
   
-
   // 뒤로가기
   function handleGoBack() {
     navigate("/main");
@@ -488,13 +532,13 @@ function Result() {
     navigate("/print", {
       state: {
         patient,
-        aiResult,
+        aiResult: Array.isArray(aiResult) ? aiResult : [aiResult],
         bigPreview,
         selectedHospital,
-        centerId: loginUser.centerId,
-        userName: loginUser.userName,
-        userEmail: loginUser.email,
-        userAddress: loginUser.address,
+        centerId: loginUser?.centerId || "(기관 없음)",
+        userName: loginUser?.userName || "(이름 없음)",
+        userEmail: loginUser?.email || "(이메일 없음)",
+        userAddress: loginUser?.address || "(주소 없음)",
         diagDate: selectedDate,
       },
     });
@@ -566,46 +610,42 @@ function Result() {
   };
 
   async function handleSaveDiagnosis() {
-    if (!selectedHospital) {
-      setShowHospitalWarningModal(true); // ✅ 모달 표시
-      setTimeout(() => {
-        setHideHospitalWarningModal(true); // ✅ 숨김 애니메이션 적용
-        setTimeout(() => {
-          setShowHospitalWarningModal(false); // ✅ 모달 완전히 제거
-          setHideHospitalWarningModal(false);
-        }, 300); // ✅ 애니메이션 시간 후 제거
-      }, 1500); // ✅ 1.5초 후 모달 숨김 시작
-      return;
-    }
-
     const userId = sessionStorage.getItem("userId") || "testDoctor";
     try {
       const matched = xrayList.filter(x =>
         newlyUploaded.some(orig => x.imgPath.includes(orig))
       );
-      if (matched.length === 0) {
-        alert("업로드된 X-ray와 매칭된 이미지가 없습니다.");
-        return;
-      }
 
       for (const img of matched) {
         await axios.put(`${process.env.REACT_APP_DB_URL}/xray/updateResult`, {
           imgIdx: img.imgIdx,
-          result: aiResult,
+          result: JSON.stringify(aiResult),
         });
       }
 
       for (const img of matched) {
+        const diagnosisData = aiResult.find((res) => res.img_idx === img.imgIdx);
+        if (!diagnosisData) {
+          console.error(`❌ 진단 결과를 찾을 수 없음: IMG_IDX=${img.imgIdx}`);
+          continue;  // 결과가 없으면 요청을 보내지 않음
+      }
+
         const body = {
           pIdx: patient.pIdx,
           imgIdx: img.imgIdx,
-          diagnosis: aiResult,
+          diagnosis: diagnosisData.diagnosis,
           doctorId: userId,
-          hosIdx: selectedHospital.hosIdx
+          hosIdx: selectedHospital?.hosIdx
         };
-        await axios.post(`${process.env.REACT_APP_DB_URL}/diagnosis-result`, body, {
-          headers: { "Content-Type": "application/json" },
-        });
+        console.log("📌 POST 요청 데이터:", body);
+        try {
+          await axios.post(`${process.env.REACT_APP_DB_URL}/diagnosis-result`, body, { 
+              headers: { "Content-Type": "application/json" },
+          });
+          console.log(`✅ IMG_IDX=${img.imgIdx} 진단 결과 저장 성공`);
+        } catch (error) {
+          console.error(`❌ IMG_IDX=${img.imgIdx} 저장 실패:`, error);
+        }
       }
 
       setShowDiagnosisSuccessModal(true); // ✅ 모달 표시
@@ -618,8 +658,6 @@ function Result() {
           setHideDiagnosisSuccessModal(false);
         }, 300); // ✅ 애니메이션 시간 후 제거
       }, 1500); // ✅ 2초 후 모달 숨김 시작
-
-
     } catch (err) {
       console.error(err);
       alert("저장 중 오류 발생");
@@ -650,17 +688,36 @@ function Result() {
       setHideSaveWarningModal(false);
     }, 300);
   };
+
   return (
     <div className="result-container">
       <Menu />
       <div className="result-topbar">
         <h2> </h2>
         <div>
-          <button className="result_btn2" onClick={handlePrint} style={{ marginLeft: "10px" }}>
-            <img src={printerIcon} alt="프린터 아이콘" className="print-icon" /> 출력하기
-          </button>
-        </div>
+        <button className="result_btn2"
+          onClick={() => {
+            console.log("🟢 현재 로그인 유저 정보:", loginUser);  // ✅ 로그 확인
+            navigate("/print", {
+              state: {
+                patient,
+                aiResult,
+                bigPreview,
+                selectedHospital,
+                centerId: loginUser?.centerId || "(기관 없음)",
+                userName: loginUser?.userName || "(이름 없음)",
+                userEmail: loginUser?.email || "(이메일 없음)",
+                userAddress: loginUser?.address || "(주소 없음)",
+                diagDate: selectedDate,
+              }
+            });
+          }}
+          style={{ marginLeft: "10px" }}
+        >
+        <img src={printerIcon} alt="프린터 아이콘" className="print-icon" /> 출력하기
+        </button>
       </div>
+    </div>
       {showSaveWarningModal && (
         <div className="save-warning-modal-overlay" onClick={closeSaveWarningModal}>
           <div className={`save-warning-modal ${hideSaveWarningModal ? "hide" : ""}`}>
@@ -699,7 +756,6 @@ function Result() {
                     <div className="patient-address">{patient.pAdd}</div>
                   </td>
                 </tr>
-
               </tbody>
             </table>
           </div>
@@ -725,20 +781,17 @@ function Result() {
 
           <h2 style={{ marginLeft: 10 }}>AI 진단 결과</h2>
           <div className="ai-result-box">
-            <div className="video-container">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="ai-result-video"
-              >
-                <source src="/video1.mp4" type="video/mp4" />
-                브라우저가 동영상을 지원하지 않습니다.
-              </video>
-              <p className="ai-result-text">{aiResult}</p>
-            </div>
-
+            {selectedDiagnosis ? (
+              <div className="video-container">
+                <video autoPlay loop muted playsInline className="ai-result-video">
+                  <source src="/video1.mp4" type="video/mp4" />
+                  브라우저가 동영상을 지원하지 않습니다.
+                </video>
+                <p className="ai-result-text">{selectedDiagnosis.diagnosis}</p>
+              </div>
+            ):(
+              <p>🔍 선택한 이미지의 진단 결과가 없습니다.</p>
+            )}
           </div>
         </div>
 
@@ -764,7 +817,6 @@ function Result() {
               <button className="erase-button" onClick={clearCanvas}></button>
             </div>
           </div>
-
            
           <div className="big-preview-box" style={{ position: "relative" }}
             onWheelCapture={handleWheelCapture}
@@ -774,15 +826,16 @@ function Result() {
             onMouseLeave={handleMouseLeave}
           >
 
-            {/* 이미지 크게 보기 */}
-            <div className="big-preview-box" style={{ position: "relative" }}>
+          {/* 이미지 크게 보기 */}
+          <div className="big-preview-box" style={{ position: "relative" }}>
             {bigPreview ? (
               <>
                 <img ref={bigImgRef} 
                 src={bigPreview} 
                 alt="bigXray" 
                 className="big-xray-image" 
-                onError={() => console.log("⚠️ 이미지 로드 실패:", bigPreview)}/>
+                onError={() => console.log("⚠️ 이미지 로드 실패:", bigPreview)}
+                />
                 <canvas
                   ref={canvasRef}
                   className="drawing-canvas"
@@ -790,7 +843,7 @@ function Result() {
                   onMouseMove={draw}
                   onMouseUp={stopDrawing}
                   onMouseLeave={stopDrawing}
-                  />
+                />
               </>
             ) : (
               <div style={{ color: "#ccc" }}>X-ray가 없습니다.</div>
@@ -825,7 +878,6 @@ function Result() {
                     </div>
                   ))}
             </div>
-
           </div>
         </div>
 
@@ -905,7 +957,6 @@ function Result() {
               </div>
               <h2 className="map-check">위치 확인</h2>
               <div ref={mapRef} className="hospital-map2" />
-
             </>
           )}
         </div>

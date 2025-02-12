@@ -264,9 +264,18 @@ function Main() {
         }
       );
   
-      console.log("📌 FastAPI에서 받은 진단 결과:", fastApiResponse.data.diagnosis);
-  
-      const diagnosisResult = fastApiResponse.data?.result?.diagnosis || "진단 실패";
+      console.log("📌 FastAPI 전체 응답:", fastApiResponse);
+      console.log("📌 FastAPI에서 받은 진단 결과:", fastApiResponse.data);
+      console.log("📌 FastAPI에서 받은 result 값:", fastApiResponse.data?.result);
+
+      let diagnosisResult = "진단 실패";
+      if (fastApiResponse.data?.result && Array.isArray(fastApiResponse.data.result)) {
+        diagnosisResult = fastApiResponse.data.result.map(item => ({
+          img_idx: item.img_idx,
+          diagnosis: item.diagnosis,
+          confidence: item.confidence.toFixed(4)
+        }))
+      }
   
       // 3️⃣ 결과 페이지 이동
       navigate("/result", {

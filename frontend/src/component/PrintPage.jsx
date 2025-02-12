@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./PrintPage.css";
 import printerImg from "./png/printerimg.png";
@@ -23,8 +23,7 @@ function PrintPage() {
     aiResult,
     bigPreview,
     selectedHospital,
-
-    centerId,
+    centerId = patient?.centerId,
     userName,
     userEmail,
     userAddress,
@@ -43,6 +42,10 @@ function PrintPage() {
   function handlePrint() {
     window.print();
   }
+
+  useEffect(() => {
+    console.log("📌 받은 location.state:", location.state);
+  }, [location.state]);
 
   return (
     <div className="print-container">
@@ -75,11 +78,11 @@ function PrintPage() {
             <tr>
               <th className="highlight-cell" rowSpan="2">의료기관</th>
               <th>명칭</th>
-              <td colSpan="3">{centerId || "(기관명)"}</td>
+              <td colSpan="3">{centerId}</td>
             </tr>
             <tr>
               <th>이메일</th>
-              <td colSpan="3">{userEmail || "(기관 이메일)"}</td>
+              <td colSpan="3">{userEmail}</td>
             </tr>
           </tbody>
         </table>
@@ -104,7 +107,17 @@ function PrintPage() {
           <tbody>
             <tr>
               <th className="highlight-cell">질병분류</th>
-              <td colSpan="4">{aiResult || "(진단없음)"}</td>
+              <td colSpan="4">
+              {Array.isArray(aiResult) && aiResult.length > 0 ? (
+                aiResult.map((result, index) => (
+                  <div key={index}>
+                    {result.diagnosis} ({(result.confidence * 100).toFixed(2)}%)
+                  </div>
+                ))
+              ) : (
+                "(진단없음)"
+              )}
+              </td>
             </tr>
             <tr>
               <th className="highlight-cell">처방인 성명</th>

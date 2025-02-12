@@ -58,7 +58,6 @@ const Login = () => {
     <div className="login-page">
       <img src={teamLogo} alt="Team Logo" className="login-team-logo" />
       <form className="login-form" onSubmit={handleSubmit}>
-
         <div className={`input-container ${shake.userId ? 'shake' : ''}`}>
           <img src={idIcon} alt="아이디 아이콘" className="input-icon" />
           <input
@@ -85,7 +84,6 @@ const Login = () => {
           />
         </div>
 
-
         {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <button type="submit" className="login-btn" disabled={isLoading}>
@@ -100,8 +98,6 @@ const Login = () => {
         <span className="separator">|</span>
         <span onClick={() => navigate('/signup')}>회원가입</span>
       </div>
-
-
     </div>
   );
 };

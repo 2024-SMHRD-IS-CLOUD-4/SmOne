@@ -37,7 +37,6 @@ class LoginRequest(BaseModel):
 def root():
     return {"message": "FastAPI 서버 정상 작동 중!"}
 
-
 @app.post("/java-login")
 def java_login(request: LoginRequest):
     """
@@ -49,7 +48,6 @@ def java_login(request: LoginRequest):
         return JSONResponse(content=response_data, media_type="application/json; charset=utf-8")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"로그인 실패: {str(e)}")
-
 
 # Java 로그인 후 세션을 유지하면서 doctor_id 가져오기
 def get_doctor_id():
@@ -89,8 +87,6 @@ app.add_middleware(
     allow_headers=["Content-Type", "Authorization"],
 )
 
-
-
 # Pydantic 모델 정의
 class DiagnosisRequest(BaseModel):
     p_idx: int
@@ -110,7 +106,6 @@ async def diagnose(request: DiagnosisRequest):
 
         # doctor_id 자동 설정 (세션에서 가져오기)
         doctor_id = request.doctor_id if request.doctor_id else get_doctor_id()
-        
         if not doctor_id:
             raise HTTPException(status_code=400, detail="doctor_id를 가져올 수 없습니다.")
 
@@ -118,21 +113,23 @@ async def diagnose(request: DiagnosisRequest):
 
         # `test()` 함수 호출 (p_idx, doctor_id 넘기기)
         # 모델 실행 및 진단
-        result = test(request.doctor_id, request.p_idx) 
-
+        result = test(doctor_id, request.p_idx)
+        if result is None:  # 🚨 test()가 None을 반환하는 경우 대비
+            print("❌ 모델이 유효한 결과를 반환하지 않음")
+            result = []
+        
+        print(f"🟢 FastAPI 최종 응답: {result}")  # 🚀 최종 응답 확인
         print("Database updated successfully")  # DB 업데이트 확인
 
-        # JSON 응답 반환 (content-type: application/json)
         return JSONResponse(
             content={
-                "status": "success",
-                "p_idx": request.p_idx,
-                "doctor_id": doctor_id,
-                "result": result  # 진단 결과 추가
-            },
+            "status": "success",
+            "p_idx": request.p_idx,
+            "doctor_id": doctor_id,
+            "result": result  # ✅ 빈 배열이라도 반환하도록 보장
+        },
             media_type="application/json"
         )
-        
     except HTTPException as e:
         print(f"HTTP Error: {e.detail}")  # HTTP 예외 로그 출력
         raise
