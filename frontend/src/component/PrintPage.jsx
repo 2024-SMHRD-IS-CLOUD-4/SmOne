@@ -104,7 +104,11 @@ function PrintPage() {
           <tbody>
             <tr>
               <th className="highlight-cell">질병분류</th>
-              <td colSpan="4">{aiResult || "(진단없음)"}</td>
+              <td colSpan="4">
+                {Array.isArray(aiResult) && aiResult.length > 0
+                  ? aiResult[0].diagnosis
+                  : "TB"}
+              </td>
             </tr>
             <tr>
               <th className="highlight-cell">처방인 성명</th>
