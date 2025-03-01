@@ -45,7 +45,7 @@
 <br>   
 
 ## 🙋‍♀️ 시스템 아키텍처 
-![Image](https://github.com/user-attachments/assets/b09e11ee-884d-4626-af27-2730e2583b68)
+![시스템 아키텍처](https://github.com/user-attachments/assets/b09e11ee-884d-4626-af27-2730e2583b68)
 <br>
 
 ## 🙋‍♀️ 유스케이스
@@ -61,12 +61,17 @@
 <br>
 
 ## 화면 구성
+<br>
 
 ## 트러블 슈팅
+<br>
 
-## 팀원 소개
+## 🙋‍♀️ 팀원 소개
+![팀원 소개](https://github.com/user-attachments/assets/18851e6c-c6f4-436d-8dce-9de22594c6c5)
+<br>
 
 ## 시연 영상
+<br>
 
 
 
