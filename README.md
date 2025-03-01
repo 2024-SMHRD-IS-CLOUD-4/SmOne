@@ -60,37 +60,59 @@
 ![E-R 다이어그램](https://github.com/user-attachments/assets/e7c6b405-3284-4d2a-b64c-2bbee0da69b3)
 <br>
 
-## 🖥️ 화면 구성
-1. 로그인
+<div class=display_composition>
+   <div><h1>🖥️ 화면 구성</h1></div>
+   <h3>1. 로그인</h3>
+   <br>
+   
+   <h3>2. 회원가입</h3>
+   <br>
+   
+   <h3>3. 아이디 찾기</h3>
+   <br>
 
-2. 회원가입
+   <h3>4. 비밀번호 변경</h3>
+   <br>
+   <h3>4-2.</h3>
+   <br>
 
-3. 아이디 찾기
+   <h3>5. 메인 화면</h3>
+   <img src="https://github.com/user-attachments/assets/d91b7e2c-6b0e-470c-a13f-6b5df4a2a567">
+   <br>
+   <img src="https://github.com/user-attachments/assets/4829dd09-3368-4a5c-a5fd-52020efc6422">
+   <br>
 
-4. 비밀번호 변경
+   <h3>5-2. 사진 업로드</h3>
+   <br>
+   <img src="https://github.com/user-attachments/assets/39dd583b-7341-4124-af2e-9db15f7c2237">
+   <br>
+   <img src="https://github.com/user-attachments/assets/658aaef9-64b1-4680-92af-e27fbab43575">
+   <br>
 
-   4-2.
+   <h3>5-3. 환자 검색</h3>
+   <img src="https://github.com/user-attachments/assets/9b94980a-72d2-4bd7-92c9-2f995f94c035">
+   <br>
+   <img src="https://github.com/user-attachments/assets/e8cff4a7-b6ed-496c-99d2-26dad42caa46">
+   <br>
 
-5. 메인 화면
-![image](https://github.com/user-attachments/assets/03747e4d-c640-4791-983d-62d2ed7dbc6a)
-![image](https://github.com/user-attachments/assets/08f3b338-3095-4f2a-8617-b4c6bc040dea)
-   5-2. 사진 업로드
-   ![image](https://github.com/user-attachments/assets/39dd583b-7341-4124-af2e-9db15f7c2237)
-   ![image](https://github.com/user-attachments/assets/658aaef9-64b1-4680-92af-e27fbab43575)
-   5-3. 환자 검색
-   ![image](https://github.com/user-attachments/assets/9b94980a-72d2-4bd7-92c9-2f995f94c035)
-   ![image](https://github.com/user-attachments/assets/e8cff4a7-b6ed-496c-99d2-26dad42caa46)
-6. 마이페이지
-![image](https://github.com/user-attachments/assets/8d421500-8722-4e1c-a002-95ed1b0bf9f4)
-7. 환자 등록
-![image](https://github.com/user-attachments/assets/d6f77c87-da57-4217-8321-8014a9dbfa0a)
-8. 환자 수정
-![image](https://github.com/user-attachments/assets/c21af8d4-6ea6-4a4f-a9a1-6704ad3ded1c)
-9. 진단
+   <h3>6. 마이페이지</h3>
+   <img src="https://github.com/user-attachments/assets/8d421500-8722-4e1c-a002-95ed1b0bf9f4">
+   <br>
 
-10. 소견서 출력
+   <h3>7. 환자 등록</h3>
+   <img src="https://github.com/user-attachments/assets/d6f77c87-da57-4217-8321-8014a9dbfa0a">
+   <br>
 
-<br>
+   <h3>8. 환자 수정</h3>
+   <img src="https://github.com/user-attachments/assets/c21af8d4-6ea6-4a4f-a9a1-6704ad3ded1c">
+   <br>
+
+   <h3>9. 진단</h3>
+   <br>
+
+   <h3>10. 소견서 출력</h3>
+   <br>
+</div>
 
 ## ⚡ 트러블 슈팅
 <br>
