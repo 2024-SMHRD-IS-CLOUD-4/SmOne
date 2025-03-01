@@ -60,7 +60,7 @@
 ![E-R 다이어그램](https://github.com/user-attachments/assets/e7c6b405-3284-4d2a-b64c-2bbee0da69b3)
 <br>
 
-<div class=display_composition>
+<div class=displayComposition>
    <div><h1>🖥️ 화면 구성</h1></div>
    <h3>1. 로그인</h3>
    <br>
@@ -114,8 +114,14 @@
    <br>
 </div>
 
-## ⚡ 트러블 슈팅
-<br>
+<div class="troubleShouting">
+   <div><h1>⚡ 트러블 슈팅</h1></div>
+   <h4>1. react-router-dom을 사용하여 react페이지를 만들었는데 새로고침 또는 url로 직접 접근하면 404에러가 나오는 문제가 생겼다.</h4>
+   <img src="https://github.com/user-attachments/assets/faaaee79-3632-4250-9d63-0115b511b1b0">
+   <img src="https://github.com/user-attachments/assets/3605b13d-bdaf-49ce-8431-ae831be53eb9">
+   <h4>해결 방안 apache 포기하고 nginx 로 리엑트파일을 배포하는걸로 변경. Nginx로 배포하는 것이 더 간단하고 효율적. 특히, React SPA (Single Page Application) 를 다룰 때 Nginx는 정적 파일 서빙에 매우 적합</h4>
+</div>
+
 
 ## 👨‍👩‍👧‍👦 팀원 소개
 ![팀원 소개](https://github.com/user-attachments/assets/18851e6c-c6f4-436d-8dce-9de22594c6c5)
