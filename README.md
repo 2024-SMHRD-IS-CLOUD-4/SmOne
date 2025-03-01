@@ -60,7 +60,7 @@
 ![E-R 다이어그램](https://github.com/user-attachments/assets/e7c6b405-3284-4d2a-b64c-2bbee0da69b3)
 <br>
 
-## 화면 구성
+## 🖥️ 화면 구성
 <br>
 
 ## 트러블 슈팅
