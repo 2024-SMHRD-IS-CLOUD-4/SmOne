@@ -61,16 +61,45 @@
 <br>
 
 ## 🖥️ 화면 구성
+1. 로그인
+
+2. 회원가입
+
+3. 아이디 찾기
+
+4. 비밀번호 변경
+
+   4-2.
+
+5. 메인 화면
+![image](https://github.com/user-attachments/assets/03747e4d-c640-4791-983d-62d2ed7dbc6a)
+![image](https://github.com/user-attachments/assets/08f3b338-3095-4f2a-8617-b4c6bc040dea)
+   5-2. 사진 업로드
+   ![image](https://github.com/user-attachments/assets/39dd583b-7341-4124-af2e-9db15f7c2237)
+   ![image](https://github.com/user-attachments/assets/658aaef9-64b1-4680-92af-e27fbab43575)
+   5-3. 환자 검색
+   ![image](https://github.com/user-attachments/assets/9b94980a-72d2-4bd7-92c9-2f995f94c035)
+   ![image](https://github.com/user-attachments/assets/e8cff4a7-b6ed-496c-99d2-26dad42caa46)
+6. 마이페이지
+![image](https://github.com/user-attachments/assets/8d421500-8722-4e1c-a002-95ed1b0bf9f4)
+7. 환자 등록
+![image](https://github.com/user-attachments/assets/d6f77c87-da57-4217-8321-8014a9dbfa0a)
+8. 환자 수정
+![image](https://github.com/user-attachments/assets/c21af8d4-6ea6-4a4f-a9a1-6704ad3ded1c)
+9. 진단
+
+10. 소견서 출력
+
 <br>
 
-## 트러블 슈팅
+## ⚡ 트러블 슈팅
 <br>
 
-## 🙋‍♀️ 팀원 소개
+## 👨‍👩‍👧‍👦 팀원 소개
 ![팀원 소개](https://github.com/user-attachments/assets/18851e6c-c6f4-436d-8dce-9de22594c6c5)
 <br>
 
-## 시연 영상
+## 🎥 시연 영상
 [![시연 영상](https://github.com/user-attachments/assets/5be7b976-f242-4d7d-b873-d17d19fd2aed)](https://github.com/user-attachments/assets/6aacf66f-6063-463b-9ada-76769a1ce78c)
 <br>
 
