@@ -45,7 +45,7 @@
 <br>   
 
 ## 🙋‍♀️ 시스템 아키텍처 
-![시스템 아키텍처](https://github.com/2024-SMHRD-IS-CLOUD-4/SmOne/blob/master/%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98.png)
+![Image](https://github.com/user-attachments/assets/b09e11ee-884d-4626-af27-2730e2583b68)
 <br>
 
 ## 유스케이스
