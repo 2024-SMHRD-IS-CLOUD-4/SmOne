@@ -48,11 +48,17 @@
 ![Image](https://github.com/user-attachments/assets/b09e11ee-884d-4626-af27-2730e2583b68)
 <br>
 
-## 유스케이스
+## 🙋‍♀️ 유스케이스
+![유스케이스 다이어그램](https://github.com/user-attachments/assets/b756a3dc-56ff-4ef0-ab8c-f6395ae4e1a0)
+<br>
 
-## 서비스 흐름도
+## 🙋‍♀️ 서비스 흐름도
+![서비스 흐름도](https://github.com/user-attachments/assets/21b39ebe-2b1b-4f1c-8e76-99998a2cb957)
+<br>
 
-## E-R 다이어그램
+## 🙋‍♀️ E-R 다이어그램
+![E-R 다이어그램](https://github.com/user-attachments/assets/e7c6b405-3284-4d2a-b64c-2bbee0da69b3)
+<br>
 
 ## 화면 구성
 
