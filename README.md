@@ -71,7 +71,7 @@
 <br>
 
 ## 시연 영상
-![시연 영상](https://github.com/user-attachments/assets/6aacf66f-6063-463b-9ada-76769a1ce78c)
+[![시연 영상](https://github.com/user-attachments/assets/5be7b976-f242-4d7d-b873-d17d19fd2aed)](https://github.com/user-attachments/assets/6aacf66f-6063-463b-9ada-76769a1ce78c)
 <br>
 
 
