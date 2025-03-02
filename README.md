@@ -137,6 +137,12 @@
    <img src="https://github.com/user-attachments/assets/faaaee79-3632-4250-9d63-0115b511b1b0">
    <img src="https://github.com/user-attachments/assets/3605b13d-bdaf-49ce-8431-ae831be53eb9">
    <h4>해결 방안 apache 포기하고 nginx 로 리엑트파일을 배포하는걸로 변경. Nginx로 배포하는 것이 더 간단하고 효율적. 특히, React SPA (Single Page Application) 를 다룰 때 Nginx는 정적 파일 서빙에 매우 적합</h4>
+
+   <h4>2. 특정 클래스에 대한 평가지표가 유독 낮게 측정되었다.</h4>
+   <img src="https://github.com/user-attachments/assets/096f1a09-0def-4c60-a759-7a39af9b3e77">
+   <h4>배치사이즈와 시행횟수등을 많이 늘려주었고, 이미지 증강을 추가적으로 하여 이미지 불균형을 줄여주었다.</h4>
+   <img src="https://github.com/user-attachments/assets/c160dcd9-1e10-4d4e-b4af-af0493c38f54">
+   <h4>학습하는 과정에서 초반부터 손실값(Loss)가 많이 올랐었지만 학습이 계속될 수록 개선되는 모습을 보여주었으며, 최종적으로 평가지표도 전체적으로 안정되는 모습을 보여주었다.</h4>
 </div>
 
 
