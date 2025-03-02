@@ -134,7 +134,7 @@
 ## 🤖 딥러닝 모델 개요
 I LUNG VIEW는 MobileNetV4를 기반으로 한 AI 모델을 활용하여 X-ray 이미지를 분석하고, 결핵 및 폐렴 여부를 판별합니다.
 
-- 데이터셋: **[공개 데이터셋명] + 자체 수집 데이터**
+- 데이터셋: **Kaggle**
 - 모델 구조: **MobileNetV4**
 - 최적화 및 변환: **ONNX 변환 후 ONNX Runtime 사용**
 - 배포 방식: **Flask API로 웹과 연동**
